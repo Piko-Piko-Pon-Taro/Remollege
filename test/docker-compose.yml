@@ -23,7 +23,7 @@ services:
             - ../api/:/src/api
         working_dir: /src/api
         tty: true
-        command: bash -c 'npm install && npm run start'
+        command: bash -c 'npm install && npm run dev'
         expose:
             - ${API_PORT}
         depends_on:
