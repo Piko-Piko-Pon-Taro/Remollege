@@ -90,3 +90,4 @@ sw.*
 *.swp
 
 # ignore package-lock.json
+package-lock.json
