@@ -9,7 +9,7 @@ services:
             - ../frontend/:/src/frontend
         working_dir: /src/frontend
         tty: true
-        command: bash -c 'npm install -- save && npm run dev'
+        command: bash -c 'npm install && npm run dev'
         expose:
             - ${FRONTEND_PORT}
         depends_on:
@@ -23,7 +23,7 @@ services:
             - ../backend/:/src/backend
         working_dir: /src/backend
         tty: true
-        command: bash -c 'npm install -- save && npm run start'
+        command: bash -c 'npm install && npm run start'
         expose:
             - ${BACKEND_PORT}
         depends_on:
