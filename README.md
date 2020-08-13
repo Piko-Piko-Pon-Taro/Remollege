@@ -20,4 +20,3 @@ git clone git@github.com:Piko-Piko-Pon-Taro/UNTIBURIBURI.git
 cd workstation/test
 docker-compose up -d
 ```
-# test
