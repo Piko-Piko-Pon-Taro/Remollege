@@ -10,7 +10,7 @@ services:
             - ../package.json/:/src/package.json
         working_dir: /src
         tty: true
-        command: bash -c 'npm install --save && node main.js'
+        command: bash -c 'npm install --save'
         expose:
             - ${NODE_PORT}
         depends_on:
@@ -32,7 +32,6 @@ services:
             - 5432:5432
         env_file: .env
         volumes:
-            - ../database/data:/var/lib/mysql
             - ../database/init:/docker-entrypoint-initdb.d
         expose:
             - 5432
