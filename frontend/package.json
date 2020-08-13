@@ -5,7 +5,7 @@
   "author": "piko_piko_pon_taro",
   "private": true,
   "scripts": {
-    "dev": "nuxt --port 3001",
+    "dev": "HOST=0.0.0.0 PORT=3001 nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
@@ -15,8 +15,8 @@
   },
   "precommit": "npm run lint",
   "dependencies": {
-    "nuxt": "^2.0.0",
-    "@nuxtjs/axios": "^5.3.6"
+    "@nuxtjs/axios": "^5.3.6",
+    "nuxt": "^2.14.1"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.0.0",
