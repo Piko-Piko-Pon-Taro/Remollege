@@ -6,32 +6,34 @@ services:
             - ${NODE_PORT}:80
         env_file: .env
         volumes:
-            - ../src/:/src
+            - ../backend/:/src/backend
+            - ../frontend/:/src/frontend
             - ../package.json/:/src/package.json
         working_dir: /src
         tty: true
-        command: bash -c 'npm install --save'
+        #command: bash -c 'npm install --save'
         expose:
             - ${NODE_PORT}
         depends_on:
             - db
-    adminer:
-        image: adminer:4.7
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
         restart: always
         ports:
-            - ${ADMINER_PORT}:8080
+            - ${PMA_PORT}:80
         depends_on:
             - db
         expose:
-            - ${ADMINER_PORT}
+            - ${PMA_PORT}
         env_file: .env
     db:
-        image: mysql:latest
+        image: mysql:5.7
         restart: always
         ports:
-            - 5432:5432
+            - 3306:3306
         env_file: .env
         volumes:
+            - ../database/my.cnf:/etc/mysql/conf.d/my.cnf
             - ../database/init:/docker-entrypoint-initdb.d
         expose:
-            - 5432
+            - 3306
