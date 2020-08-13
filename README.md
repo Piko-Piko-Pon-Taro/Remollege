@@ -1,6 +1,8 @@
 # UntiBuriburi
-<image src="https://img.shields.io/github/issues/UNTI-UNTI-GENERATION/workstation"> <image src="https://img.shields.io/github/forks/UNTI-UNTI-GENERATION/workstation"> <image src="https://img.shields.io/github/stars/UNTI-UNTI-GENERATION/workstation"> <image src="https://img.shields.io/github/license/UNTI-UNTI-GENERATION/workstation">
-
+<img src="https://img.shields.io/github/issues/Piko-Piko-Pon-Taro/UNTIBURIBURI.git">
+<img src="https://img.shields.io/github/forks/Piko-Piko-Pon-Taro/UNTIBURIBURI.git">
+<img src="https://img.shields.io/github/stars/Piko-Piko-Pon-Taro/UNTIBURIBURI.git">
+<img src="https://img.shields.io/github/license/Piko-Piko-Pon-Taro/UNTIBURIBURI.git">
 # Environment
 - Nuxt.js
 - Swagger
@@ -9,10 +11,10 @@
 - Docker
 # Installation
 ## Requires
-- docker-compose@1.24.1
+- docker-compose@1.26.2
 ## Steps
 ```
-git clone https://github.com/UNTI-UNTI-GENERATION/workstation.git
+git clone git@github.com:Piko-Piko-Pon-Taro/UNTIBURIBURI.git
 cd workstation/test
 docker-compose up -d
 ```
