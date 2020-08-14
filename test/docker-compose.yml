@@ -1,31 +1,31 @@
 version: '3'
 services:
-    frontend:
+    client:
         image: node:latest
         ports:
-            - ${FRONTEND_PORT}:${FRONTEND_PORT}
+            - ${CLIENT_PORT}:${CLIENT_PORT}
         env_file: .env
         volumes:
-            - ../frontend/:/src/frontend
-        working_dir: /src/frontend
+            - ../client/:/src/client
+        working_dir: /src/client
         tty: true
         command: bash -c 'npm install && npm run dev'
         expose:
-            - ${FRONTEND_PORT}
+            - ${CLIENT_PORT}
         depends_on:
-            - backend
-    backend:
+            - api
+    api:
         image: node:latest
         ports:
-            - ${BACKEND_PORT}:3000
+            - ${API_PORT}:${API_PORT}
         env_file: .env
         volumes:
-            - ../backend/:/src/backend
-        working_dir: /src/backend
+            - ../api/:/src/api
+        working_dir: /src/api
         tty: true
-        command: bash -c 'npm install && npm run start'
+        command: bash -c 'npm install && npm run dev'
         expose:
-            - ${BACKEND_PORT}
+            - ${API_PORT}
         depends_on:
             - db
     phpmyadmin:
