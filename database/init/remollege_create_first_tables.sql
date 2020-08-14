@@ -94,11 +94,11 @@ CREATE TABLE `Users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- テーブルのデータのダンプ `Users`
+-- テーブルのデータのダンプ `Users` (password: userpass)
 --
 
 INSERT INTO `Users` (`id`, `name`, `email`, `password`, `img`, `createdAt`, `updatedAt`) VALUES
-(1, 'user', 'turunasi@ruri.waseda.jp', 'userpass', NULL, '2020-08-14 00:00:00', '2020-08-14 00:00:00');
+(1, 'user', 'turunasi@ruri.waseda.jp', '$2b$10$o/StVm9I6dRD7SSQNsAcTOvYGaigAsFtdHZuMfRiV29rxihp2CodS', NULL, '2020-08-14 00:00:00', '2020-08-14 00:00:00');
 
 --
 -- ダンプしたテーブルのインデックス

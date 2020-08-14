@@ -1,3 +1,45 @@
 @baseUrl = http://localhost:3000
+@email = turunasi@ruri.waseda.jp
+@password = userpass
+@token = {{Login.response.body.$.token}}
+@refreshToken = {{Login.response.body.$.refreshToken}}
+###
+### ===== Auth ===
+###
+# @name Sinup
+POST {{baseUrl}}/auth/signup/
+Content-Type: application/json
 
-GET {{baseUrl}}/users/1 HTTP/1.1
+{
+  "name": "ピコピコぽん太郎",
+  "email": "pikopikopontaro@example.com",
+  "password": "pikopikopontaro"
+}
+###
+# @name Login
+POST {{baseUrl}}/auth/login/
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+###
+# @name Logout
+POST {{baseUrl}}/auth/logout/
+###
+# @name RefreshToken
+GET {{baseUrl}}/auth/refresh/
+Authorization: Bearer {{refreshToken}}
+###
+# @name GetCurrentUser
+GET {{baseUrl}}/auth/user/
+Authorization: Bearer {{token}}
+###
+### ===== User ===
+###
+# @name GetAllUser
+GET {{baseUrl}}/users/all/
+###
+# @name GetOneUser
+GET {{baseUrl}}/users/1

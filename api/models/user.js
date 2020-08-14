@@ -31,16 +31,23 @@ module.exports = (sequelize, DataTypes) => {
       },
       img: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
-          notEmpty: true,
           len: [1, 255],
         },
       },
     },
     {
-      defaultScope: {},
-      scopes: {},
+      defaultScope: {
+        attributes: {
+          exclude: ["email", "password"],
+        },
+      },
+      scopes: {
+        auth: () => {
+          return {};
+        },
+      },
     }
   );
   User.associate = function (models) {
