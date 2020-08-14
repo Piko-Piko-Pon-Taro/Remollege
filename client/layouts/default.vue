@@ -24,22 +24,9 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" fixed app color="#9B003F">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn @click.stop="miniVariant = !miniVariant" icon>
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn @click.stop="clipped = !clipped" icon>
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn @click.stop="fixed = !fixed" icon>
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
       <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn @click.stop="rightDrawer = !rightDrawer" icon>
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
     </v-app-bar>
     <v-content>
       <v-container>
@@ -59,7 +46,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-footer :fixed="fixed" app>
-      <span>&copy; 2019</span>
+      <span>&copy; 2020 PikoPikoPonTaro</span>
     </v-footer>
   </v-app>
 </template>
@@ -68,25 +55,25 @@
 export default {
   data() {
     return {
-      clipped: false,
+      clipped: true,
       drawer: false,
       fixed: false,
       items: [
         {
-          icon: 'mdi-apps',
-          title: 'Welcome',
+          icon: 'mdi-school',
+          title: 'CAMPUS TOP',
           to: '/'
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+          icon: 'mdi-logout',
+          title: 'Logout',
+          to: '/login'
         }
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'Remollege'
     }
   }
 }
