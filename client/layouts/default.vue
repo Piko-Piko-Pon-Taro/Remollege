@@ -85,7 +85,7 @@ export default {
       title: 'Recollege',
       user: {
         name: 'ピコピコ ぽん太郎',
-        icon: 'sampleIcon.png'
+        icon: 'sampleIcon1.jpg'
       }
     }
   }

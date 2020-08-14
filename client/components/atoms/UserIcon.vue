@@ -1,6 +1,9 @@
 <template>
   <v-list-item-avatar>
     <v-img v-if="src" :src="require('@/assets/image/' + src)" />
+    <v-icon v-else-if="icon" :size="size" :large="size == undefined">
+      {{ icon }}
+    </v-icon>
     <v-icon v-else :size="size" :large="size == undefined">
       mdi-account-circle
     </v-icon>
@@ -11,6 +14,10 @@
 export default {
   props: {
     src: {
+      type: String,
+      default: null
+    },
+    icon: {
       type: String,
       default: null
     },
