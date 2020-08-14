@@ -27,6 +27,12 @@
     <v-app-bar :clipped-left="clipped" fixed app color="#9B003F">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
+      <v-card-actions>
+        <v-card-text class="white--text">
+          <UserIcon :src="user.icon" class="mr-2" />
+          {{ user.name }}
+        </v-card-text>
+      </v-card-actions>
     </v-app-bar>
     <v-content>
       <v-container>
@@ -53,6 +59,9 @@
 
 <script>
 export default {
+  components: {
+    UserIcon: () => import('@/components/atoms/UserIcon')
+  },
   data() {
     return {
       clipped: true,
@@ -73,7 +82,11 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Remollege'
+      title: 'Remollege',
+      user: {
+        name: 'ピコピコ ぽん太郎',
+        icon: 'sampleIcon.png'
+      }
     }
   }
 }
