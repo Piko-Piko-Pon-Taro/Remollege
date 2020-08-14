@@ -24,7 +24,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app color="#9B003F">
+    <v-app-bar :clipped-left="clipped" :color="$const.WASEDA_COLOR" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-card-actions>
