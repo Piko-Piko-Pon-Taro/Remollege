@@ -24,80 +24,80 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `chats`
+-- テーブルの構造 `Chats`
 --
 
-CREATE TABLE `chats` (
+CREATE TABLE `Chats` (
   `id` int(11) NOT NULL,
-  `table_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `tableId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
   `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime NOT NULL,
-  `modified_at` datetime NOT NULL
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `rooms`
+-- テーブルの構造 `Rooms`
 --
 
-CREATE TABLE `rooms` (
+CREATE TABLE `Rooms` (
   `id` int(11) NOT NULL,
-  `building_id` int(11) NOT NULL,
+  `buildingId` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime NOT NULL,
-  `modified_at` datetime NOT NULL
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `tables`
+-- テーブルの構造 `Tables`
 --
 
-CREATE TABLE `tables` (
+CREATE TABLE `Tables` (
   `id` int(11) NOT NULL,
-  `room_id` int(11) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `modified_at` datetime NOT NULL
+  `roomId` int(11) NOT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `tables_users`
+-- テーブルの構造 `TablesUsers`
 --
 
-CREATE TABLE `tables_users` (
+CREATE TABLE `TablesUsers` (
   `id` int(11) NOT NULL,
-  `table_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `modified_at` datetime NOT NULL
+  `tableId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `users`
+-- テーブルの構造 `Users`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE `Users` (
   `id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `img` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `modified_at` datetime NOT NULL
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- テーブルのデータのダンプ `users`
+-- テーブルのデータのダンプ `Users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `img`, `created_at`, `modified_at`) VALUES
+INSERT INTO `Users` (`id`, `name`, `email`, `password`, `img`, `createdAt`, `updatedAt`) VALUES
 (1, 'user', 'turunasi@ruri.waseda.jp', 'userpass', NULL, '2020-08-14 00:00:00', '2020-08-14 00:00:00');
 
 --
@@ -105,33 +105,33 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `img`, `created_at`, `mo
 --
 
 --
--- テーブルのインデックス `chats`
+-- テーブルのインデックス `Chats`
 --
-ALTER TABLE `chats`
+ALTER TABLE `Chats`
   ADD PRIMARY KEY (`id`);
 
 --
--- テーブルのインデックス `rooms`
+-- テーブルのインデックス `Rooms`
 --
-ALTER TABLE `rooms`
+ALTER TABLE `Rooms`
   ADD PRIMARY KEY (`id`);
 
 --
--- テーブルのインデックス `tables`
+-- テーブルのインデックス `Tables`
 --
-ALTER TABLE `tables`
+ALTER TABLE `Tables`
   ADD PRIMARY KEY (`id`);
 
 --
--- テーブルのインデックス `tables_users`
+-- テーブルのインデックス `TablesUsers`
 --
-ALTER TABLE `tables_users`
+ALTER TABLE `TablesUsers`
   ADD PRIMARY KEY (`id`);
 
 --
--- テーブルのインデックス `users`
+-- テーブルのインデックス `Users`
 --
-ALTER TABLE `users`
+ALTER TABLE `Users`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -139,33 +139,33 @@ ALTER TABLE `users`
 --
 
 --
--- テーブルのAUTO_INCREMENT `chats`
+-- テーブルのAUTO_INCREMENT `Chats`
 --
-ALTER TABLE `chats`
+ALTER TABLE `Chats`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- テーブルのAUTO_INCREMENT `rooms`
+-- テーブルのAUTO_INCREMENT `Rooms`
 --
-ALTER TABLE `rooms`
+ALTER TABLE `Rooms`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- テーブルのAUTO_INCREMENT `tables`
+-- テーブルのAUTO_INCREMENT `Tables`
 --
-ALTER TABLE `tables`
+ALTER TABLE `Tables`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- テーブルのAUTO_INCREMENT `tables_users`
+-- テーブルのAUTO_INCREMENT `TablesUsers`
 --
-ALTER TABLE `tables_users`
+ALTER TABLE `TablesUsers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- テーブルのAUTO_INCREMENT `users`
+-- テーブルのAUTO_INCREMENT `Users`
 --
-ALTER TABLE `users`
+ALTER TABLE `Users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
