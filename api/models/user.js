@@ -51,14 +51,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   User.associate = function (models) {
-    // User.hasMany(models.Chat), {
-    //   sourceKey: 'id',
-    //   foreignKey: 'user_id'
-    // };
-    // User.hasMany(models.TableUser), {
-    //   sourceKey: 'id',
-    //   foreignKey: 'user_id'
-    // };
+    User.hasMany(models.Chat, {
+      sourceKey: "id",
+      foreignKey: "userId",
+    });
+    User.hasOne(models.TableUser, {
+      sourceKey: "id",
+      foreignKey: "userId",
+    });
   };
   return User;
 };

@@ -8,6 +8,8 @@ var passport = require("./passport");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+var chatsRouter = require("./routes/chats");
+var roomsRouter = require("./routes/rooms");
 var authRouter = require("./routes/auth");
 
 var app = express();
@@ -24,6 +26,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/chats", chatsRouter);
+app.use("/rooms", roomsRouter);
 app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler

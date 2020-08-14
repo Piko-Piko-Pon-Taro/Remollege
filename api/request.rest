@@ -6,7 +6,7 @@
 ###
 ### ===== Auth ===
 ###
-# @name Sinup
+# @name Signup
 POST {{baseUrl}}/auth/signup/
 Content-Type: application/json
 
@@ -43,3 +43,21 @@ GET {{baseUrl}}/users/all/
 ###
 # @name GetOneUser
 GET {{baseUrl}}/users/1
+### ===== Chat ===
+###
+# @name GetOneChat
+GET {{baseUrl}}/chats/1
+###
+# @name CreateOneChat
+POST {{baseUrl}}/chats/create/
+Content-Type: application/json
+
+{
+    "tableId": 1,
+    "userId": 1,
+    "content": "ヤサイマシマシニンニクマシマシアブラマシマシ",
+}
+###
+### ===== Room ===
+# @name GetOneRoom
+GET {{baseUrl}}/rooms/1
