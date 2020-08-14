@@ -2,7 +2,13 @@
   <section class="container">
     <div>
       <div id="videos-container">
-        <video id="my-video" :width="videoWidth" muted autoplay></video>
+        <video
+          id="my-video"
+          :width="videoWidth"
+          :height="videoHeight"
+          muted
+          autoplay
+        ></video>
       </div>
 
       <div class="main">
@@ -36,13 +42,13 @@
             Your id: <span id="my-id">{{ peerId }}</span>
           </p>
           <p>
-            Connected id:
-            <span id="connected-peer-id">{{ connectedPeerId }}</span>
+            Connected room id:
+            <span id="connected-room-id">{{ connectedRoomId }}</span>
           </p>
-          <h3>コールする</h3>
-          <input v-model="calltoid" placeholder="call id" />
-          <button id="end-call" v-if="isTalking" @click="endCall">End</button>
-          <button id="make-call" v-else @click="makeCall">Call</button>
+          <h3>部屋に参加する</h3>
+          <input v-model="roomId" placeholder="room id" />
+          <button id="end-call" v-if="isTalking" @click="endCall">Leave</button>
+          <button id="make-call" v-else @click="makeCall">Join</button>
         </div>
       </div>
     </div>
@@ -63,25 +69,18 @@ export default {
       selectedVideo: '',
       audios: [],
       videos: [],
-      videoWidth: 200,
+      videoWidth: 320,
+      videoHeight: 240,
       localStream: null,
       peerId: '',
-      connectedPeerId: '',
-      calltoid: '',
+      connectedRoomId: '',
+      roomId: '',
       existingCall: null,
       isTalking: false
     }
   },
   mounted() {
     // デバイスへのアクセス
-
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then(() => {})
-      .catch((err) => {
-        console.error('mediaDevice.getUserMedia() error:', err)
-      })
-
     navigator.mediaDevices.enumerateDevices().then((deviceInfos) => {
       for (let i = 0; i !== deviceInfos.length; ++i) {
         const deviceInfo = deviceInfos[i]
@@ -134,6 +133,16 @@ export default {
           ? { deviceId: { exact: this.selectedVideo } }
           : false
       }
+      if (constraints.video) {
+        constraints.video.width = {
+          min: this.videoWidth,
+          max: this.videoWidth
+        }
+        constraints.video.height = {
+          min: this.videoHeight,
+          max: this.videoHeight
+        }
+      }
 
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
       document.getElementById('my-video').srcObject = stream
@@ -142,7 +151,13 @@ export default {
     },
 
     makeCall() {
-      const call = this.peer.call(this.calltoid, this.localStream)
+      if (!this.roomId) {
+        return
+      }
+      const call = this.peer.joinRoom(this.roomId, {
+        mode: 'sfu',
+        stream: this.localStream
+      })
       this.setupCallEventHandlers(call)
     },
     endCall() {
@@ -155,28 +170,39 @@ export default {
       }
 
       this.existingCall = call
+      this.setupEndCallUI()
+      this.connectedRoomId = call.name
 
       call.on('stream', (stream) => {
-        this.addVideo(call, stream)
-        this.setupEndCallUI()
-        this.connectedPeerId = call.remoteId
+        this.addVideo(stream)
+      })
+
+      call.on('peerLeave', (peerId) => {
+        this.removeVideo(peerId)
       })
 
       call.on('close', () => {
-        this.removeVideo(call.remoteId)
+        this.removeAllVideos()
         this.setupMakeCallUI()
       })
     },
-    addVideo(call, stream) {
+
+    addVideo(stream) {
       const videoDom = document.createElement('video')
-      videoDom.setAttribute('id', call.remoteId)
+      videoDom.setAttribute('id', stream.peerId)
       videoDom.setAttribute('width', this.videoWidth)
+      videoDom.setAttribute('height', this.videoHeight)
       videoDom.autoplay = true
       videoDom.srcObject = stream
       document.getElementById('videos-container').append(videoDom)
     },
+
     removeVideo(peerId) {
       document.getElementById(peerId).remove()
+    },
+
+    removeAllVideos() {
+      document.getElementById('videos-container').innerHTML = '' // 後でオブジェクトの配列を用いたものに変換
     },
 
     setupMakeCallUI() {
