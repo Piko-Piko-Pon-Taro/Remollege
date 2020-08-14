@@ -2,12 +2,11 @@
   <section class="container">
     <div>
       <div id="videos-container">
-        <video id="their-video" width="200" autoplay></video>
-        <video id="my-video" width="200" muted autoplay></video>
+        <video id="my-video" :width="videoWidth" muted autoplay></video>
       </div>
 
       <div class="main">
-        <h2>Nuxt.js + SkyWayのビデオチャット</h2>
+        <h2>ビデオチャット</h2>
         マイク:
         <select v-model="selectedAudio" @change="onChange">
           <option disabled value="">Please select one</option>
@@ -40,7 +39,6 @@
             Connected id:
             <span id="connected-peer-id">{{ connectedPeerId }}</span>
           </p>
-          <p>他のブラウザでこのIDをコールしましょう。</p>
           <h3>コールする</h3>
           <input v-model="calltoid" placeholder="call id" />
           <button id="end-call" v-if="isTalking" @click="endCall">End</button>
@@ -65,6 +63,7 @@ export default {
       selectedVideo: '',
       audios: [],
       videos: [],
+      videoWidth: 200,
       localStream: null,
       peerId: '',
       connectedPeerId: '',
@@ -75,6 +74,7 @@ export default {
   },
   mounted() {
     // デバイスへのアクセス
+
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then(() => {})
@@ -170,7 +170,7 @@ export default {
     addVideo(call, stream) {
       const videoDom = document.createElement('video')
       videoDom.setAttribute('id', call.remoteId)
-      videoDom.setAttribute('width', 200)
+      videoDom.setAttribute('width', this.videoWidth)
       videoDom.autoplay = true
       videoDom.srcObject = stream
       document.getElementById('videos-container').append(videoDom)
