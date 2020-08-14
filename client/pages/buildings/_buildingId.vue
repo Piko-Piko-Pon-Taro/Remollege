@@ -1,12 +1,19 @@
 <template>
-  <v-layout wrap>
-    <RoomCard v-for="room in rooms" :key="room.id" :room="room" class="my-3" />
-  </v-layout>
+  <v-container>
+    <ExitButton :to="'/'" />
+
+    <v-row no-gutters>
+      <v-col v-for="room in rooms" :key="room.id" cols="3">
+        <RoomCard :room="room" class="my-3" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 export default {
   components: {
+    ExitButton: () => import('@/components/atoms/ExitButton'),
     RoomCard: () => import('@/components/organisms/RoomCard')
   },
   asyncData({ store, route, error }) {

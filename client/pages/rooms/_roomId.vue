@@ -1,8 +1,6 @@
 <template>
   <v-container>
-    <v-btn class="ma-2" tile outlined x-large color="success">
-      <v-icon left>mdi-door</v-icon> EXIT
-    </v-btn>
+    <ExitButton :to="'/buildings/' + buildingId" />
     <TeacherCard :teacher="teacher" class="my-5" />
     <v-row no-gutters>
       <v-col v-for="k in 15" :key="k" cols="4">
@@ -23,6 +21,7 @@
 <script>
 export default {
   components: {
+    ExitButton: () => import('@/components/atoms/ExitButton'),
     TeacherCard: () => import('@/components/organisms/TeacherCard'),
     TableCard: () => import('@/components/organisms/TableCard')
   },
@@ -42,6 +41,7 @@ export default {
   },
   asyncData({ store, route, error }) {
     const roomId = route.params.roomId
+    const buildingId = 1 // あとでDBから取ってくる
     const tables = Array(16)
       .fill(0)
       .map((value, index) => {
@@ -62,7 +62,7 @@ export default {
           }
         }
       })
-    return { roomId, tables }
+    return { buildingId, roomId, tables }
   },
   methods: {
     sitDown(value) {
