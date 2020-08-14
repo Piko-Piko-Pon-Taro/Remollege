@@ -82,7 +82,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Remollege',
+      title: 'Recollege',
       user: {
         name: 'ピコピコ ぽん太郎',
         icon: 'sampleIcon.png'
