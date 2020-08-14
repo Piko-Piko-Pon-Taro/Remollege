@@ -25,7 +25,9 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
-    "nuxt": "^2.14.1"
+    "@nuxtjs/dotenv": "^1.4.1",
+    "nuxt": "^2.14.1",
+    "skyway-js": "^3.0.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^1.0.1",
