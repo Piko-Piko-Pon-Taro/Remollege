@@ -91,3 +91,6 @@ sw.*
 
 # ignore package-lock.json
 package-lock.json
+
+# ignore .gcloudignore
+.gcloudignore
