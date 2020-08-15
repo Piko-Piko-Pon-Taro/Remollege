@@ -2,7 +2,7 @@
   <v-container>
     <ExitButton :to="'/buildings/' + buildingId" />
     <TeacherCard :teacher="teacher" class="my-5" />
-    <v-card color="#aaa">
+    <v-card :color="$const.BASE_COLOR2">
       <v-row no-gutters>
         <v-col v-for="k in 15" :key="k" cols="4">
           <TableCard

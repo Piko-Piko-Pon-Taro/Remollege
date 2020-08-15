@@ -6,6 +6,7 @@
       :clipped="clipped"
       fixed
       app
+      dark
     >
       <v-list>
         <v-list-item
@@ -24,7 +25,13 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" :color="$const.MAIN_COLOR" fixed app>
+    <v-app-bar
+      :clipped-left="clipped"
+      :color="$const.MAIN_COLOR"
+      fixed
+      app
+      dark
+    >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-card-actions>
@@ -51,7 +58,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-footer :fixed="fixed" app>
+    <v-footer :fixed="fixed" dark app>
       <span>&copy; 2020 PikoPikoPonTaro</span>
     </v-footer>
   </v-app>
