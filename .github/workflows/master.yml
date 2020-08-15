@@ -35,8 +35,9 @@ jobs:
     - name: GAE deploy
       run: |
           cd client
-          gcloud app deploy app.yaml
+          gcloud app deploy app.yaml --project 'pikopikopon1'
           cd ../api
-          gcloud app deploy app.yaml
+          gcloud app deploy app.yaml --project 'pikopikopon1'
+          cd ..
       env:
           CI: true
