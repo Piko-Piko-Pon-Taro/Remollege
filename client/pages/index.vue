@@ -1,12 +1,11 @@
 <template>
-  <v-layout wrap>
-    <BuildingCard
-      v-for="building in buildings"
-      :key="building.id"
-      :building="building"
-      class="my-3"
-    />
-  </v-layout>
+  <v-container>
+    <v-row no-gutters>
+      <v-col v-for="building in buildings" :key="building.id" cols="3">
+        <BuildingCard :building="building" class="my-3" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>

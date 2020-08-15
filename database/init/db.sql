@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: db
--- 生成日時: 2020 年 8 月 14 日 08:32
+-- 生成日時: 2020 年 8 月 15 日 03:53
 -- サーバのバージョン： 5.7.31
 -- PHP のバージョン: 7.4.8
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- データベース: `remollege`
 --
+CREATE DATABASE IF NOT EXISTS `remollege` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `remollege`;
 
 -- --------------------------------------------------------
 
@@ -36,6 +38,17 @@ CREATE TABLE `Chats` (
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- テーブルのデータのダンプ `Chats`
+--
+
+INSERT INTO `Chats` (`id`, `tableId`, `userId`, `content`, `createdAt`, `updatedAt`) VALUES
+(1, 1, 1, 'ぴこぴこポンはおいしいね！', '2020-08-14 00:00:00', '2020-08-14 00:00:00'),
+(2, 1, 4, 'ヤサイニンニクアブラ', '2020-08-14 13:57:57', '2020-08-14 13:57:57'),
+(3, 1, 1, 'ヤサイマシマシニンニクマシマシアブラマシマシ', '2020-08-14 13:58:51', '2020-08-14 13:58:51'),
+(4, 1, 1, 'ヤサイマシマシニンニクマシマシアブラマシマシ', '2020-08-14 15:21:11', '2020-08-14 15:21:11'),
+(5, 1, 1, 'ヤサイマシマシニンニクマシマシアブラマシマシ', '2020-08-14 17:10:08', '2020-08-14 17:10:08');
+
 -- --------------------------------------------------------
 
 --
@@ -50,6 +63,15 @@ CREATE TABLE `Rooms` (
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- テーブルのデータのダンプ `Rooms`
+--
+
+INSERT INTO `Rooms` (`id`, `buildingId`, `name`, `createdAt`, `updatedAt`) VALUES
+(1, 1, 'ピコピコポン西早稲田店', '2020-08-14 00:00:00', '2020-08-14 00:00:00'),
+(2, 1, 'ピコピコポン57号館店', '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(3, 1, 'ピコピコポン63号館店', '2020-08-15 00:00:00', '2020-08-15 00:00:00');
+
 -- --------------------------------------------------------
 
 --
@@ -62,6 +84,21 @@ CREATE TABLE `Tables` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- テーブルのデータのダンプ `Tables`
+--
+
+INSERT INTO `Tables` (`id`, `roomId`, `createdAt`, `updatedAt`) VALUES
+(1, 1, '2020-08-14 00:00:00', '2020-08-14 00:00:00'),
+(2, 1, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(3, 1, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(4, 2, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(5, 2, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(6, 3, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(7, 3, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(8, 3, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(9, 2, '2020-08-15 00:00:00', '2020-08-15 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -76,6 +113,19 @@ CREATE TABLE `TablesUsers` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- テーブルのデータのダンプ `TablesUsers`
+--
+
+INSERT INTO `TablesUsers` (`id`, `tableId`, `userId`, `createdAt`, `updatedAt`) VALUES
+(1, 1, 1, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(2, 2, 2, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(3, 3, 3, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(7, 1, 4, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(8, 2, 5, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(9, 3, 6, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(10, 4, 7, '2020-08-15 00:00:00', '2020-08-15 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -94,11 +144,17 @@ CREATE TABLE `Users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- テーブルのデータのダンプ `Users` (password: userpass)
+-- テーブルのデータのダンプ `Users`
 --
 
 INSERT INTO `Users` (`id`, `name`, `email`, `password`, `img`, `createdAt`, `updatedAt`) VALUES
-(1, 'user', 'turunasi@ruri.waseda.jp', '$2b$10$o/StVm9I6dRD7SSQNsAcTOvYGaigAsFtdHZuMfRiV29rxihp2CodS', NULL, '2020-08-14 00:00:00', '2020-08-14 00:00:00');
+(1, 'user', 'turunasi@ruri.waseda.jp', 'userpass', NULL, '2020-08-14 00:00:00', '2020-08-14 00:00:00'),
+(2, '店長', 'pikopiko@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(3, '関くん', 'pikopiko@gmail.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(4, '西井', 'nishii@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(5, '井上', 'inoue@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(6, '平', 'taira@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(7, '渡邉', 'watanabe@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00');
 
 --
 -- ダンプしたテーブルのインデックス
@@ -142,31 +198,31 @@ ALTER TABLE `Users`
 -- テーブルのAUTO_INCREMENT `Chats`
 --
 ALTER TABLE `Chats`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- テーブルのAUTO_INCREMENT `Rooms`
 --
 ALTER TABLE `Rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- テーブルのAUTO_INCREMENT `Tables`
 --
 ALTER TABLE `Tables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- テーブルのAUTO_INCREMENT `TablesUsers`
 --
 ALTER TABLE `TablesUsers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- テーブルのAUTO_INCREMENT `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

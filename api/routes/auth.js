@@ -167,7 +167,7 @@ router.get(
   async (req, res) => {
     try {
       const user = await User.scope("auth").findByPk(req.user.id);
-      res.json(user);
+      res.json({ user });
     } catch (e) {
       res.json(e);
     }

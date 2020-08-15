@@ -30,7 +30,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [{ src: '~plugins/const.js' }],
+  plugins: [{ src: '~plugins/const.js' }, { src: '~plugins/validate.js' }],
   /*
    ** Nuxt.js dev-modules
    */
@@ -58,7 +58,7 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,

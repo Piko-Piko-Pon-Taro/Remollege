@@ -1,11 +1,12 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
       :clipped="clipped"
       fixed
       app
+      dark
     >
       <v-list>
         <v-list-item
@@ -24,7 +25,13 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" :color="$const.WASEDA_COLOR" fixed app>
+    <v-app-bar
+      :clipped-left="clipped"
+      :color="$const.MAIN_COLOR"
+      fixed
+      app
+      dark
+    >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-card-actions>
@@ -34,11 +41,11 @@
         </v-card-text>
       </v-card-actions>
     </v-app-bar>
-    <v-content>
+    <v-main :style="'background-color: ' + $const.BASE_COLOR + ';'">
       <v-container>
         <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
     <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
       <v-list>
         <v-list-item @click.native="right = !right">
@@ -51,7 +58,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-footer :fixed="fixed" app>
+    <v-footer :fixed="fixed" dark app>
       <span>&copy; 2020 PikoPikoPonTaro</span>
     </v-footer>
   </v-app>
@@ -82,10 +89,10 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Recollege',
+      title: 'Remollege',
       user: {
         name: 'ピコピコ ぽん太郎',
-        icon: 'sampleIcon.png'
+        icon: 'sampleIcon1.jpg'
       }
     }
   }
