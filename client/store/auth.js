@@ -82,6 +82,5 @@ export const actions = {
     localStorage.removeItem('token')
     localStorage.removeItem('expiryTimeMs')
     localStorage.removeItem('refreshToken')
-    this.$router.replace('/login')
   }
 }
