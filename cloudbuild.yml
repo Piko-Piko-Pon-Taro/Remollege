@@ -1,4 +1,0 @@
- steps:
-# Build docker-compose container
- - name: 'gcr.io/$PROJECT_ID/docker-compose'
-   args: ['up', '-d']

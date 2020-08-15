@@ -1,0 +1,4 @@
+application: remollege
+service: api
+version: 0.1
+runtime: nodejs12
