@@ -23,6 +23,7 @@
         <v-toolbar-title
           v-else-if="types.active == 'signup'"
           :style="'margin: auto;font-size: 16px;'"
+          class="display-1"
         >
           Remollegeへサインアップ
         </v-toolbar-title>
