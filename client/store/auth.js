@@ -13,21 +13,31 @@ export const mutations = {
 }
 
 export const actions = {
-  async signup({ commit }, { name, email, password }) {
-    const { token, refreshToken } = await this.$api.post('/auth/signup/', {
-      email,
-      password,
-      name
-    })
-    commit('updateToken', token)
-    console.log(refreshToken)
+  signup({ commit }, { name, email, password }) {
+    const vm = this
+    this.$api
+      .post('/auth/signup/', {
+        name,
+        email,
+        password
+      })
+      .then((res) => {
+        console.log(res)
+        commit('updateToken', res.data.token)
+        vm.$router.push('/')
+      })
   },
-  async login({ commit }, { email, password }) {
-    const { token, refreshToken } = await this.$api.post('/auth/login/', {
-      email,
-      password
-    })
-    commit('updateToken', token)
-    console.log(refreshToken)
+  login({ commit }, { email, password }) {
+    const vm = this
+    this.$api
+      .post('/auth/login/', {
+        email,
+        password
+      })
+      .then((res) => {
+        console.log(res)
+        commit('updateToken', res.data.token)
+        vm.$router.push('/')
+      })
   }
 }
