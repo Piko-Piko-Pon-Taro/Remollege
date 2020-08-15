@@ -1,6 +1,8 @@
 import Vue from 'vue'
 
 Vue.prototype.$const = {
-  WASEDA_COLOR: '#9B003F',
-  MAIN_COLOR: '#5C0025'
+  MAIN_COLOR: '#bd004d',
+  BASE_COLOR: '#f6f5f2',
+  BASE_COLOR2: '#f6f5f2',
+  ACCENT_COLOR: 'orange'
 }
