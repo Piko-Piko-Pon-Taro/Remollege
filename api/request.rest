@@ -1,19 +1,19 @@
 @baseUrl = http://localhost:3000
-@email = turunasi@ruri.waseda.jp
-@password = userpass
-@token = {{Login.response.body.$.token}}
-@refreshToken = {{Login.response.body.$.refreshToken}}
+@email = pikopikopon@example.com
+@password = pikopikopon
+@token = {{Signup.response.body.$.token}}
+@refreshToken = {{Signup.response.body.$.refreshToken}}
 ###
-### ===== Auth ===
+### ===== Auth =====
 ###
-# @name Sinup
+# @name Signup
 POST {{baseUrl}}/auth/signup/
 Content-Type: application/json
 
 {
   "name": "ピコピコぽん太郎",
-  "email": "pikopikopontaro@example.com",
-  "password": "pikopikopontaro"
+  "email": "pikopikopon@example.com",
+  "password": "pikopikopon"
 }
 ###
 # @name Login
@@ -36,10 +36,38 @@ Authorization: Bearer {{refreshToken}}
 GET {{baseUrl}}/auth/user/
 Authorization: Bearer {{token}}
 ###
-### ===== User ===
+### ===== User =====
 ###
-# @name GetAllUser
+# @name GetAllUsers
 GET {{baseUrl}}/users/all/
 ###
 # @name GetOneUser
 GET {{baseUrl}}/users/1
+###
+### ===== Chat =====
+###
+# @name GetOneChat
+GET {{baseUrl}}/chats/1
+###
+# @name CreateOneChat
+POST {{baseUrl}}/chats/create/
+Content-Type: application/json
+
+{
+  "tableId": 1,
+  "userId": 1,
+  "content": "ヤサイマシマシニンニクマシマシアブラマシマシ"
+}
+###
+### ===== Room =====
+###
+# @name GetRoomTables
+GET {{baseUrl}}/rooms/1/tables/
+###
+# @name GetRoomActiveUsers
+GET {{baseUrl}}/rooms/1/users/
+###
+### ===== Table =====
+###
+# @name GetTableChats
+GET {{baseUrl}}/tables/1/chats/
