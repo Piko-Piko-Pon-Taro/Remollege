@@ -17,7 +17,7 @@ jobs:
       run: echo 'BURBURIBURIBURIBURIBURIBURI'
 
     - name: GAE deploy
-        run:|
+      run: |
           echo 'GAEにdeployすりゅ!'
           gcloud auth activate-service-account --key-file key.json
           cd client
