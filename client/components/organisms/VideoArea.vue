@@ -1,45 +1,98 @@
 <template>
-  <v-card :color="$const.MAIN_COLOR" class="mx-auto" dark>
+  <v-card :color="$const.BASE_COLOR" class="mx-auto pa-5 elevation-0">
     <div id="videos-container">
-      <VideoCard
-        v-if="localStream"
-        :id="'self'"
-        :videoWidth="videoWidth"
-        :videoHeight="videoHeight"
-        :name="user.name"
-        :stream="localStream"
-        :muted="true"
-      />
-      <VideoCard
+      <v-row no-gutters>
+        <v-col v-for="n in 5" :key="n" cols="2">
+          <VideoCard
+            v-if="localStream"
+            :id="'self'"
+            :videoWidth="videoWidth"
+            :videoHeight="videoHeight"
+            :name="user.name"
+            :stream="localStream"
+            :muted="true"
+            class="my-3"
+          />
+          <!-- <VideoCard
         v-for="peerStream in peerStreams"
         :id="peerStream.peerId"
         :width="videoWidth"
         :height="videoHeight"
         :stream="peerStream"
         :muted="false"
-      />
+      /> -->
+        </v-col>
+      </v-row>
     </div>
+
+    <v-bottom-navigation
+      :value="activeBtn"
+      :color="$const.MAIN_COLOR"
+      :background-color="$const.BASE_COLOR2"
+      horizontal
+    >
+      <v-btn>
+        <span>Video</span>
+        <v-icon>mdi-video</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Mic</span>
+        <v-icon>mdi-microphone</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Speaker</span>
+        <v-icon>mdi-volume-high</v-icon>
+      </v-btn>
+
+      <v-dialog v-model="dialog" persistent max-width="600px">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn v-bind="attrs" v-on="on">
+            <span>settings</span>
+            <v-icon>mdi-cog</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">Settings</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-select
+                    v-model="selectedAudio"
+                    @change="onChange"
+                    :items="audioDevices"
+                    label="Select Audio"
+                    outlined
+                  ></v-select>
+                </v-col>
+                <v-col cols="12">
+                  <v-select
+                    v-model="selectedVideo"
+                    @change="onChange"
+                    :items="videoDevices"
+                    label="Select Camera"
+                    outlined
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn @click="dialog = false" :color="$const.ACCENT_COLOR" text
+              >Close</v-btn
+            >
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-bottom-navigation>
 
     <div class="UI">
       <p>ルーム名:{{ getCurrentRoom }}</p>
-      マイク:
-      <v-select
-        v-model="selectedAudio"
-        @change="onChange"
-        :items="audioDevices"
-        :background-color="$const.ACCENT_COLOR"
-        label="Select Audio"
-        solo
-      ></v-select>
-      カメラ:
-      <v-select
-        v-model="selectedVideo"
-        @change="onChange"
-        :items="videoDevices"
-        :background-color="$const.ACCENT_COLOR"
-        label="Select Camera"
-        solo
-      ></v-select>
 
       <div>
         <template v-if="isTalking">
@@ -79,6 +132,8 @@ export default {
   },
   data() {
     return {
+      dialog: false,
+      activeBtn: 1,
       APIKey: process.env.SKYWAY_API_KEY,
       selectedAudio: '',
       selectedVideo: '',

@@ -1,7 +1,7 @@
 <template>
   <v-card
-    :color="$const.MAIN_COLOR"
-    class="mx-auto"
+    :color="$const.BASE_COLOR"
+    class="mx-auto elevation-0"
     max-width="300"
     max-height="260"
     dark
