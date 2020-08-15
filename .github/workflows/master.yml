@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+
+    - name: take a shit
+      run: echo 'BURBURIBURIBURIBURIBURIBURI'
+
+    - name: GAE deploy
+        run:|
+          echo 'GAEにdeployすりゅ!'
+          gcloud auth activate-service-account --key-file key.json
+          cd client
+          gcloud app deploy
+          cd ../api
+          gcloud app deploy
