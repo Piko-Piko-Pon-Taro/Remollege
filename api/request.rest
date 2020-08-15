@@ -4,7 +4,7 @@
 @token = {{Login.response.body.$.token}}
 @refreshToken = {{Login.response.body.$.refreshToken}}
 ###
-### ===== Auth ===
+### ===== Auth =====
 ###
 # @name Signup
 POST {{baseUrl}}/auth/signup/
@@ -36,14 +36,14 @@ Authorization: Bearer {{refreshToken}}
 GET {{baseUrl}}/auth/user/
 Authorization: Bearer {{token}}
 ###
-### ===== User ===
+### ===== User =====
 ###
 # @name GetAllUser
 GET {{baseUrl}}/users/all/
 ###
 # @name GetOneUser
 GET {{baseUrl}}/users/1
-### ===== Chat ===
+### ===== Chat =====
 ###
 # @name GetOneChat
 GET {{baseUrl}}/chats/1
@@ -58,6 +58,6 @@ Content-Type: application/json
     "content": "ヤサイマシマシニンニクマシマシアブラマシマシ",
 }
 ###
-### ===== Room ===
+### ===== Room =====
 # @name GetOneRoom
 GET {{baseUrl}}/rooms/1

@@ -47,6 +47,14 @@ module.exports = (sequelize, DataTypes) => {
         auth: () => {
           return {};
         },
+        forChat: () => {
+          return {
+            attributes: [
+              ["name", "userName"],
+              ["img", "userImg"],
+            ],
+          };
+        },
       },
     }
   );

@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
           return {
             include: [
               {
-                model: sequelize.models.Chat,
+                model: sequelize.models.Chat("withUsers"),
                 order: [["createdAt", "ASC"]],
               },
             ],
