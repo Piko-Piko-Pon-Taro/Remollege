@@ -51,13 +51,52 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    // Doc: https://nuxt-socket-io.netlify.app/
+    'nuxt-socket-io'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
   axios: {},
+  /*
+   ** io module configuration
+   ** See https://nuxt-socket-io.netlify.app/configuration
+   */
+  io: {
+    sockets: [
+      {
+        name: 'api',
+        url: 'http://localhost:3000',
+        // url: 'https://nuxt-socket-io.herokuapp.com',
+        default: true,
+        vuex: {
+          actions: [
+            {
+              // When key is received,
+              // dispatch action value
+              newMessage: 'SOCKET_newMessage',
+              updateUsers: 'SOCKET_updateUsers'
+            }
+          ]
+          // emitBacks: [
+          //   // When "examples/sample" state changes,
+          //   // emit back the event "examples/sample"
+          //   'examples/sample',
+          //   {
+          //     // When "examples/sample2" state changes,
+          //     // emit back the event "sample2"
+          //     'examples/sample2': 'sample2'
+          //   },
+          //   // Alternatively, the previous entry
+          //   // could be written with the arrow format:
+          //   'examples/sample2 <-- sample2'  // S/A
+          // ]
+        }
+      }
+    ]
+  },
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
