@@ -1,15 +1,28 @@
 <template>
-  <v-btn
-    :to="to"
-    :color="$const.ACCENT_COLOR"
-    @click.stop="click"
-    class="ma-2"
-    nuxt
-    depressed
-  >
-    <v-icon v-if="icon" left>{{ icon }}</v-icon>
-    {{ text }}
-  </v-btn>
+  <div class="ma-0 pa-0">
+    <v-btn
+      v-if="to"
+      :to="to"
+      :color="$const.ACCENT_COLOR"
+      @click.stop="click"
+      class="ma-2"
+      nuxt
+      depressed
+    >
+      <v-icon v-if="icon" left>{{ icon }}</v-icon>
+      {{ text }}
+    </v-btn>
+    <v-btn
+      v-else="to"
+      :color="$const.ACCENT_COLOR"
+      @click.stop="click"
+      class="ma-2"
+      depressed
+    >
+      <v-icon v-if="icon" left>{{ icon }}</v-icon>
+      {{ text }}
+    </v-btn>
+  </div>
 </template>
 
 <script>
@@ -20,7 +33,7 @@ export default {
       default: null
     },
     to: {
-      type: Object,
+      type: String,
       default: null
     },
     text: {

@@ -34,11 +34,11 @@
         </v-card-text>
       </v-card-actions>
     </v-app-bar>
-    <v-content :style="'background-color: ' + $const.BASE_COLOR + ';'">
+    <v-main :style="'background-color: ' + $const.BASE_COLOR + ';'">
       <v-container>
         <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
     <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
       <v-list>
         <v-list-item @click.native="right = !right">
