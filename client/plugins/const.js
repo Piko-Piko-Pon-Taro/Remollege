@@ -9,12 +9,6 @@ Vue.prototype.$const = {
     nameMax: 50,
     emailMax: 255,
     passwordMin: 8,
-    passwordMax: 16,
-    profileMax: 200,
-    professionMax: 20,
-    titleMax: 255,
-    priceMin: 50,
-    priceMax: 10000,
-    imageSizeMax: 5 // MB
+    passwordMax: 16
   }
 }

@@ -14,14 +14,7 @@ Vue.prototype.$validate = {
     const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return pattern.test(value) || '有効なメールアドレスではありません'
   },
-  isInt: (value) =>
-    Number.isInteger(Number(value)) || '整数値を入力してください',
   range: (value, minValue, maxValue) =>
     (value >= minValue && value <= maxValue) ||
-    minValue + '以上' + maxValue + '以下の範囲で入力してください',
-  imageSizeMax: (value, sizeMax) =>
-    !value ||
-    !value.size ||
-    value.size <= sizeMax * 1000000 ||
-    '画像は' + sizeMax + 'MB以下にしてください'
+    minValue + '以上' + maxValue + '以下の範囲で入力してください'
 }
