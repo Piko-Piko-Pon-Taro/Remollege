@@ -1,7 +1,6 @@
-export default function({ store, redirect }) {
-  console.log(store.getters['auth/token'])
+export default function({ store, route, redirect }) {
   // ユーザーが認証されていないとき
-  if (!store.getters['auth/token']) {
+  if (!store.getters['auth/token'] && route.name !== 'login') {
     return redirect('/login')
   }
 }

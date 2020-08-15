@@ -14,6 +14,7 @@
           v-show="item.afterAuth === isAuthenticated"
           :key="i"
           :to="item.to"
+          @click="logout"
           router
           exact
         >
@@ -85,7 +86,6 @@ export default {
         {
           icon: 'mdi-logout',
           title: 'Logout',
-          to: '/login',
           afterAuth: true
         },
         {
@@ -108,6 +108,11 @@ export default {
   computed: {
     isAuthenticated() {
       return this.$store.getters['auth/token'] !== null
+    }
+  },
+  methods: {
+    async logout() {
+      await this.$store.dispatch('auth/logout')
     }
   }
 }
