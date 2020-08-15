@@ -17,7 +17,6 @@
           :height="videoHeight"
           :srcObject.prop="peerStream"
           class="peer-video"
-          muted
           autoplay
         />
       </div>
@@ -91,23 +90,35 @@ export default {
   },
   mounted() {
     // 利用可能デバイスの取得
-    navigator.mediaDevices.enumerateDevices().then((deviceInfos) => {
-      for (let i = 0; i !== deviceInfos.length; ++i) {
-        const deviceInfo = deviceInfos[i]
-        if (deviceInfo.kind === 'audioinput') {
-          this.audioDevices.push({
-            text:
-              deviceInfo.label || `Microphone ${this.audioDevices.length + 1}`,
-            value: deviceInfo.deviceId
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then(() =>
+        navigator.mediaDevices
+          .enumerateDevices()
+          .then((deviceInfos) => {
+            for (let i = 0; i !== deviceInfos.length; ++i) {
+              const deviceInfo = deviceInfos[i]
+              if (deviceInfo.kind === 'audioinput') {
+                this.audioDevices.push({
+                  text:
+                    deviceInfo.label ||
+                    `Microphone ${this.audioDevices.length}`,
+                  value: deviceInfo.deviceId
+                })
+              } else if (deviceInfo.kind === 'videoinput') {
+                this.videoDevices.push({
+                  text:
+                    deviceInfo.label || `Camera  ${this.videoDevices.length}`,
+                  value: deviceInfo.deviceId
+                })
+              }
+            }
           })
-        } else if (deviceInfo.kind === 'videoinput') {
-          this.videoDevices.push({
-            text: deviceInfo.label || `Camera  ${this.videoDevices.length - 1}`,
-            value: deviceInfo.deviceId
+          .catch(function(error) {
+            console.error('mediaDevices.enumerateDevices() error:', error)
           })
-        }
-      }
-    })
+      )
+      .catch((err) => alert(`${err.name} ${err.message}`))
 
     this.peer = new Peer({
       key: this.APIKey,
