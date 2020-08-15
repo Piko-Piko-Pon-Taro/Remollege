@@ -1,15 +1,15 @@
 <template>
   <v-card :color="$const.MAIN_COLOR" class="mx-auto" max-width="400" dark>
     <v-img
-      :src="require('@/assets/image/building' + building.num + '.png')"
+      :src="require('@/assets/image/classroom1.jpg')"
       class="white--text align-end"
       height="200px"
     />
 
-    <v-card-title class="pb-0">{{ building.num }}号館</v-card-title>
+    <v-card-title class="pb-0">{{ room.name }}教室</v-card-title>
 
     <v-card-actions>
-      <ActionButton :to="'/buildings/' + building.id" text="ENTER" />
+      <ActionButton :to="'/rooms/' + room.id" text="ENTER" />
     </v-card-actions>
   </v-card>
 </template>
@@ -20,7 +20,7 @@ export default {
     ActionButton: () => import('@/components/atoms/ActionButton')
   },
   props: {
-    building: {
+    room: {
       type: Object,
       default: null
     }
