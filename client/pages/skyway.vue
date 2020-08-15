@@ -17,7 +17,6 @@
           :height="videoHeight"
           :srcObject.prop="peerStream"
           class="peer-video"
-          muted
           autoplay
         />
       </div>
@@ -56,8 +55,20 @@
           </p>
           <h3>部屋に参加する</h3>
           <input v-model="roomId" placeholder="room id" />
-          <button id="end-call" v-if="isTalking" @click="endCall">Leave</button>
-          <button id="make-call" v-else @click="makeCall">Join</button>
+          <template v-if="isTalking">
+            <button id="end-call" @click="endCall">Leave</button>
+
+            <button v-if="isMute" @click="toggleMute">unmute</button>
+            <button v-else @click="toggleMute">mute</button>
+
+            <button v-if="isCamOn" @click="toggleCamera">
+              turn camera off
+            </button>
+            <button v-else @click="toggleCamera">turn camera on</button>
+          </template>
+          <template v-else>
+            <button id="make-call" @click="makeCall">Join</button>
+          </template>
         </div>
       </div>
     </div>
@@ -86,28 +97,42 @@ export default {
       connectedRoomId: '',
       roomId: '',
       existingCall: null,
-      isTalking: false
+      isTalking: false,
+      isMute: false,
+      isCamOn: true
     }
   },
   mounted() {
     // 利用可能デバイスの取得
-    navigator.mediaDevices.enumerateDevices().then((deviceInfos) => {
-      for (let i = 0; i !== deviceInfos.length; ++i) {
-        const deviceInfo = deviceInfos[i]
-        if (deviceInfo.kind === 'audioinput') {
-          this.audioDevices.push({
-            text:
-              deviceInfo.label || `Microphone ${this.audioDevices.length + 1}`,
-            value: deviceInfo.deviceId
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then(() =>
+        navigator.mediaDevices
+          .enumerateDevices()
+          .then((deviceInfos) => {
+            for (let i = 0; i !== deviceInfos.length; ++i) {
+              const deviceInfo = deviceInfos[i]
+              if (deviceInfo.kind === 'audioinput') {
+                this.audioDevices.push({
+                  text:
+                    deviceInfo.label ||
+                    `Microphone ${this.audioDevices.length}`,
+                  value: deviceInfo.deviceId
+                })
+              } else if (deviceInfo.kind === 'videoinput') {
+                this.videoDevices.push({
+                  text:
+                    deviceInfo.label || `Camera  ${this.videoDevices.length}`,
+                  value: deviceInfo.deviceId
+                })
+              }
+            }
           })
-        } else if (deviceInfo.kind === 'videoinput') {
-          this.videoDevices.push({
-            text: deviceInfo.label || `Camera  ${this.videoDevices.length - 1}`,
-            value: deviceInfo.deviceId
+          .catch(function(error) {
+            console.error('mediaDevices.enumerateDevices() error:', error)
           })
-        }
-      }
-    })
+      )
+      .catch((err) => alert(`${err.name} ${err.message}`))
 
     this.peer = new Peer({
       key: this.APIKey,
@@ -218,6 +243,21 @@ export default {
 
     setupEndCallUI() {
       this.isTalking = true
+    },
+
+    toggleMute() {
+      if (this.localStream) {
+        const audioTrack = this.localStream.getAudioTracks()[0]
+        audioTrack.enabled = !audioTrack.enabled
+        this.isMute = !audioTrack.enabled
+      }
+    },
+    toggleCamera() {
+      if (this.localStream) {
+        const videoTrack = this.localStream.getVideoTracks()[0]
+        videoTrack.enabled = !videoTrack.enabled
+        this.isCamOn = videoTrack.enabled
+      }
     }
   }
 }
