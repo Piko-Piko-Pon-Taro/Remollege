@@ -1,4 +1,0 @@
-application: remollege
-service: client
-version: 0.1
-runtime: nodejs12
