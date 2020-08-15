@@ -34,6 +34,7 @@ export default {
    */
   plugins: [
     { src: '~plugins/const.js' },
+    { src: '~plugins/init.js', ssr: false },
     { src: '~plugins/validate.js' },
     { src: '~plugins/api.js' }
   ],
@@ -126,5 +127,8 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
+  },
+  router: {
+    middleware: 'auth'
   }
 }
