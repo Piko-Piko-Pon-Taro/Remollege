@@ -33,6 +33,7 @@
     "@nuxtjs/axios": "^5.12.1",
     "@nuxtjs/dotenv": "^1.4.1",
     "nuxt": "^2.14.1",
+    "nuxt-socket-io": "^1.1.8",
     "skyway-js": "^3.0.2"
   },
   "devDependencies": {
