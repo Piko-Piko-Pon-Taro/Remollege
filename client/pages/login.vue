@@ -159,28 +159,13 @@ export default {
       if (!this.$refs.userInputs.validate()) {
         this.success = false
       }
-      this.$api
-        .post('/auth/login/', {
-          email: this.user.email,
-          password: this.user.password
-        })
-        .then((response) => {
-          console.log(response)
-        })
+      this.$store.dispatch('auth/login', this.user)
     },
     signup() {
       if (!this.$refs.userInputs.validate()) {
         this.success = false
       }
-      this.$api
-        .post('/auth/signup/', {
-          email: this.user.email,
-          password: this.user.password,
-          name: this.user.name
-        })
-        .then((response) => {
-          console.log(response)
-        })
+      this.$store.dispatch('auth/signup', this.user)
     },
     toggleType() {
       const tmp = this.types.active
