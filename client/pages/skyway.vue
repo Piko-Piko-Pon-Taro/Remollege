@@ -8,38 +8,47 @@
           :height="videoHeight"
           muted
           autoplay
-        ></video>
+        />
+        <video
+          v-for="peerStream in peerStreams"
+          :id="peerStream.peerId"
+          :key="peerStream.peerId"
+          :width="videoWidth"
+          :height="videoHeight"
+          :srcObject.prop="peerStream"
+          class="peer-video"
+          muted
+          autoplay
+        />
       </div>
 
       <div class="main">
         <h2>ビデオチャット</h2>
         マイク:
         <select v-model="selectedAudio" @change="onChange">
-          <option disabled value="">Please select one</option>
+          <option disabled value>Please select one</option>
           <option
-            v-for="(audio, key, index) in audios"
-            v-bind:key="index"
+            v-for="(audio, key, index) in audioDevices"
+            :key="index"
             :value="audio.value"
+            >{{ audio.text }}</option
           >
-            {{ audio.text }}
-          </option>
         </select>
-
         カメラ:
         <select v-model="selectedVideo" @change="onChange">
-          <option disabled value="">Please select one</option>
+          <option disabled value>Please select one</option>
           <option
-            v-for="(video, key, index) in videos"
-            v-bind:key="index"
+            v-for="(video, key, index) in videoDevices"
+            :key="index"
             :value="video.value"
+            >{{ video.text }}</option
           >
-            {{ video.text }}
-          </option>
         </select>
 
         <div>
           <p>
-            Your id: <span id="my-id">{{ peerId }}</span>
+            Your id:
+            <span id="my-id">{{ peerId }}</span>
           </p>
           <p>
             Connected room id:
@@ -67,10 +76,11 @@ export default {
       APIKey: process.env.SKYWAY_API_KEY,
       selectedAudio: '',
       selectedVideo: '',
-      audios: [],
-      videos: [],
+      audioDevices: [],
+      videoDevices: [],
       videoWidth: 320,
       videoHeight: 240,
+      peerStreams: [],
       localStream: null,
       peerId: '',
       connectedRoomId: '',
@@ -80,18 +90,19 @@ export default {
     }
   },
   mounted() {
-    // デバイスへのアクセス
+    // 利用可能デバイスの取得
     navigator.mediaDevices.enumerateDevices().then((deviceInfos) => {
       for (let i = 0; i !== deviceInfos.length; ++i) {
         const deviceInfo = deviceInfos[i]
         if (deviceInfo.kind === 'audioinput') {
-          this.audios.push({
-            text: deviceInfo.label || `Microphone ${this.audios.length + 1}`,
+          this.audioDevices.push({
+            text:
+              deviceInfo.label || `Microphone ${this.audioDevices.length + 1}`,
             value: deviceInfo.deviceId
           })
         } else if (deviceInfo.kind === 'videoinput') {
-          this.videos.push({
-            text: deviceInfo.label || `Camera  ${this.videos.length - 1}`,
+          this.videoDevices.push({
+            text: deviceInfo.label || `Camera  ${this.videoDevices.length - 1}`,
             value: deviceInfo.deviceId
           })
         }
@@ -146,7 +157,6 @@ export default {
 
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
       document.getElementById('my-video').srcObject = stream
-      document.getElementById('my-video').play()
       this.localStream = stream
     },
 
@@ -181,6 +191,7 @@ export default {
         this.removeVideo(peerId)
       })
 
+      // 自分が部屋を抜けた時
       call.on('close', () => {
         this.removeAllVideos()
         this.setupMakeCallUI()
@@ -188,21 +199,17 @@ export default {
     },
 
     addVideo(stream) {
-      const videoDom = document.createElement('video')
-      videoDom.setAttribute('id', stream.peerId)
-      videoDom.setAttribute('width', this.videoWidth)
-      videoDom.setAttribute('height', this.videoHeight)
-      videoDom.autoplay = true
-      videoDom.srcObject = stream
-      document.getElementById('videos-container').append(videoDom)
+      this.peerStreams.push(stream)
     },
 
     removeVideo(peerId) {
-      document.getElementById(peerId).remove()
+      this.peerStreams.some((v, i) => {
+        if (v.peerId === peerId) this.peerStreams.splice(i, 1)
+      })
     },
 
     removeAllVideos() {
-      document.getElementById('videos-container').innerHTML = '' // 後でオブジェクトの配列を用いたものに変換
+      this.peerStreams = []
     },
 
     setupMakeCallUI() {
