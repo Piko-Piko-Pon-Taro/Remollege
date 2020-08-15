@@ -8,6 +8,7 @@
         seatedTableId ? String(roomId) + '-' + String(seatedTableId) : null
       "
     />
+
     <v-card :color="$const.BASE_COLOR2">
       <v-row no-gutters>
         <v-col v-for="k in 15" :key="k" cols="4">
