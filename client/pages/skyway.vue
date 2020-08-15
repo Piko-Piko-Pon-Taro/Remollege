@@ -55,8 +55,20 @@
           </p>
           <h3>部屋に参加する</h3>
           <input v-model="roomId" placeholder="room id" />
-          <button id="end-call" v-if="isTalking" @click="endCall">Leave</button>
-          <button id="make-call" v-else @click="makeCall">Join</button>
+          <template v-if="isTalking">
+            <button id="end-call" @click="endCall">Leave</button>
+
+            <button v-if="isMute" @click="toggleMute">unmute</button>
+            <button v-else @click="toggleMute">mute</button>
+
+            <button v-if="isCamOn" @click="toggleCamera">
+              turn camera off
+            </button>
+            <button v-else @click="toggleCamera">turn camera on</button>
+          </template>
+          <template v-else>
+            <button id="make-call" @click="makeCall">Join</button>
+          </template>
         </div>
       </div>
     </div>
@@ -85,7 +97,9 @@ export default {
       connectedRoomId: '',
       roomId: '',
       existingCall: null,
-      isTalking: false
+      isTalking: false,
+      isMute: false,
+      isCamOn: true
     }
   },
   mounted() {
@@ -229,6 +243,21 @@ export default {
 
     setupEndCallUI() {
       this.isTalking = true
+    },
+
+    toggleMute() {
+      if (this.localStream) {
+        const audioTrack = this.localStream.getAudioTracks()[0]
+        audioTrack.enabled = !audioTrack.enabled
+        this.isMute = !audioTrack.enabled
+      }
+    },
+    toggleCamera() {
+      if (this.localStream) {
+        const videoTrack = this.localStream.getVideoTracks()[0]
+        videoTrack.enabled = !videoTrack.enabled
+        this.isCamOn = videoTrack.enabled
+      }
     }
   }
 }
