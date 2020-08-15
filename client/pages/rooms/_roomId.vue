@@ -1,7 +1,13 @@
 <template>
   <v-container>
     <ExitButton :to="'/buildings/' + buildingId" />
-    <TeacherCard :teacher="teacher" class="my-5" />
+    <!-- <TeacherCard :teacher="teacher" class="my-5" /> -->
+    <VideoArea
+      :user="user"
+      :roomId="
+        seatedTableId ? String(roomId) + '-' + String(seatedTableId) : null
+      "
+    />
     <v-card :color="$const.BASE_COLOR2">
       <v-row no-gutters>
         <v-col v-for="k in 15" :key="k" cols="4">
@@ -9,7 +15,7 @@
             :seatedTableId="seatedTableId"
             :table="tables[k - 1]"
             @sitDown="sitDown"
-            @standUp="standUp"
+            @leave="leave"
             class="my-3 mx-3"
           />
         </v-col>
@@ -22,8 +28,9 @@
 export default {
   components: {
     ExitButton: () => import('@/components/atoms/ExitButton'),
-    TeacherCard: () => import('@/components/organisms/TeacherCard'),
-    TableCard: () => import('@/components/organisms/TableCard')
+    // TeacherCard: () => import('@/components/organisms/TeacherCard'),
+    TableCard: () => import('@/components/organisms/TableCard'),
+    VideoArea: () => import('@/components/organisms/VideoArea')
   },
   data() {
     return {
@@ -81,7 +88,7 @@ export default {
         }
       })
     },
-    standUp() {
+    leave() {
       this.tables.forEach((table, index) => {
         if (table.id === this.seatedTableId) {
           table.users.forEach((user, index2) => {
