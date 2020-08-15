@@ -32,7 +32,11 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [{ src: '~plugins/const.js' }, { src: '~plugins/validate.js' }],
+  plugins: [
+    { src: '~plugins/const.js' },
+    { src: '~plugins/validate.js' },
+    { src: '~plugins/api.js' }
+  ],
   /*
    ** Nuxt.js dev-modules
    */
