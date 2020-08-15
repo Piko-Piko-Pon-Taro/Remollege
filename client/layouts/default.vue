@@ -11,6 +11,7 @@
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
+          v-show="item.afterAuth === isAuthenticated"
           :key="i"
           :to="item.to"
           router
@@ -78,12 +79,20 @@ export default {
         {
           icon: 'mdi-school',
           title: 'CAMPUS TOP',
-          to: '/'
+          to: '/',
+          afterAuth: true
         },
         {
           icon: 'mdi-logout',
           title: 'Logout',
-          to: '/login'
+          to: '/login',
+          afterAuth: true
+        },
+        {
+          icon: 'mdi-login',
+          title: 'Login',
+          to: '/login',
+          afterAuth: false
         }
       ],
       miniVariant: false,
@@ -94,6 +103,11 @@ export default {
         name: 'ピコピコ ぽん太郎',
         icon: 'sampleIcon1.jpg'
       }
+    }
+  },
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters['auth/token'] !== null
     }
   }
 }

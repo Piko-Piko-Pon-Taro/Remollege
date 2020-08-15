@@ -27,7 +27,7 @@ export const actions = {
         vm.$router.push('/')
       })
   },
-  login({ commit }, { email, password }) {
+  login({ commit, dispatch }, { email, password }) {
     const vm = this
     this.$api
       .post('/auth/login/', {
@@ -37,7 +37,24 @@ export const actions = {
       .then((res) => {
         console.log(res)
         commit('updateToken', res.data.token)
+        setTimeout(() => {
+          dispatch('refreshToken', res.data.refreshToken)
+        }, 3600000)
         vm.$router.push('/')
+      })
+  },
+  refreshToken({ commit, dispatch }, refreshToken) {
+    this.$api
+      .get('/auth/refresh/', {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`
+        }
+      })
+      .then((res) => {
+        commit('updateToken', res.data.token)
+        setTimeout(() => {
+          dispatch('refreshToken', res.data.refreshToken)
+        }, 3600000)
       })
   }
 }
