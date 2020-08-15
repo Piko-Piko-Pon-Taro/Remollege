@@ -1,0 +1,50 @@
+<template>
+  <v-card
+    :color="$const.MAIN_COLOR"
+    class="mx-auto"
+    max-width="300"
+    max-height="260"
+    dark
+  >
+    <video
+      :id="id"
+      :key="id"
+      :width="videoWidth"
+      :height="videoHeight"
+      :srcObject.prop="stream"
+      :muted="muted"
+      autoplay
+    />
+    <v-card-title>{{ name }}</v-card-title>
+  </v-card>
+</template>
+
+<script>
+export default {
+  props: {
+    id: {
+      type: String
+    },
+    videoWidth: {
+      type: Number,
+      default: 320
+    },
+    videoHeight: {
+      type: Number,
+      default: 240
+    },
+    name: {
+      type: String,
+      default: null
+    },
+    stream: {
+      type: MediaStream,
+      default: null
+    },
+    muted: {
+      type: Boolean,
+      default: true
+    }
+  }
+}
+</script>

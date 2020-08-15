@@ -10,8 +10,8 @@
       />
       <ActionButton
         v-else-if="seatedTableId === table.id"
-        @click="standUp"
-        text="Stand up"
+        @click="leave"
+        text="Leave"
         class="mr-10"
       />
       <div style="margin: 0 0 0 auto">
@@ -47,8 +47,8 @@ export default {
     sitDown() {
       this.$emit('sitDown', this.table.id)
     },
-    standUp() {
-      this.$emit('standUp')
+    leave() {
+      this.$emit('leave')
     }
   }
 }
