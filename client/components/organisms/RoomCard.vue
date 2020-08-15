@@ -9,15 +9,16 @@
     <v-card-title class="pb-0">{{ room.name }}教室</v-card-title>
 
     <v-card-actions>
-      <v-btn :to="'/rooms/' + room.id" color="orange" text nuxt>
-        ENTER
-      </v-btn>
+      <ActionButton :to="'/rooms/' + room.id" text="ENTER" />
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
 export default {
+  components: {
+    ActionButton: () => import('@/components/atoms/ActionButton')
+  },
   props: {
     room: {
       type: Object,

@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -24,7 +24,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" :color="$const.WASEDA_COLOR" fixed app>
+    <v-app-bar :clipped-left="clipped" :color="$const.MAIN_COLOR" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-card-actions>
@@ -34,7 +34,7 @@
         </v-card-text>
       </v-card-actions>
     </v-app-bar>
-    <v-content>
+    <v-content :style="'background-color: ' + $const.BASE_COLOR + ';'">
       <v-container>
         <nuxt />
       </v-container>

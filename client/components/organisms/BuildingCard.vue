@@ -9,15 +9,16 @@
     <v-card-title class="pb-0">{{ building.num }}号館</v-card-title>
 
     <v-card-actions>
-      <v-btn :to="'/buildings/' + building.id" color="orange" text nuxt>
-        ENTER
-      </v-btn>
+      <ActionButton :to="'/buildings/' + building.id" text="ENTER" />
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
 export default {
+  components: {
+    ActionButton: () => import('@/components/atoms/ActionButton')
+  },
   props: {
     building: {
       type: Object,

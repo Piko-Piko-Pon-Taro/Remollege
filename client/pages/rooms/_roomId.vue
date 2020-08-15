@@ -2,19 +2,19 @@
   <v-container>
     <ExitButton :to="'/buildings/' + buildingId" />
     <TeacherCard :teacher="teacher" class="my-5" />
-    <v-row no-gutters>
-      <v-col v-for="k in 15" :key="k" cols="4">
-        <v-card class="pa-2">
+    <v-card color="#aaa">
+      <v-row no-gutters>
+        <v-col v-for="k in 15" :key="k" cols="4">
           <TableCard
             :seatedTableId="seatedTableId"
             :table="tables[k - 1]"
             @sitDown="sitDown"
             @standUp="standUp"
-            class="my-3"
+            class="my-3 mx-3"
           />
-        </v-card>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 

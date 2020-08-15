@@ -1,11 +1,12 @@
 <template>
-  <v-btn :to="to" class="ma-2" tile outlined x-large color="success" nuxt>
-    <v-icon left>mdi-door</v-icon> EXIT
-  </v-btn>
+  <ActionButton :to="to" text="EXIT" icon="mdi-door" class="ml-5" />
 </template>
 
 <script>
 export default {
+  components: {
+    ActionButton: () => import('@/components/atoms/ActionButton')
+  },
   props: {
     to: {
       type: Object,

@@ -1,21 +1,19 @@
 <template>
-  <v-card color="#385F73" dark>
+  <v-card :color="$const.MAIN_COLOR">
     <v-card-title class="headline pt-3 pb-0">Table</v-card-title>
     <v-card-actions>
-      <v-btn
+      <ActionButton
         v-if="seatedTableId === null"
-        @click.stop="sitDown"
-        text
+        @click="sitDown"
+        text="Take a seat"
         class="mr-10"
-        >Take a seat</v-btn
-      >
-      <v-btn
+      />
+      <ActionButton
         v-else-if="seatedTableId === table.id"
-        @click.stop="standUp"
-        text
+        @click="standUp"
+        text="Stand up"
         class="mr-10"
-        >Stand up</v-btn
-      >
+      />
       <div style="margin: 0 0 0 auto">
         <UserIcon
           v-for="i in 6"
@@ -32,6 +30,7 @@
 <script>
 export default {
   components: {
+    ActionButton: () => import('@/components/atoms/ActionButton'),
     UserIcon: () => import('@/components/atoms/UserIcon')
   },
   props: {
