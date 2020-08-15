@@ -8,6 +8,7 @@
       class="ma-2"
       nuxt
       depressed
+      dark
     >
       <v-icon v-if="icon" left>{{ icon }}</v-icon>
       {{ text }}
@@ -18,6 +19,7 @@
       @click.stop="click"
       class="ma-2"
       depressed
+      dark
     >
       <v-icon v-if="icon" left>{{ icon }}</v-icon>
       {{ text }}

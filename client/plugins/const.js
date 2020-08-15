@@ -3,9 +3,8 @@ import Vue from 'vue'
 Vue.prototype.$const = {
   MAIN_COLOR: '#bd004d',
   BASE_COLOR: '#FFF3E0',
-  // BASE_COLOR: '#f6f5f2',
   BASE_COLOR2: '#fff',
-  ACCENT_COLOR: 'orange',
+  ACCENT_COLOR: '#5cb4ed',
   VALIDATE: {
     nameMax: 50,
     emailMax: 255,

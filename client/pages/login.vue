@@ -1,6 +1,12 @@
 <template>
   <v-container>
-    <v-card :dark="false" class="elevation-12">
+    <v-card
+      :dark="false"
+      class="elevation-12"
+      width="60%"
+      height="50%"
+      style="margin: 10% auto;"
+    >
       <v-toolbar :color="$const.MAIN_COLOR" dark flat>
         <v-icon style="margin: auto;" x-large>
           mdi-school
@@ -23,12 +29,6 @@
       </v-toolbar>
       <v-form ref="userInputs" style="width: 90%;margin:auto;" class="py-5">
         <v-text-field
-          :dark="false"
-          label="Outlined"
-          single-line
-          outlined
-        ></v-text-field>
-        <v-text-field
           v-if="types.active == 'signup'"
           v-model="user.name"
           :rules="[rules.required, rules.nameMax]"
@@ -39,7 +39,7 @@
           type="text"
           counter
           validate-on-blur
-          filled
+          outlined
         />
         <v-text-field
           v-model="user.email"
@@ -71,22 +71,24 @@
         <v-btn
           v-if="types.active == 'login'"
           @click.stop="login()"
-          color="primary"
+          :color="$const.ACCENT_COLOR"
           rounded
-          width="90%"
-          style="margin: 10px 5%;"
+          width="70%"
+          style="margin: 10px 15%;"
           class="title py-5"
+          dark
         >
           Login
         </v-btn>
         <v-btn
           v-else-if="types.active == 'signup'"
           @click.stop="signup()"
-          color="primary"
+          :color="$const.ACCENT_COLOR"
           rounded
-          width="90%"
-          style="margin: 10px 5%;"
+          width="70%"
+          style="margin: 10px 15%;"
           class="title py-5"
+          dark
         >
           Signup
         </v-btn>
@@ -99,7 +101,7 @@
             アカウントをお持ちではないですか？
             <v-btn
               @click.stop="toggleType()"
-              color="primary"
+              :color="$const.ACCENT_COLOR"
               class="white--text"
             >
               今すぐ作成
@@ -111,7 +113,7 @@
             既にアカウントをお持ちですか？
             <v-btn
               @click.stop="toggleType()"
-              color="primary"
+              :color="$const.ACCENT_COLOR"
               class="white--text"
             >
               サインイン

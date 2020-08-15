@@ -1,5 +1,5 @@
 <template>
-  <v-card :color="$const.MAIN_COLOR">
+  <v-card :color="$const.MAIN_COLOR" dark>
     <v-card-title class="headline pt-3 pb-0">Table</v-card-title>
     <v-card-actions>
       <ActionButton

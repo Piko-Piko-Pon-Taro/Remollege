@@ -1,5 +1,5 @@
 <template>
-  <v-card :color="$const.MAIN_COLOR" class="mx-auto" max-width="400">
+  <v-card :color="$const.MAIN_COLOR" class="mx-auto" max-width="400" dark>
     <v-img
       :src="require('@/assets/image/' + teacher.img)"
       class="white--text align-end"
