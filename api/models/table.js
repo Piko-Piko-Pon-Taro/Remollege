@@ -21,8 +21,6 @@ module.exports = (sequelize, DataTypes) => {
             include: [
               {
                 model: sequelize.models.TableUser.scope("withUsers"),
-                attributes: ["id"],
-                required: true,
               },
             ],
           };
@@ -31,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
           return {
             include: [
               {
-                model: sequelize.models.Chat.scope("withUsers"),
+                model: sequelize.models.Chat,
                 order: [["createdAt", "ASC"]],
               },
             ],

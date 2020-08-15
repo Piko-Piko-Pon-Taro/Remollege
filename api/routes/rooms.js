@@ -11,10 +11,10 @@ router.get("/", function (req, res, next) {
 /* get one */
 router.get("/:id", async (req, res) => {
   try {
-    //const users = await Room.scope("withUsers").findByPk(req.params.id);
-    //const tables = await Room.scope("withTables").findByPk(req.params.id);
+    const users = await Room.scope("withUsers").findByPk(req.params.id);
+    const tables = await Room.scope("withTables").findByPk(req.params.id);
     const chats = await Room.scope("withChats").findByPk(req.params.id);
-    res.json({ chats });
+    res.json({ users, tables, chats });
   } catch (e) {
     res.json(e);
   }
