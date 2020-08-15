@@ -16,11 +16,27 @@ jobs:
     - name: take a shit
       run: echo 'BURBURIBURIBURIBURIBURIBURI'
 
-    - name: GAE deploy
+    - name: npm install, build
+      run: |
+          cd client
+          npm install
+          npm run build
+          cd ../api
+          npm install
+          cd ..
+
+    - name: GAE login
       run: |
           echo 'GAEにdeployすりゅ!'
+          echo '${{ secrets.GAE_DEPLOY_KEY }}' > key.json
           gcloud auth activate-service-account --key-file key.json
+          rm key.json
+
+    - name: GAE deploy
+      run: |
           cd client
-          gcloud app deploy
+          gcloud app deploy app.yaml
           cd ../api
-          gcloud app deploy
+          gcloud app deploy app.yaml
+      env:
+          CI: true
