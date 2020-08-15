@@ -39,9 +39,17 @@ export default {
       }
     }
   },
+  computed: {
+    token() {
+      return this.$store.getters['auth/token']
+    }
+  },
   asyncData({ store, route, error }) {
     const roomId = route.params.roomId
     const buildingId = 1 // あとでDBから取ってくる
+    // const tables = this.$api.get('/rooms/' + roomId + '/tables/', {headers:{
+    // Authorization: `Bearer ${this.token}`
+    // }})
     const tables = Array(16)
       .fill(0)
       .map((value, index) => {
