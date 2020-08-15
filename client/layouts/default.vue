@@ -8,21 +8,58 @@
       app
       dark
     >
-      <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
+      <v-list dense>
+        <nuxt-link
+          v-if="isAuthenticated"
+          :to="'/'"
+          style="text-decoration: none;color:white;"
         >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
+          <v-list-item link>
+            <v-list-item-action>
+              <v-icon>mdi-school</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                CAMPUS TOP
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </nuxt-link>
+
+        <nuxt-link
+          v-if="!isAuthenticated"
+          :to="'/login'"
+          style="text-decoration: none;color:white;"
+        >
+          <v-list-item link>
+            <v-list-item-action>
+              <v-icon>mdi-login</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                LOGIN
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </nuxt-link>
+
+        <nuxt-link
+          :to="'/login'"
+          @click.native.stop="logout"
+          v-if="isAuthenticated"
+          style="color:white;text-decoration: none;"
+        >
+          <v-list-item link>
+            <v-list-item-action>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                LOGOUT
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </nuxt-link>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
@@ -74,18 +111,6 @@ export default {
       clipped: true,
       drawer: false,
       fixed: false,
-      items: [
-        {
-          icon: 'mdi-school',
-          title: 'CAMPUS TOP',
-          to: '/'
-        },
-        {
-          icon: 'mdi-logout',
-          title: 'Logout',
-          to: '/login'
-        }
-      ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
@@ -94,6 +119,16 @@ export default {
         name: 'ピコピコ ぽん太郎',
         icon: 'sampleIcon1.jpg'
       }
+    }
+  },
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters['auth/token'] !== null
+    }
+  },
+  methods: {
+    async logout() {
+      await this.$store.dispatch('auth/logout')
     }
   }
 }
