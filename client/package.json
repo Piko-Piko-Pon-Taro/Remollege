@@ -5,7 +5,7 @@
   "author": "piko_piko_pon_taro",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
+    "dev": "HOST=0.0.0.0 PORT=3001 nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
