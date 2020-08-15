@@ -11,7 +11,7 @@ router.get("/:id/chats/", async (req, res) => {
     );
     chats = chats.map((c) => {
       const cDataValues = c.dataValues;
-      const { User: user, ...chat } = cDataValues; // eslint-disable-line no-use-before-define
+      const { User: user, ...chat } = cDataValues;
       const userDataValues = user.dataValues;
       return { ...chat, ...userDataValues };
     });

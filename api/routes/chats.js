@@ -9,7 +9,7 @@ router.get("/:id", async (req, res) => {
     const { dataValues: chatDataValues } = await Chat.scope(
       "withUsers"
     ).findByPk(req.params.id);
-    const { User, ...chat } = chatDataValues; // eslint-disable-line no-use-before-define
+    const { User, ...chat } = chatDataValues;
     const userDataValues = chatDataValues.User.dataValues;
     return res.json({ chat: { ...chat, ...userDataValues } });
   } catch (e) {
