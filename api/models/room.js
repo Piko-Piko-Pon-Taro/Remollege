@@ -33,16 +33,6 @@ module.exports = (sequelize, DataTypes) => {
             ],
           };
         },
-        withChats() {
-          return {
-            include: [
-              {
-                model: sequelize.models.Table.scope("withChats"),
-                limit: 100,
-              },
-            ],
-          };
-        },
         withTables() {
           return {
             include: [

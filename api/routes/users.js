@@ -3,11 +3,11 @@ var router = express.Router();
 const models = require(global.models);
 const User = models.User;
 
-/* GetAllUser */
+/* GetAllUsers */
 router.get("/all/", async (req, res) => {
   try {
     const users = await User.findAll();
-    res.json(users);
+    res.json({ users });
   } catch (e) {
     res.json(e);
   }
@@ -17,7 +17,7 @@ router.get("/all/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id);
-    res.json(user);
+    res.json({ user });
   } catch (e) {
     res.json(e);
   }

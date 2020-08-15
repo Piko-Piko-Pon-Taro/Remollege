@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
           return {
             include: [
               {
-                model: sequelize.models.User("forChat"),
+                model: sequelize.models.User.scope("forChat"),
               },
             ],
           };

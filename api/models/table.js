@@ -29,8 +29,9 @@ module.exports = (sequelize, DataTypes) => {
           return {
             include: [
               {
-                model: sequelize.models.Chat("withUsers"),
+                model: sequelize.models.Chat.scope("withUsers"),
                 order: [["createdAt", "ASC"]],
+                limit: 100,
               },
             ],
           };

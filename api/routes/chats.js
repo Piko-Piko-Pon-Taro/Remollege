@@ -3,23 +3,21 @@ var router = express.Router();
 const models = require(global.models);
 const Chat = models.Chat;
 
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
-});
-
-/* get one */
+/* GetOneChat */
 router.get("/:id", async (req, res) => {
   try {
-    // TODO:chatの次元降下&User->user
-    const chat = await Chat.scope("withUsers").findByPk(req.params.id);
-    res.json({ chat });
+    const { dataValues: chatDataValues } = await Chat.scope(
+      "withUsers"
+    ).findByPk(req.params.id);
+    const { User, ...chat } = chatDataValues; // eslint-disable-line no-use-before-define
+    const userDataValues = chatDataValues.User.dataValues;
+    return res.json({ chat: { ...chat, ...userDataValues } });
   } catch (e) {
     res.json(e);
   }
 });
 
-/* post one */
+/* CreateOneChat */
 router.post("/create/", async (req, res) => {
   try {
     const chat = await Chat.create({

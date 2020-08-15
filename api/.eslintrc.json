@@ -5,7 +5,11 @@
     "prettier/prettier": "error"
   },
   "parserOptions": {
-    "ecmaVersion": 2017
+    "parser": "babel-eslint",
+    "ecmaVersion": 2018,
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "env": {
       "es6": true
