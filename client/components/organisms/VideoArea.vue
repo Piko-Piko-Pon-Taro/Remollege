@@ -26,30 +26,38 @@
     </div>
 
     <v-bottom-navigation
-      :value="activeBtn"
+      v-model="bottomNav"
       :color="$const.MAIN_COLOR"
       :background-color="$const.BASE_COLOR2"
       horizontal
     >
-      <v-btn>
+      <v-btn @click="endCall" value="hangup">
+        <span>Leave</span>
+        <v-icon>mdi-phone-hangup</v-icon>
+      </v-btn>
+
+      <v-btn @click="toggleCamera" value="video">
         <span>Video</span>
-        <v-icon>mdi-video</v-icon>
+        <v-icon v-if="isCamOn">mdi-video</v-icon>
+        <v-icon v-if="!isCamOn">mdi-video-off</v-icon>
       </v-btn>
 
-      <v-btn>
+      <v-btn @click="toggleMute" value="mic">
         <span>Mic</span>
-        <v-icon>mdi-microphone</v-icon>
+        <v-icon v-if="!isMute">mdi-microphone</v-icon>
+        <v-icon v-if="isMute">mdi-microphone-off</v-icon>
       </v-btn>
 
-      <v-btn>
-        <span>Speaker</span>
+      <!-- <v-btn>
+        <span value="speaker">Speaker</span>
         <v-icon>mdi-volume-high</v-icon>
-      </v-btn>
+        <v-icon>mdi-volume-off</v-icon>
+      </v-btn> -->
 
-      <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-dialog v-if="roomId" v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on">
-            <span>settings</span>
+          <v-btn v-bind="attrs" v-on="on" value="cog">
+            <span>Settings</span>
             <v-icon>mdi-cog</v-icon>
           </v-btn>
         </template>
@@ -57,6 +65,9 @@
           <v-card-title>
             <span class="headline">Settings</span>
           </v-card-title>
+          <v-card-subtitle v-if="!selectedAudio || !selectedVideo">
+            <span>マイクとカメラを選択してください</span>
+          </v-card-subtitle>
           <v-card-text>
             <v-container>
               <v-row>
@@ -93,20 +104,6 @@
 
     <div class="UI">
       <p>ルーム名:{{ getCurrentRoom }}</p>
-
-      <div>
-        <template v-if="isTalking">
-          <button id="end-call" @click="endCall">Leave</button>
-
-          <button v-if="isMute" @click="toggleMute">unmute</button>
-          <button v-else @click="toggleMute">mute</button>
-
-          <button v-if="isCamOn" @click="toggleCamera">
-            turn camera off
-          </button>
-          <button v-else @click="toggleCamera">turn camera on</button>
-        </template>
-      </div>
     </div>
   </v-card>
 </template>
@@ -132,8 +129,8 @@ export default {
   },
   data() {
     return {
-      dialog: false,
-      activeBtn: 1,
+      dialog: true,
+      bottomNav: 'cog',
       APIKey: process.env.SKYWAY_API_KEY,
       selectedAudio: '',
       selectedVideo: '',
@@ -186,7 +183,7 @@ export default {
                 })
               }
             }
-            // this.selectedAudio = this.audioDevices[0] || ''
+            // this.selectedAudio = this.audioDevices[0] || '' // TODO: デフォルト値設定しようしたけどうまくいかない
             // this.selectedVideo = this.videoDevices[0] || ''
           })
           .catch(function(error) {
@@ -257,6 +254,7 @@ export default {
     },
     endCall() {
       this.existingCall.close()
+      this.$emit('leave')
     },
 
     setupCallEventHandlers(call) {

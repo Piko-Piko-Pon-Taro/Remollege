@@ -15,6 +15,7 @@
       :roomId="
         seatedTableId ? String(roomId) + '-' + String(seatedTableId) : null
       "
+      @leave="leave"
     />
 
     <v-card :color="$const.BASE_COLOR2">
