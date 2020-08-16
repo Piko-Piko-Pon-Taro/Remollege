@@ -7,6 +7,7 @@ services:
         env_file: .env
         volumes:
             - ../client/:/src/client:cached
+            - /src/client/node_modules/
         working_dir: /src/client
         tty: true
         command: bash -c 'npm install && npm run dev'
@@ -22,6 +23,7 @@ services:
         env_file: .env
         volumes:
             - ../api/:/src/api:cached
+            - /src/api/node_modules/
         working_dir: /src/api
         tty: true
         command: bash -c 'npm install && npm run dev'
