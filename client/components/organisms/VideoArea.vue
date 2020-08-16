@@ -2,7 +2,7 @@
   <v-card :color="$const.BASE_COLOR" class="mx-auto pa-5 elevation-0">
     <div id="videos-container">
       <v-row no-gutters>
-        <v-col v-for="n in 5" :key="n" cols="2">
+        <v-col cols="2">
           <VideoCard
             v-if="localStream"
             :id="'self'"
@@ -13,14 +13,19 @@
             :muted="true"
             class="mt-3 pb-0 mb-0"
           />
-          <!-- <VideoCard
-        v-for="peerStream in peerStreams"
-        :id="peerStream.peerId"
-        :width="videoWidth"
-        :height="videoHeight"
-        :stream="peerStream"
-        :muted="false"
-      /> -->
+        </v-col>
+        <v-col
+          v-for="peerStream in peerStreams"
+          :key="peerStream.peerId"
+          cols="2"
+        >
+          <VideoCard
+            :id="peerStream.peerId"
+            :width="videoWidth"
+            :height="videoHeight"
+            :stream="peerStream"
+            :muted="false"
+          />
         </v-col>
       </v-row>
     </div>
@@ -68,10 +73,10 @@
           <v-card-subtitle v-if="!selectedAudio || !selectedVideo">
             <span>マイクとカメラを選択してください</span>
           </v-card-subtitle>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col cols="12">
+          <v-card-text class="my-0 pt-3 pb-0">
+            <v-container class="my-0 py-0">
+              <v-row class="my-0 py-0">
+                <v-col cols="12" class="my-0 py-0">
                   <v-select
                     v-model="selectedAudio"
                     @change="onChange"
@@ -80,7 +85,7 @@
                     outlined
                   ></v-select>
                 </v-col>
-                <v-col cols="12">
+                <v-col cols="12" class="my-0 py-0">
                   <v-select
                     v-model="selectedVideo"
                     @change="onChange"
@@ -93,18 +98,20 @@
             </v-container>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn @click="dialog = false" :color="$const.ACCENT_COLOR" text
-              >Close</v-btn
-            >
+            <ActionButton
+              v-if="selectedAudio && selectedVideo"
+              @click="dialog = false"
+              text="OK"
+              class="mx-auto my-0 py-0"
+            />
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-bottom-navigation>
 
-    <div class="UI">
+    <!-- <div class="UI">
       <p>ルーム名:{{ getCurrentRoom }}</p>
-    </div>
+    </div> -->
   </v-card>
 </template>
 
@@ -115,7 +122,8 @@ if (process.client) {
 }
 export default {
   components: {
-    VideoCard: () => import('@/components/organisms/VideoCard')
+    VideoCard: () => import('@/components/organisms/VideoCard'),
+    ActionButton: () => import('@/components/atoms/ActionButton')
   },
   props: {
     user: {
@@ -183,8 +191,6 @@ export default {
                 })
               }
             }
-            // this.selectedAudio = this.audioDevices[0] || '' // TODO: デフォルト値設定しようしたけどうまくいかない
-            // this.selectedVideo = this.videoDevices[0] || ''
           })
           .catch(function(error) {
             console.error('mediaDevices.enumerateDevices() error:', error)
