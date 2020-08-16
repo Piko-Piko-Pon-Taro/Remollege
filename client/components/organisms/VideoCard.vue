@@ -15,7 +15,7 @@
       :muted="muted"
       autoplay
     />
-    <v-card-title>{{ name }}</v-card-title>
+    <!-- <v-card-title>{{ name }}</v-card-title> -->
   </v-card>
 </template>
 

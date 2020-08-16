@@ -13,6 +13,12 @@
             :muted="true"
             class="mt-3 pb-0 mb-0"
           />
+          <UserBanner
+            v-if="localStream"
+            :img="user.img"
+            :name="user.name"
+            style="width: 100%;"
+          />
         </v-col>
         <v-col
           v-for="peerStream in peerStreams"
@@ -25,6 +31,12 @@
             :height="videoHeight"
             :stream="peerStream"
             :muted="false"
+          />
+          <UserBanner
+            v-if="localStream"
+            :img="user.img"
+            :name="user.name"
+            style="width: 100%;"
           />
         </v-col>
       </v-row>
@@ -123,7 +135,8 @@ if (process.client) {
 export default {
   components: {
     VideoCard: () => import('@/components/organisms/VideoCard'),
-    ActionButton: () => import('@/components/atoms/ActionButton')
+    ActionButton: () => import('@/components/atoms/ActionButton'),
+    UserBanner: () => import('@/components/organisms/UserBanner')
   },
   props: {
     user: {
