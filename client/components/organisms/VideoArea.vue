@@ -2,7 +2,7 @@
   <v-card :color="$const.BASE_COLOR" class="mx-auto pa-5 elevation-0">
     <div id="videos-container">
       <v-row no-gutters>
-        <v-col cols="2">
+        <v-col :width="videoWidth">
           <VideoCard
             v-if="localStream"
             :id="'self'"
@@ -11,19 +11,20 @@
             :name="user.name"
             :stream="localStream"
             :muted="true"
-            class="mt-3 pb-0 mb-0"
+            class="pb-0 mb-3"
           />
-          <UserBanner
+          <!-- <UserBanner
             v-if="localStream"
             :img="user.img"
             :name="user.name"
-            style="width: 100%;"
-          />
+            :width="videoWidth"
+            class="mx-2"
+          /> -->
         </v-col>
         <v-col
           v-for="peerStream in peerStreams"
           :key="peerStream.peerId"
-          cols="2"
+          :width="videoWidth"
         >
           <VideoCard
             :id="peerStream.peerId"
@@ -31,13 +32,16 @@
             :height="videoHeight"
             :stream="peerStream"
             :muted="false"
+            class="pb-0 mb-3"
           />
-          <UserBanner
+          <!-- <UserBanner
             v-if="localStream"
             :img="user.img"
             :name="user.name"
-            style="width: 100%;"
-          />
+            :width="videoWidth"
+            class="mx-2"
+            style="display: block;"
+          /> -->
         </v-col>
       </v-row>
     </div>
@@ -112,7 +116,7 @@
           <v-card-actions>
             <ActionButton
               v-if="selectedAudio && selectedVideo"
-              @click="dialog = false"
+              @click="makeCall"
               text="OK"
               class="mx-auto my-0 py-0"
             />
@@ -121,9 +125,10 @@
       </v-dialog>
     </v-bottom-navigation>
 
-    <!-- <div class="UI">
-      <p>ルーム名:{{ getCurrentRoom }}</p>
-    </div> -->
+    <!-- <div class="UI"> -->
+    <!-- <p>ルーム名:{{ getCurrentRoom }}</p> -->
+    <!-- </div> -->
+    <!-- {{ roomId }} -->
   </v-card>
 </template>
 
@@ -135,8 +140,8 @@ if (process.client) {
 export default {
   components: {
     VideoCard: () => import('@/components/organisms/VideoCard'),
-    ActionButton: () => import('@/components/atoms/ActionButton'),
-    UserBanner: () => import('@/components/organisms/UserBanner')
+    ActionButton: () => import('@/components/atoms/ActionButton')
+    // UserBanner: () => import('@/components/organisms/UserBanner')
   },
   props: {
     user: {
@@ -157,7 +162,7 @@ export default {
       selectedVideo: '',
       audioDevices: [],
       videoDevices: [],
-      videoWidth: 280,
+      videoWidth: 300,
       videoHeight: 240,
       peerStreams: [],
       localStream: null,
@@ -169,16 +174,16 @@ export default {
       isCamOn: true
     }
   },
-  computed: {
-    getCurrentRoom() {
-      if (this.roomId) {
-        this.makeCall()
-      } else if (this.existingCall) {
-        this.endCall()
-      }
-      return this.roomId
-    }
-  },
+  // computed: {
+  //   getCurrentRoom() {
+  //     if (this.roomId) {
+  //       this.makeCall()
+  //     } else if (this.existingCall) {
+  //       this.endCall()
+  //     }
+  //     return this.roomId
+  //   }
+  // },
   mounted() {
     // 利用可能デバイスの取得
     navigator.mediaDevices
@@ -213,7 +218,7 @@ export default {
 
     this.peer = new Peer({
       key: this.APIKey,
-      debug: 3
+      debug: 1
     })
 
     this.peer.on('open', () => {
@@ -262,6 +267,8 @@ export default {
     },
 
     makeCall() {
+      this.dialog = false
+      console.log('start makeCall')
       if (!this.roomId) {
         return
       }
@@ -270,6 +277,7 @@ export default {
         stream: this.localStream
       })
       this.setupCallEventHandlers(call)
+      console.log('end makeCall')
     },
     endCall() {
       this.existingCall.close()
@@ -277,6 +285,7 @@ export default {
     },
 
     setupCallEventHandlers(call) {
+      console.log('in setupCallEventHandlers')
       if (this.existingCall) {
         this.existingCall.close()
       }
@@ -286,6 +295,7 @@ export default {
       this.connectedRoomId = call.name
 
       call.on('stream', (stream) => {
+        console.log('in strem')
         this.addVideo(stream)
       })
 
