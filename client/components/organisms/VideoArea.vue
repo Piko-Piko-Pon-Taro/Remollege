@@ -2,7 +2,7 @@
   <v-card :color="$const.BASE_COLOR" class="mx-auto pa-5 elevation-0">
     <div id="videos-container">
       <v-row no-gutters>
-        <v-col v-for="n in 5" :key="n" cols="2">
+        <v-col cols="2">
           <VideoCard
             v-if="localStream"
             :id="'self'"
@@ -11,45 +11,58 @@
             :name="user.name"
             :stream="localStream"
             :muted="true"
-            class="my-3"
+            class="mt-3 pb-0 mb-0"
           />
-          <!-- <VideoCard
-        v-for="peerStream in peerStreams"
-        :id="peerStream.peerId"
-        :width="videoWidth"
-        :height="videoHeight"
-        :stream="peerStream"
-        :muted="false"
-      /> -->
+        </v-col>
+        <v-col
+          v-for="peerStream in peerStreams"
+          :key="peerStream.peerId"
+          cols="2"
+        >
+          <VideoCard
+            :id="peerStream.peerId"
+            :width="videoWidth"
+            :height="videoHeight"
+            :stream="peerStream"
+            :muted="false"
+          />
         </v-col>
       </v-row>
     </div>
 
     <v-bottom-navigation
-      :value="activeBtn"
+      v-model="bottomNav"
       :color="$const.MAIN_COLOR"
       :background-color="$const.BASE_COLOR2"
       horizontal
     >
-      <v-btn>
+      <v-btn @click="endCall" value="hangup">
+        <span>Leave</span>
+        <v-icon>mdi-phone-hangup</v-icon>
+      </v-btn>
+
+      <v-btn @click="toggleCamera" value="video">
         <span>Video</span>
-        <v-icon>mdi-video</v-icon>
+        <v-icon v-if="isCamOn">mdi-video</v-icon>
+        <v-icon v-if="!isCamOn">mdi-video-off</v-icon>
       </v-btn>
 
-      <v-btn>
+      <v-btn @click="toggleMute" value="mic">
         <span>Mic</span>
-        <v-icon>mdi-microphone</v-icon>
+        <v-icon v-if="!isMute">mdi-microphone</v-icon>
+        <v-icon v-if="isMute">mdi-microphone-off</v-icon>
       </v-btn>
 
-      <v-btn>
-        <span>Speaker</span>
+      <!-- <v-btn>
+        <span value="speaker">Speaker</span>
         <v-icon>mdi-volume-high</v-icon>
-      </v-btn>
+        <v-icon>mdi-volume-off</v-icon>
+      </v-btn> -->
 
-      <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-dialog v-if="roomId" v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on">
-            <span>settings</span>
+          <v-btn v-bind="attrs" v-on="on" value="cog">
+            <span>Settings</span>
             <v-icon>mdi-cog</v-icon>
           </v-btn>
         </template>
@@ -57,10 +70,13 @@
           <v-card-title>
             <span class="headline">Settings</span>
           </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col cols="12">
+          <v-card-subtitle v-if="!selectedAudio || !selectedVideo">
+            <span>マイクとカメラを選択してください</span>
+          </v-card-subtitle>
+          <v-card-text class="my-0 pt-3 pb-0">
+            <v-container class="my-0 py-0">
+              <v-row class="my-0 py-0">
+                <v-col cols="12" class="my-0 py-0">
                   <v-select
                     v-model="selectedAudio"
                     @change="onChange"
@@ -69,7 +85,7 @@
                     outlined
                   ></v-select>
                 </v-col>
-                <v-col cols="12">
+                <v-col cols="12" class="my-0 py-0">
                   <v-select
                     v-model="selectedVideo"
                     @change="onChange"
@@ -82,32 +98,20 @@
             </v-container>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn @click="dialog = false" :color="$const.ACCENT_COLOR" text
-              >Close</v-btn
-            >
+            <ActionButton
+              v-if="selectedAudio && selectedVideo"
+              @click="dialog = false"
+              text="OK"
+              class="mx-auto my-0 py-0"
+            />
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-bottom-navigation>
 
-    <div class="UI">
+    <!-- <div class="UI">
       <p>ルーム名:{{ getCurrentRoom }}</p>
-
-      <div>
-        <template v-if="isTalking">
-          <button id="end-call" @click="endCall">Leave</button>
-
-          <button v-if="isMute" @click="toggleMute">unmute</button>
-          <button v-else @click="toggleMute">mute</button>
-
-          <button v-if="isCamOn" @click="toggleCamera">
-            turn camera off
-          </button>
-          <button v-else @click="toggleCamera">turn camera on</button>
-        </template>
-      </div>
-    </div>
+    </div> -->
   </v-card>
 </template>
 
@@ -118,7 +122,8 @@ if (process.client) {
 }
 export default {
   components: {
-    VideoCard: () => import('@/components/organisms/VideoCard')
+    VideoCard: () => import('@/components/organisms/VideoCard'),
+    ActionButton: () => import('@/components/atoms/ActionButton')
   },
   props: {
     user: {
@@ -132,8 +137,8 @@ export default {
   },
   data() {
     return {
-      dialog: false,
-      activeBtn: 1,
+      dialog: true,
+      bottomNav: 'cog',
       APIKey: process.env.SKYWAY_API_KEY,
       selectedAudio: '',
       selectedVideo: '',
@@ -255,6 +260,7 @@ export default {
     },
     endCall() {
       this.existingCall.close()
+      this.$emit('leave')
     },
 
     setupCallEventHandlers(call) {

@@ -1,5 +1,11 @@
 <template>
-  <ActionButton :to="to" text="EXIT" icon="mdi-door" class="ml-5" />
+  <ActionButton
+    :to="to"
+    :xlarge="true"
+    text="EXIT"
+    icon="mdi-door"
+    class="ml-5"
+  />
 </template>
 
 <script>

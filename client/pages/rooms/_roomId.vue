@@ -1,12 +1,21 @@
 <template>
   <v-container>
-    <ExitButton :to="'/buildings/' + buildingId" />
-    <!-- <TeacherCard :teacher="teacher" class="my-5" /> -->
+    <v-row>
+      <ExitButton :to="'/buildings/' + buildingId" />
+      <TeacherBanner
+        v-if="seatedTableId"
+        :img="teacher.img"
+        :name="teacher.name"
+      />
+    </v-row>
+    <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="my-5" />
     <VideoArea
+      v-show="seatedTableId"
       :user="user"
       :roomId="
         seatedTableId ? String(roomId) + '-' + String(seatedTableId) : null
       "
+      @leave="leave"
     />
 
     <v-card :color="$const.BASE_COLOR2">
@@ -29,7 +38,8 @@
 export default {
   components: {
     ExitButton: () => import('@/components/atoms/ExitButton'),
-    // TeacherCard: () => import('@/components/organisms/TeacherCard'),
+    TeacherCard: () => import('@/components/organisms/TeacherCard'),
+    TeacherBanner: () => import('@/components/organisms/TeacherBanner'),
     TableCard: () => import('@/components/organisms/TableCard'),
     VideoArea: () => import('@/components/organisms/VideoArea')
   },

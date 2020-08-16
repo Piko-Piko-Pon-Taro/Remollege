@@ -71,7 +71,7 @@
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
-      <v-card-actions>
+      <v-card-actions v-if="isAuthenticated">
         <v-card-text class="white--text">
           <UserIcon :src="user.icon" class="mr-2" />
           {{ user.name }}

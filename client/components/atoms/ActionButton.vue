@@ -5,6 +5,7 @@
       :to="to"
       :color="$const.ACCENT_COLOR"
       @click.stop="click"
+      :x-large="xlarge"
       class="ma-2"
       nuxt
       depressed
@@ -17,6 +18,7 @@
       v-else="to"
       :color="$const.ACCENT_COLOR"
       @click.stop="click"
+      :x-large="xlarge"
       class="ma-2"
       depressed
       dark
@@ -41,6 +43,10 @@ export default {
     text: {
       type: String,
       default: null
+    },
+    xlarge: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
