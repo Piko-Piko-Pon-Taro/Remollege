@@ -11,7 +11,7 @@
             :name="user.name"
             :stream="localStream"
             :muted="true"
-            class="my-3"
+            class="mt-3 pb-0 mb-0"
           />
           <!-- <VideoCard
         v-for="peerStream in peerStreams"
@@ -186,6 +186,8 @@ export default {
                 })
               }
             }
+            this.selectedAudio = this.audioDevices[0] || ''
+            this.selectedVideo = this.videoDevices[0] || ''
           })
           .catch(function(error) {
             console.error('mediaDevices.enumerateDevices() error:', error)
