@@ -1,60 +1,134 @@
 <template>
-  <v-card :color="$const.MAIN_COLOR" class="mx-auto" dark>
+  <v-card :color="$const.BASE_COLOR" class="mx-auto pa-5 elevation-0">
     <div id="videos-container">
-      <VideoCard
-        v-if="localStream"
-        :id="'self'"
-        :videoWidth="videoWidth"
-        :videoHeight="videoHeight"
-        :name="user.name"
-        :stream="localStream"
-        :muted="true"
-      />
-      <VideoCard
-        v-for="peerStream in peerStreams"
-        :id="peerStream.peerId"
-        :width="videoWidth"
-        :height="videoHeight"
-        :stream="peerStream"
-        :muted="false"
-      />
+      <v-row no-gutters>
+        <v-col :width="videoWidth">
+          <VideoCard
+            v-if="localStream"
+            :id="'self'"
+            :videoWidth="videoWidth"
+            :videoHeight="videoHeight"
+            :name="user.name"
+            :stream="localStream"
+            :muted="true"
+            class="pb-0 mb-3"
+          />
+          <!-- <UserBanner
+            v-if="localStream"
+            :img="user.img"
+            :name="user.name"
+            :width="videoWidth"
+            class="mx-2"
+          /> -->
+        </v-col>
+        <v-col
+          v-for="peerStream in peerStreams"
+          :key="peerStream.peerId"
+          :width="videoWidth"
+        >
+          <VideoCard
+            :id="peerStream.peerId"
+            :width="videoWidth"
+            :height="videoHeight"
+            :stream="peerStream"
+            :muted="false"
+            class="pb-0 mb-3"
+          />
+          <!-- <UserBanner
+            v-if="localStream"
+            :img="user.img"
+            :name="user.name"
+            :width="videoWidth"
+            class="mx-2"
+            style="display: block;"
+          /> -->
+        </v-col>
+      </v-row>
     </div>
 
-    <div class="UI">
-      <p>ルーム名:{{ getCurrentRoom }}</p>
-      マイク:
-      <v-select
-        v-model="selectedAudio"
-        @change="onChange"
-        :items="audioDevices"
-        :background-color="$const.ACCENT_COLOR"
-        label="Select Audio"
-        solo
-      ></v-select>
-      カメラ:
-      <v-select
-        v-model="selectedVideo"
-        @change="onChange"
-        :items="videoDevices"
-        :background-color="$const.ACCENT_COLOR"
-        label="Select Camera"
-        solo
-      ></v-select>
+    <v-bottom-navigation
+      v-model="bottomNav"
+      :color="$const.MAIN_COLOR"
+      :background-color="$const.BASE_COLOR2"
+      horizontal
+    >
+      <v-btn @click="endCall" value="hangup">
+        <span>Leave</span>
+        <v-icon>mdi-phone-hangup</v-icon>
+      </v-btn>
 
-      <div>
-        <template v-if="isTalking">
-          <button id="end-call" @click="endCall">Leave</button>
+      <v-btn @click="toggleCamera" value="video">
+        <span>Video</span>
+        <v-icon v-if="isCamOn">mdi-video</v-icon>
+        <v-icon v-if="!isCamOn">mdi-video-off</v-icon>
+      </v-btn>
 
-          <button v-if="isMute" @click="toggleMute">unmute</button>
-          <button v-else @click="toggleMute">mute</button>
+      <v-btn @click="toggleMute" value="mic">
+        <span>Mic</span>
+        <v-icon v-if="!isMute">mdi-microphone</v-icon>
+        <v-icon v-if="isMute">mdi-microphone-off</v-icon>
+      </v-btn>
 
-          <button v-if="isCamOn" @click="toggleCamera">
-            turn camera off
-          </button>
-          <button v-else @click="toggleCamera">turn camera on</button>
+      <!-- <v-btn>
+        <span value="speaker">Speaker</span>
+        <v-icon>mdi-volume-high</v-icon>
+        <v-icon>mdi-volume-off</v-icon>
+      </v-btn> -->
+
+      <v-dialog v-if="roomId" v-model="dialog" persistent max-width="600px">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn v-bind="attrs" v-on="on" value="cog">
+            <span>Settings</span>
+            <v-icon>mdi-cog</v-icon>
+          </v-btn>
         </template>
-      </div>
-    </div>
+        <v-card>
+          <v-card-title>
+            <span class="headline">Settings</span>
+          </v-card-title>
+          <v-card-subtitle v-if="!selectedAudio || !selectedVideo">
+            <span>マイクとカメラを選択してください</span>
+          </v-card-subtitle>
+          <v-card-text class="my-0 pt-3 pb-0">
+            <v-container class="my-0 py-0">
+              <v-row class="my-0 py-0">
+                <v-col cols="12" class="my-0 py-0">
+                  <v-select
+                    v-model="selectedAudio"
+                    @change="onChange"
+                    :items="audioDevices"
+                    label="Select Audio"
+                    outlined
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" class="my-0 py-0">
+                  <v-select
+                    v-model="selectedVideo"
+                    @change="onChange"
+                    :items="videoDevices"
+                    label="Select Camera"
+                    outlined
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <ActionButton
+              v-if="selectedAudio && selectedVideo"
+              @click="makeCall"
+              text="OK"
+              class="mx-auto my-0 py-0"
+            />
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-bottom-navigation>
+
+    <!-- <div class="UI"> -->
+    <!-- <p>ルーム名:{{ getCurrentRoom }}</p> -->
+    <!-- </div> -->
+    <!-- {{ roomId }} -->
   </v-card>
 </template>
 
@@ -65,7 +139,9 @@ if (process.client) {
 }
 export default {
   components: {
-    VideoCard: () => import('@/components/organisms/VideoCard')
+    VideoCard: () => import('@/components/organisms/VideoCard'),
+    ActionButton: () => import('@/components/atoms/ActionButton')
+    // UserBanner: () => import('@/components/organisms/UserBanner')
   },
   props: {
     user: {
@@ -79,12 +155,14 @@ export default {
   },
   data() {
     return {
+      dialog: true,
+      bottomNav: 'cog',
       APIKey: process.env.SKYWAY_API_KEY,
       selectedAudio: '',
       selectedVideo: '',
       audioDevices: [],
       videoDevices: [],
-      videoWidth: 280,
+      videoWidth: 300,
       videoHeight: 240,
       peerStreams: [],
       localStream: null,
@@ -96,16 +174,16 @@ export default {
       isCamOn: true
     }
   },
-  computed: {
-    getCurrentRoom() {
-      if (this.roomId) {
-        this.makeCall()
-      } else if (this.existingCall) {
-        this.endCall()
-      }
-      return this.roomId
-    }
-  },
+  // computed: {
+  //   getCurrentRoom() {
+  //     if (this.roomId) {
+  //       this.makeCall()
+  //     } else if (this.existingCall) {
+  //       this.endCall()
+  //     }
+  //     return this.roomId
+  //   }
+  // },
   mounted() {
     // 利用可能デバイスの取得
     navigator.mediaDevices
@@ -140,7 +218,7 @@ export default {
 
     this.peer = new Peer({
       key: this.APIKey,
-      debug: 3
+      debug: 1
     })
 
     this.peer.on('open', () => {
@@ -189,6 +267,8 @@ export default {
     },
 
     makeCall() {
+      this.dialog = false
+      console.log('start makeCall')
       if (!this.roomId) {
         return
       }
@@ -197,12 +277,15 @@ export default {
         stream: this.localStream
       })
       this.setupCallEventHandlers(call)
+      console.log('end makeCall')
     },
     endCall() {
       this.existingCall.close()
+      this.$emit('leave')
     },
 
     setupCallEventHandlers(call) {
+      console.log('in setupCallEventHandlers')
       if (this.existingCall) {
         this.existingCall.close()
       }
@@ -212,6 +295,7 @@ export default {
       this.connectedRoomId = call.name
 
       call.on('stream', (stream) => {
+        console.log('in strem')
         this.addVideo(stream)
       })
 

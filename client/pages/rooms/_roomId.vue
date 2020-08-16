@@ -1,13 +1,23 @@
 <template>
   <v-container>
-    <ExitButton :to="'/buildings/' + buildingId" />
-    <!-- <TeacherCard :teacher="teacher" class="my-5" /> -->
+    <v-row>
+      <ExitButton :to="'/buildings/' + buildingId" />
+      <TeacherBanner
+        v-if="seatedTableId"
+        :img="teacher.img"
+        :name="teacher.name"
+      />
+    </v-row>
+    <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="my-5" />
     <VideoArea
+      v-show="seatedTableId"
       :user="user"
       :roomId="
         seatedTableId ? String(roomId) + '-' + String(seatedTableId) : null
       "
+      @leave="leave"
     />
+
     <v-card :color="$const.BASE_COLOR2">
       <v-row no-gutters>
         <v-col v-for="k in 15" :key="k" cols="4">
@@ -28,7 +38,8 @@
 export default {
   components: {
     ExitButton: () => import('@/components/atoms/ExitButton'),
-    // TeacherCard: () => import('@/components/organisms/TeacherCard'),
+    TeacherCard: () => import('@/components/organisms/TeacherCard'),
+    TeacherBanner: () => import('@/components/organisms/TeacherBanner'),
     TableCard: () => import('@/components/organisms/TableCard'),
     VideoArea: () => import('@/components/organisms/VideoArea')
   },
@@ -65,9 +76,9 @@ export default {
             id: index + 1,
             users: [
               { id: 2, name: '井上 智裕', img: 'sampleIcon2.png' },
-              { id: 3, name: '渡辺 豪志', img: 'sampleIcon3.jpg' },
-              { id: 4, name: '西井 祐貴', img: 'sampleIcon4.jpg' },
-              { id: 5, name: '平 和也', img: 'sampleIcon5.jpeg' }
+              { id: 3, name: '渡辺 豪志', img: 'sampleIcon3.jpg' }
+              // { id: 4, name: '西井 祐貴', img: 'sampleIcon4.jpg' },
+              // { id: 5, name: '平 和也', img: 'sampleIcon5.jpeg' }
             ]
           }
         } else {

@@ -67,12 +67,12 @@ export const actions = {
       })
   },
   setAuthData({ commit, dispatch }, authData) {
-    const now = new Date()
-    const expiryTimeMs = now.getTime() + 3600000
+    // const now = new Date()
+    // const expiryTimeMs = now.getTime() + 3600000
     commit('updateToken', authData.token)
-    localStorage.setItem('token', authData.token)
-    localStorage.setItem('expiryTimeMs', expiryTimeMs)
-    localStorage.setItem('refreshToken', authData.refreshToken)
+    // localStorage.setItem('token', authData.token)
+    // localStorage.setItem('expiryTimeMs', expiryTimeMs)
+    // localStorage.setItem('refreshToken', authData.refreshToken)
     setTimeout(() => {
       dispatch('refreshToken', authData.refreshToken)
     }, 3600000)
