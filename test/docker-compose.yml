@@ -1,7 +1,7 @@
 version: '3'
 services:
     client:
-        image: node:latest
+        image: node:12
         ports:
             - ${CLIENT_PORT}:${CLIENT_PORT}
         env_file: .env
@@ -15,7 +15,7 @@ services:
         depends_on:
             - api
     api:
-        image: node:latest
+        image: node:12
         ports:
             - ${API_PORT}:${API_PORT}
         env_file: .env
@@ -49,3 +49,15 @@ services:
             - ../database/init:/docker-entrypoint-initdb.d:cached
         expose:
             - 3306
+    swagger-editor:
+        image: swaggerapi/swagger-editor
+        ports:
+            - 8081:8080
+    swagger-ui:
+        image: swaggerapi/swagger-ui
+        ports:
+            - 8082:8080
+        volumes:
+            - ../api/swagger.yaml:/swagger.yaml
+        environment:
+            SWAGGER_JSON: /swagger.yaml
