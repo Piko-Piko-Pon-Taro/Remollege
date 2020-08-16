@@ -76,9 +76,9 @@ export default {
             id: index + 1,
             users: [
               { id: 2, name: '井上 智裕', img: 'sampleIcon2.png' },
-              { id: 3, name: '渡辺 豪志', img: 'sampleIcon3.jpg' },
-              { id: 4, name: '西井 祐貴', img: 'sampleIcon4.jpg' },
-              { id: 5, name: '平 和也', img: 'sampleIcon5.jpeg' }
+              { id: 3, name: '渡辺 豪志', img: 'sampleIcon3.jpg' }
+              // { id: 4, name: '西井 祐貴', img: 'sampleIcon4.jpg' },
+              // { id: 5, name: '平 和也', img: 'sampleIcon5.jpeg' }
             ]
           }
         } else {
