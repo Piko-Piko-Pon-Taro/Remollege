@@ -158,12 +158,14 @@ export default {
     login() {
       if (!this.$refs.userInputs.validate()) {
         this.success = false
+        // TODO: ログイン失敗したときの表示
       }
       this.$store.dispatch('auth/login', this.user)
     },
     signup() {
       if (!this.$refs.userInputs.validate()) {
         this.success = false
+        // TODO: サインアップ失敗したときの表示
       }
       this.$store.dispatch('auth/signup', this.user)
     },

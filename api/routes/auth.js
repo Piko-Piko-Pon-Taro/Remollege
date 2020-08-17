@@ -1,3 +1,6 @@
+// TODO:
+// - 重複する処理が結構あるのでまとめる
+
 var express = require("express");
 var router = express.Router();
 const models = require(global.models);
@@ -5,8 +8,9 @@ const User = models.User;
 
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
-const jwt_secret = "your_jwt_secret"; // FIXME:
-const expiresIn = 3600;
+const jwt_secret = "your_jwt_secret"; // FIXME: envファイルで管理する
+const expiresIn = 1800; // 30分
+const refreshExpiresIn = 3 * 30 * 24 * 3600; // 3ヶ月
 const bcrypt = require("bcrypt");
 
 /* Signup */
@@ -60,7 +64,8 @@ router.post("/signup/", async (req, res) => {
               id: user.id,
               name: user.name,
             },
-            jwt_secret
+            jwt_secret,
+            { expiresIn: refreshExpiresIn }
           );
           // レスポンス
           return res.json({ token, refreshToken });
@@ -102,14 +107,17 @@ router.post("/login/", async (req, res) => {
               id: user.id,
               name: user.name,
             },
-            jwt_secret
+            jwt_secret,
+            { expiresIn: refreshExpiresIn }
           );
           // レスポンス
+          console.log({token, refreshToken})
           return res.json({ token, refreshToken });
         });
       }
     )(req, res);
   } catch (e) {
+    console.log(e.message)
     res.json(e);
   }
 });
@@ -149,7 +157,8 @@ router.get(
             id: user.id,
             name: user.name,
           },
-          jwt_secret
+          jwt_secret,
+          { expiresIn: refreshExpiresIn }
         );
         // レスポンス
         return res.json({ token, refreshToken });
