@@ -66,6 +66,10 @@ export default {
         }
       ]
     }
+  },
+  async asyncData({ store }) {
+    // TODO: 最初にまとめて呼べるようにしたい
+    await Promise.all([store.dispatch('auth/getCurrentUser')])
   }
 }
 </script>

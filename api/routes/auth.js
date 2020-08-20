@@ -68,12 +68,12 @@ router.post("/signup/", async (req, res) => {
             { expiresIn: refreshExpiresIn }
           );
           // レスポンス
-          return res.json({ token, refreshToken });
+          return res.json({ token, refreshToken, expiresInSec: expiresIn, refreshExpiresInSec: refreshExpiresIn });
         });
       }
     )(req, res);
   } catch (e) {
-    res.json(e);
+    res.json(401, e.message);
   }
 });
 
@@ -111,14 +111,12 @@ router.post("/login/", async (req, res) => {
             { expiresIn: refreshExpiresIn }
           );
           // レスポンス
-          console.log({token, refreshToken})
-          return res.json({ token, refreshToken });
+          return res.json({ token, refreshToken, expiresInSec: expiresIn, refreshExpiresInSec: refreshExpiresIn });
         });
       }
     )(req, res);
   } catch (e) {
-    console.log(e.message)
-    res.json(e);
+    res.json(401, e.message);
   }
 });
 
@@ -127,7 +125,7 @@ router.post("/logout/", async (req, res) => {
   try {
     res.json(req.logout());
   } catch (e) {
-    res.json(e);
+    res.json(e.message);
   }
 });
 
@@ -161,10 +159,10 @@ router.get(
           { expiresIn: refreshExpiresIn }
         );
         // レスポンス
-        return res.json({ token, refreshToken });
+          return res.json({ token, refreshToken, expiresInSec: expiresIn, refreshExpiresInSec: refreshExpiresIn });
       });
     } catch (e) {
-      res.json({ e });
+      res.json(401, e.message);
     }
   }
 );
@@ -178,7 +176,7 @@ router.get(
       const user = await User.scope("auth").findByPk(req.user.id);
       res.json({ user });
     } catch (e) {
-      res.json(e);
+      res.json(401, e.message);
     }
   }
 );

@@ -4,7 +4,8 @@ var path = require("path");
 global.models = path.join(__dirname, "models/index.js");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var passport = require("./passport");
+var passport = require("passport");
+require("./passport");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
