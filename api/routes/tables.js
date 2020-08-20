@@ -17,7 +17,7 @@ router.get("/:id/chats/", async (req, res) => {
     });
     return res.json({ chats });
   } catch (e) {
-    res.json(e);
+    res.json(e.message);
   }
 });
 

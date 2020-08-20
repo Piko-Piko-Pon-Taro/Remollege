@@ -13,7 +13,7 @@ router.get("/:id", async (req, res) => {
     const userDataValues = chatDataValues.User.dataValues;
     return res.json({ chat: { ...chat, ...userDataValues } });
   } catch (e) {
-    res.json(e);
+    res.json(e.message);
   }
 });
 
@@ -27,7 +27,7 @@ router.post("/create/", async (req, res) => {
     });
     res.json({ chat });
   } catch (e) {
-    res.json(e);
+    res.json(e.message);
   }
 });
 

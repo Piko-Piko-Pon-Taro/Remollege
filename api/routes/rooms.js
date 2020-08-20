@@ -11,7 +11,7 @@ router.get("/:id/tables/", async (req, res) => {
     );
     res.json({ tables });
   } catch (e) {
-    res.json(e);
+    res.json(e.message);
   }
 });
 
@@ -22,7 +22,7 @@ router.get("/:id/users/", async (req, res) => {
     users = users.Tables.map((t) => t.TableUser.User);
     res.json({ users });
   } catch (e) {
-    res.json(e);
+    res.json(e.message);
   }
 });
 

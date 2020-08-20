@@ -9,7 +9,7 @@ router.get("/all/", async (req, res) => {
     const users = await User.findAll();
     res.json({ users });
   } catch (e) {
-    res.json(e);
+    res.json(e.message);
   }
 });
 
@@ -19,7 +19,7 @@ router.get("/:id", async (req, res) => {
     const user = await User.findByPk(req.params.id);
     res.json({ user });
   } catch (e) {
-    res.json(e);
+    res.json(e.message);
   }
 });
 
