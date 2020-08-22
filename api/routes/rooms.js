@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const Room = require(global.models).Room;
+const boom = require('@hapi/boom');
 
 /* GetOneRoom */
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
     let room = await Room.scope('withUsers').findByPk(req.params.id);
     tables = room.Tables.map(t => {
@@ -24,30 +25,30 @@ router.get("/:id", async (req, res) => {
       tables
     } });
   } catch (e) {
-    res.json(e.message);
+    next(e);
   }
 });
 
 // /* GetRoomTables */
-// router.get("/:id/tables/", async (req, res) => {
+// router.get("/:id/tables/", async (req, res, next) => {
 //   try {
 //     const { Tables: tables } = await Room.scope("withTables").findByPk(
 //       req.params.id
 //     );
 //     res.json({ tables });
 //   } catch (e) {
-//     res.json(e);
+//     next(e);
 //   }
 // });
 
 // /* GetRoomActiveUsers */
-// router.get("/:id/users/", async (req, res) => {
+// router.get("/:id/users/", async (req, res, next) => {
 //   try {
 //     let users = await Room.scope("withUsers").findByPk(req.params.id);
 //     users = users.Tables.map((t) => t.TableUser.User);
 //     res.json({ users });
 //   } catch (e) {
-//     res.json(e);
+//     next(e);
 //   }
 // });
 

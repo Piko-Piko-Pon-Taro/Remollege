@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const Chat = require(global.models).Chat;
+const boom = require('@hapi/boom');
 
 /* GetOneChat */
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const { dataValues: chatDataValues } = await Chat.scope(
       "withUsers"
@@ -11,7 +12,7 @@ router.get("/:id", async (req, res) => {
     const userDataValues = chatDataValues.User.dataValues;
     return res.json({ chat: { ...chat, ...userDataValues } });
   } catch (e) {
-    res.json(e.message);
+    next(e);
   }
 });
 
@@ -25,7 +26,7 @@ router.post("/create/", async (req, res) => {
     });
     res.json({ chat });
   } catch (e) {
-    res.json(e.message);
+    next(e);
   }
 });
 

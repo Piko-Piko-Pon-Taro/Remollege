@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const Table = require(global.models).Table;
+const boom = require('@hapi/boom');
 
 /* GetTableChats */
-router.get("/:id/chats/", async (req, res) => {
+router.get("/:id/chats/", async (req, res, next) => {
   try {
     let { Chats: chats } = await Table.scope("withChats").findByPk(
       req.params.id
@@ -15,7 +16,7 @@ router.get("/:id/chats/", async (req, res) => {
     });
     return res.json({ chats });
   } catch (e) {
-    res.json(e.message);
+    next(e);
   }
 });
 

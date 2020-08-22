@@ -1,23 +1,24 @@
 const router = require("express").Router();
 const User = require(global.models).User;
+const boom = require('@hapi/boom');
 
 /* GetAllUsers */
-router.get("/all/", async (req, res) => {
+router.get("/all/", async (req, res, next) => {
   try {
     const users = await User.findAll();
     res.json({ users });
   } catch (e) {
-    res.json(e.message);
+    next(e);
   }
 });
 
 /* GetOneUser */
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
     res.json({ user });
   } catch (e) {
-    res.json(e.message);
+    next(e);
   }
 });
 
