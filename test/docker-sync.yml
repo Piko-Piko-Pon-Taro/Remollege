@@ -1,0 +1,12 @@
+version: '2'
+options:
+    compose-dev-file-path: 'docker-compose-sync.yml'
+syncs:
+    client-sync:
+        src: '../client/'
+        sync_strategy: 'unison'
+        sync_excludes: ['../client/node_modules']
+    api-sync:
+        src: '../api/'
+        sync_strategy: 'unison'
+        sync_excludes: ['../api/node_modules']

@@ -15,8 +15,20 @@
 ## Requires
 - docker-compose@1.26.2
 ## Steps
+### Use docker-compose only
 ```
 git clone git@github.com:Piko-Piko-Pon-Taro/Remollege.git
 cd Remollege/test
 docker-compose up -d
 ```
+### Use docker-sync
+#### Mac
+```
+sudo gem install docker-sync
+brew install unison
+brew install eugenmayer/dockersync/unox
+cd Remollege/test
+docker-sync start
+```
+#### Windows
+わからないンゴねぇ

@@ -1,0 +1,13 @@
+version: '3'
+services:
+    client:
+        volumes:
+            - client-sync:/src/client
+    api:
+        volumes:
+            - api-sync:/src/api
+volumes:
+    client-sync:
+        external: true
+    api-sync:
+        external: true
