@@ -1,6 +1,7 @@
 const router = require("express").Router();
-const Chat = require(global.models).Chat;
 const boom = require('@hapi/boom');
+const addStatusOK = require('./lib/addStatusOK');
+const Chat = require(global.models).Chat;
 
 /* GetOneChat */
 router.get("/:id", async (req, res, next) => {
@@ -10,7 +11,7 @@ router.get("/:id", async (req, res, next) => {
     ).findByPk(req.params.id);
     const { User, ...chat } = chatDataValues;
     const userDataValues = chatDataValues.User.dataValues;
-    return res.json({ chat: { ...chat, ...userDataValues } });
+    res.json(addStatusOK({ chat: { ...chat, ...userDataValues } }));
   } catch (e) {
     next(e);
   }
@@ -24,7 +25,7 @@ router.post("/create/", async (req, res) => {
       userId: req.body.userId,
       content: req.body.content,
     });
-    res.json({ chat });
+    res.json(addStatusOK({ chat }));
   } catch (e) {
     next(e);
   }

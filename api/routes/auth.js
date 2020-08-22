@@ -2,8 +2,9 @@
 // - 重複する処理が結構あるのでまとめる
 
 const router = require("express").Router();
-const User = require(global.models).User;
 const boom = require('@hapi/boom');
+const addStatusOK = require('./lib/addStatusOK');
+const User = require(global.models).User;
 
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
@@ -68,7 +69,7 @@ router.post("/signup/", async (req, res, next) => {
             { expiresIn: refreshExpiresIn }
           );
           // レスポンス
-          return res.json({ token, refreshToken, expiresInSec: expiresIn, refreshExpiresInSec: refreshExpiresIn });
+          res.json(addStatusOK({ token, refreshToken, expiresInSec: expiresIn, refreshExpiresInSec: refreshExpiresIn }));
         });
       }
     )(req, res);
@@ -111,7 +112,7 @@ router.post("/login/", async (req, res, next) => {
             { expiresIn: refreshExpiresIn }
           );
           // レスポンス
-          return res.json({ token, refreshToken, expiresInSec: expiresIn, refreshExpiresInSec: refreshExpiresIn });
+          res.json(addStatusOK({ token, refreshToken, expiresInSec: expiresIn, refreshExpiresInSec: refreshExpiresIn }));
         });
       }
     )(req, res);
@@ -124,7 +125,7 @@ router.post("/login/", async (req, res, next) => {
 router.post("/logout/", async (req, res, next) => {
   try {
     req.logout();
-    res.json({ message: 'logged out' });
+    res.json(addStatusOK({ message: 'logged out' }));
   } catch (e) {
     next(e);
   }
@@ -160,7 +161,7 @@ router.get(
           { expiresIn: refreshExpiresIn }
         );
         // レスポンス
-          return res.json({ token, refreshToken, expiresInSec: expiresIn, refreshExpiresInSec: refreshExpiresIn });
+        res.json(addStatusOK({ token, refreshToken, expiresInSec: expiresIn, refreshExpiresInSec: refreshExpiresIn }));
       });
     } catch (e) {
       next(e);
@@ -175,7 +176,7 @@ router.get(
   async (req, res, next) => {
     try {
       const user = await User.scope("auth").findByPk(req.user.id);
-      res.json({ user });
+      res.json(addStatusOK({ user }));
     } catch (e) {
       next(e);
     }

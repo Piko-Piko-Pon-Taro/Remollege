@@ -1,6 +1,7 @@
 const router = require("express").Router();
-const Room = require(global.models).Room;
 const boom = require('@hapi/boom');
+const addStatusOK = require('./lib/addStatusOK');
+const Room = require(global.models).Room;
 
 /* GetOneRoom */
 router.get("/:id", async (req, res, next) => {
@@ -16,14 +17,14 @@ router.get("/:id", async (req, res, next) => {
         })
       };
     })
-    res.json({ room: {
+    res.json(addStatusOK({ room: {
       id: room.id,
       buildingId: room.buildingId,
       name: room.name,
       createdAt: room.createdAt,
       updatedAt: room.updatedAt,
       tables
-    } });
+    } }));
   } catch (e) {
     next(e);
   }
@@ -35,7 +36,7 @@ router.get("/:id", async (req, res, next) => {
 //     const { Tables: tables } = await Room.scope("withTables").findByPk(
 //       req.params.id
 //     );
-//     res.json({ tables });
+//     res.json(addStatusOK({ tables }));
 //   } catch (e) {
 //     next(e);
 //   }
@@ -46,7 +47,7 @@ router.get("/:id", async (req, res, next) => {
 //   try {
 //     let users = await Room.scope("withUsers").findByPk(req.params.id);
 //     users = users.Tables.map((t) => t.TableUser.User);
-//     res.json({ users });
+//     res.json(addStatusOK({ users }));
 //   } catch (e) {
 //     next(e);
 //   }

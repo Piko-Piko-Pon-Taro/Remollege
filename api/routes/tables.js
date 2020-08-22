@@ -1,6 +1,7 @@
 const router = require("express").Router();
-const Table = require(global.models).Table;
 const boom = require('@hapi/boom');
+const addStatusOK = require('./lib/addStatusOK');
+const Table = require(global.models).Table;
 
 /* GetTableChats */
 router.get("/:id/chats/", async (req, res, next) => {
@@ -14,7 +15,7 @@ router.get("/:id/chats/", async (req, res, next) => {
       const userDataValues = user.dataValues;
       return { ...chat, ...userDataValues };
     });
-    return res.json({ chats });
+    res.json(addStatusOK({ chats }));
   } catch (e) {
     next(e);
   }
