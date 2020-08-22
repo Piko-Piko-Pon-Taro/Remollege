@@ -1,17 +1,16 @@
 // TODO:
 // - 重複する処理が結構あるのでまとめる
 
-var express = require("express");
-var router = express.Router();
-const models = require(global.models);
-const User = models.User;
+const router = require("express").Router();
+const User = require(global.models).User;
 
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
+const bcrypt = require("bcrypt");
+
 const jwt_secret = "your_jwt_secret"; // FIXME: envファイルで管理する
 const expiresIn = 1800; // 30分
 const refreshExpiresIn = 3 * 30 * 24 * 3600; // 3ヶ月
-const bcrypt = require("bcrypt");
 
 /* Signup */
 router.post("/signup/", async (req, res) => {

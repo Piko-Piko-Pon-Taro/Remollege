@@ -1,7 +1,5 @@
-var express = require("express");
-var router = express.Router();
-const models = require(global.models);
-const User = models.User;
+const router = require("express").Router();
+const User = require(global.models).User;
 
 /* GetAllUsers */
 router.get("/all/", async (req, res) => {

@@ -1,7 +1,5 @@
-var express = require("express");
-var router = express.Router();
-const models = require(global.models);
-const Chat = models.Chat;
+const router = require("express").Router();
+const Chat = require(global.models).Chat;
 
 /* GetOneChat */
 router.get("/:id", async (req, res) => {

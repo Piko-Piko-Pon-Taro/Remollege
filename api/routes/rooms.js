@@ -1,7 +1,5 @@
-var express = require("express");
-var router = express.Router();
-const models = require(global.models);
-const Room = models.Room;
+const router = require("express").Router();
+const Room = require(global.models).Room;
 
 /* GetOneRoom */
 router.get("/:id", async (req, res) => {

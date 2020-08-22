@@ -1,7 +1,5 @@
-var express = require("express");
-var router = express.Router();
-const models = require(global.models);
-const Table = models.Table;
+const router = require("express").Router();
+const Table = require(global.models).Table;
 
 /* GetTableChats */
 router.get("/:id/chats/", async (req, res) => {
