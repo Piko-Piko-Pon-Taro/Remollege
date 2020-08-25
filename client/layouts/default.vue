@@ -10,7 +10,7 @@
     >
       <v-list dense>
         <nuxt-link
-          v-if="isAuthenticated"
+          v-show="isAuthenticated"
           :to="'/'"
           style="text-decoration: none;color:white;"
         >
@@ -27,7 +27,7 @@
         </nuxt-link>
 
         <nuxt-link
-          v-if="!isAuthenticated"
+          v-show="!isAuthenticated"
           :to="'/login'"
           style="text-decoration: none;color:white;"
         >
@@ -46,7 +46,7 @@
         <nuxt-link
           :to="'/login'"
           @click.native.stop="logout"
-          v-if="isAuthenticated"
+          v-show="isAuthenticated"
           style="color:white;text-decoration: none;"
         >
           <v-list-item link>
@@ -73,8 +73,8 @@
       <v-toolbar-title v-text="title" />
       <v-card-actions v-if="isAuthenticated">
         <v-card-text class="white--text">
-          <UserIcon :src="user.icon" class="mr-2" />
-          {{ user.name }}
+          <UserIcon :src="currentUser.img" class="mr-2" />
+          {{ currentUser.name }}
         </v-card-text>
       </v-card-actions>
     </v-app-bar>
@@ -114,16 +114,15 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Remollege',
-      user: {
-        name: 'ピコピコ ぽん太郎',
-        icon: 'sampleIcon1.jpg'
-      }
+      title: 'Remollege'
     }
   },
   computed: {
     isAuthenticated() {
-      return this.$store.getters['auth/token'] !== null
+      return this.$store.getters['auth/isLogined']
+    },
+    currentUser() {
+      return this.$store.getters['auth/user']
     }
   },
   methods: {

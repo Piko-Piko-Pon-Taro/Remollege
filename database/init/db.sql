@@ -151,10 +151,10 @@ INSERT INTO `Users` (`id`, `name`, `email`, `password`, `img`, `createdAt`, `upd
 (1, 'user', 'turunasi@ruri.waseda.jp', 'userpass', NULL, '2020-08-14 00:00:00', '2020-08-14 00:00:00'),
 (2, '店長', 'pikopiko@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
 (3, '関くん', 'pikopiko@gmail.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(4, '西井', 'nishii@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(5, '井上', 'inoue@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(6, '平', 'taira@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(7, '渡邉', 'watanabe@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00');
+(4, '西井', 'nishii@gmai.com', 'userpass', 'sampleIcon4.jpg', '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(5, '井上', 'inoue@gmai.com', 'userpass', 'sampleIcon2.png', '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(6, '平', 'taira@gmai.com', 'userpass', 'sampleIcon5.jpeg', '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(7, '渡邉', 'watanabe@gmai.com', 'userpass', 'sampleIcon3.jpg', '2020-08-15 00:00:00', '2020-08-15 00:00:00');
 
 --
 -- ダンプしたテーブルのインデックス

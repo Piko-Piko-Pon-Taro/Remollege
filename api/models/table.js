@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       sourceKey: "roomId",
       foreignKey: "id",
     });
-    Table.hasOne(models.TableUser, {
+    Table.hasMany(models.TableUser, {
       sourceKey: "id",
       foreignKey: "tableId",
     });
