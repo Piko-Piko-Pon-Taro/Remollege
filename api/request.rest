@@ -61,11 +61,14 @@ Content-Type: application/json
 ###
 ### ===== Room =====
 ###
-# @name GetRoomTables
-GET {{baseUrl}}/rooms/1/tables/
+# @name GetOneRoom
+GET {{baseUrl}}/rooms/1
 ###
-# @name GetRoomActiveUsers
-GET {{baseUrl}}/rooms/1/users/
+# # @name GetRoomTables
+# GET {{baseUrl}}/rooms/1/tables/
+###
+# # @name GetRoomActiveUsers
+# GET {{baseUrl}}/rooms/1/users/
 ###
 ### ===== Table =====
 ###

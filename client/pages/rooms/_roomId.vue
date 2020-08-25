@@ -9,9 +9,10 @@
       />
     </v-row>
     <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="my-5" />
+
     <VideoArea
       v-show="seatedTableId"
-      :user="user"
+      :user="currentUser"
       :roomId="
         seatedTableId ? String(roomId) + '-' + String(seatedTableId) : null
       "
@@ -49,20 +50,19 @@ export default {
         name: '田中愛治総長',
         img: 'teacher.jpg'
       },
-      seatedTableId: null,
-      user: {
-        id: 1,
-        name: 'ピコピコ ぽん太郎',
-        img: 'sampleIcon1.jpg'
-      }
+      seatedTableId: null
     }
   },
   computed: {
-    token() {
-      return this.$store.getters['auth/token']
+    currentUser() {
+      return this.$store.getters['auth/user']
     }
   },
-  asyncData({ store, route, error }) {
+  async asyncData({ store, route, error }) {
+    await Promise.all([
+      // TODO: 最初にまとめて呼べるようにしたい
+      store.dispatch('auth/getCurrentUser')
+    ])
     const roomId = route.params.roomId
     const buildingId = 1 // あとでDBから取ってくる
     // const tables = this.$api.get('/rooms/' + roomId + '/tables/', {headers:{
@@ -95,7 +95,7 @@ export default {
       this.seatedTableId = value
       this.tables.forEach((table, index) => {
         if (table.id === this.seatedTableId) {
-          this.tables[index].users.push(this.user)
+          this.tables[index].users.push(this.currentUser)
         }
       })
     },
@@ -103,7 +103,7 @@ export default {
       this.tables.forEach((table, index) => {
         if (table.id === this.seatedTableId) {
           table.users.forEach((user, index2) => {
-            if (user.id === this.user.id) {
+            if (user.id === this.currentUser.id) {
               this.tables[index].users.splice(index2, 1)
             }
           })

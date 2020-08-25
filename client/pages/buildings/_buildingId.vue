@@ -15,7 +15,11 @@ export default {
     ExitButton: () => import('@/components/atoms/ExitButton'),
     RoomCard: () => import('@/components/organisms/RoomCard')
   },
-  asyncData({ store, route, error }) {
+  async asyncData({ store, route, error }) {
+    await Promise.all([
+      // TODO: 最初にまとめて呼べるようにしたい
+      store.dispatch('auth/getCurrentUser')
+    ])
     const buildingId = route.params.buildingId
     const buildingNum = 51 + Number(buildingId)
     const rooms = Array(16)

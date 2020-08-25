@@ -1,54 +1,46 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
+// デフォルトのモジュールたち
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+
+// あぷぷ
+const app = express();
+
+// パス定義
 global.models = path.join(__dirname, "models/index.js");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var passport = require("./passport");
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var chatsRouter = require("./routes/chats");
-var roomsRouter = require("./routes/rooms");
-var tablesRouter = require("./routes/tables");
-var authRouter = require("./routes/auth");
+// 認証
+// http://www.passportjs.org/
+const passport = require("./passport");
 
-var app = express();
+// CORS設定
+const cors = require("cors");
+const corsOptions = {
+  origin: 'http://localhost:3001', // FIXME: 環境変数に移行する
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions));
 
-var cors = require("cors");
-app.use(cors());
-
-// view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "jade");
-
+// デフォルトのミドルウェアたち
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/chats", chatsRouter);
-app.use("/rooms", roomsRouter);
-app.use("/tables", tablesRouter);
-app.use("/auth", authRouter);
+// ルーティング
+app.use("/", require("./routes/index"));
+app.use("/users", require("./routes/users"));
+app.use("/chats", require("./routes/chats"));
+app.use("/rooms", require("./routes/rooms"));
+app.use("/tables", require("./routes/tables"));
+app.use("/auth", require("./routes/auth"));
 
+// エラーハンドリング
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
-});
+app.use((req, res, next) => next(require('@hapi/boom').notFound('missing')));
+// https://hapi.dev/module/boom/api
+app.use(require('./middleware/error'));
 
 module.exports = app;

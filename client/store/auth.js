@@ -1,86 +1,133 @@
+// TODO:
+// - localStorageへの操作を切り出す
+
 export const state = () => ({
-  token: null
+  token: null,
+  user: {}
 })
 
 export const getters = {
-  token: (state) => state.token
+  token: (state) => state.token,
+  user: (state) => state.user,
+  isLogined: (state) => !!state.token
 }
 
 export const mutations = {
-  updateToken(state, token) {
+  updateToken(state, { token }) {
     state.token = token
+  },
+  deleteToken(state) {
+    state.token = null
+  },
+  updateUser(state, { user }) {
+    state.user = user
+  },
+  deleteUser(state) {
+    state.user = {}
   }
 }
 
 export const actions = {
   async autoLogin({ commit, dispatch }) {
     const token = localStorage.getItem('token')
-    if (!token) return
-    const now = new Date()
-    const expiryTimeMs = localStorage.getItem('expiryTimeMs')
-    const isExpired = now.getTime() >= expiryTimeMs
+    const expireAt = localStorage.getItem('expireAt')
     const refreshToken = localStorage.getItem('refreshToken')
+    const refreshExpireAt = localStorage.getItem('refreshExpireAt')
+    if (!token || !expireAt || !refreshToken || !refreshExpireAt) return
+    const now = new Date()
+    const isExpired = now.getTime() >= expireAt
+    const isRefreshExpired = now.getTime() >= refreshExpireAt
+    if (isRefreshExpired) return
     if (isExpired) {
-      await dispatch('refreshToken', refreshToken)
+      await dispatch('refreshToken', { refreshToken })
     } else {
-      const expiresInMs = expiryTimeMs - now.getTime()
+      const expiresInMs = expireAt - now.getTime()
       setTimeout(() => {
-        dispatch(refreshToken)
+        dispatch('refreshToken', { refreshToken })
       }, expiresInMs)
-      commit('updateToken', token)
+      commit('updateToken', { token })
     }
   },
-  signup({ dispatch }, { name, email, password }) {
-    const vm = this
-    this.$api
-      .post('/auth/signup/', {
-        name,
-        email,
-        password
-      })
-      .then((res) => {
-        dispatch('setAuthData', res.data)
-        vm.$router.push('/')
-      })
+  async signup({ dispatch }, { name, email, password }) {
+    const { data } = await this.$api.post('/auth/signup/', {
+      name,
+      email,
+      password
+    })
+    dispatch('saveTokens', {
+      token: data.token,
+      refreshToken: data.refreshToken,
+      expiresInSec: data.expiresInSec,
+      refreshExpiresInSec: data.refreshExpiresInSec
+    })
+    dispatch('getCurrentUser')
+    this.$router.push('/')
   },
-  login({ dispatch }, { email, password }) {
-    const vm = this
-    this.$api
-      .post('/auth/login/', {
-        email,
-        password
-      })
-      .then((res) => {
-        dispatch('setAuthData', res.data)
-        vm.$router.push('/')
-      })
+  async login({ dispatch }, { email, password }) {
+    const { data } = await this.$api.post('/auth/login/', { email, password })
+    dispatch('saveTokens', {
+      token: data.token,
+      refreshToken: data.refreshToken,
+      expiresInSec: data.expiresInSec,
+      refreshExpiresInSec: data.refreshExpiresInSec
+    })
+    dispatch('getCurrentUser')
+    this.$router.push('/')
   },
-  async refreshToken({ dispatch }, refreshToken) {
-    await this.$api
-      .get('/auth/refresh/', {
+  async refreshToken({ dispatch }, { refreshToken }) {
+    try {
+      // TODO: plugin/apiにまとめたい
+      const { data } = await this.$api.get('/auth/refresh/', {
         headers: {
-          Authorization: `Bearer ${refreshToken}`
+          Authorization: `Bearer ${refreshToken}` // TODO: plugin/apiにまとめたい
         }
       })
-      .then((res) => {
-        dispatch('setAuthData', res.data)
+      dispatch('saveTokens', {
+        token: data.token,
+        refreshToken: data.refreshToken,
+        expiresInSec: data.expiresInSec,
+        refreshExpiresInSec: data.refreshExpiresInSec
       })
+    } catch (e) {
+      await dispatch('logout')
+      this.$router.push('/login')
+    }
   },
-  setAuthData({ commit, dispatch }, authData) {
-    // const now = new Date()
-    // const expiryTimeMs = now.getTime() + 3600000
-    commit('updateToken', authData.token)
-    // localStorage.setItem('token', authData.token)
-    // localStorage.setItem('expiryTimeMs', expiryTimeMs)
-    // localStorage.setItem('refreshToken', authData.refreshToken)
+  saveTokens(
+    { commit, dispatch },
+    { token, refreshToken, expiresInSec, refreshExpiresInSec }
+  ) {
+    const expiresInMs = expiresInSec * 1000
+    const refreshExpiresInMs = refreshExpiresInSec * 1000
+    const now = new Date()
+    const expireAt = now.getTime() + expiresInMs
+    const refreshExpireAt = now.getTime() + refreshExpiresInMs
+    commit('updateToken', { token })
+    localStorage.setItem('token', token)
+    localStorage.setItem('expireAt', expireAt)
+    localStorage.setItem('refreshToken', refreshToken)
+    localStorage.setItem('refreshExpireAt', refreshExpireAt)
     setTimeout(() => {
-      dispatch('refreshToken', authData.refreshToken)
-    }, 3600000)
+      dispatch('refreshToken', { refreshToken })
+    }, expiresInMs)
   },
   logout({ commit }) {
-    commit('updateToken', null)
+    commit('deleteToken')
+    commit('deleteUser')
     localStorage.removeItem('token')
-    localStorage.removeItem('expiryTimeMs')
+    localStorage.removeItem('expireAt')
     localStorage.removeItem('refreshToken')
+    localStorage.removeItem('refreshExpireAt')
+    this.$router.push('/login')
+  },
+  async getCurrentUser({ getters, commit }) {
+    const { data } = await this.$api.get('/auth/user', {
+      headers: {
+        Authorization: `Bearer ${getters.token}` // TODO: plugin/apiにまとめたい
+      }
+    })
+    const user = data.user
+    user.img = 'sampleIcon1.jpg' // FIXME: apiから取得するようにしたら削除する
+    commit('updateUser', { user })
   }
 }
