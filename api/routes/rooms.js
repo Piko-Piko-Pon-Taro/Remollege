@@ -30,6 +30,16 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+/* GetRoomsByBuildingId */
+router.get("/buildingId/:buildingId", async (req, res, next) => {
+  try {
+    const rooms = await Room.findAll({where: { buildingId: req.params.buildingId }});
+    res.json(addStatusOK({ rooms }));
+  } catch (e) {
+    next(e);
+  }
+})
+
 // /* GetRoomTables */
 // router.get("/:id/tables/", async (req, res, next) => {
 //   try {
