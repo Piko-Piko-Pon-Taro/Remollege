@@ -15,29 +15,21 @@ export default {
     ExitButton: () => import('@/components/atoms/ExitButton'),
     RoomCard: () => import('@/components/organisms/RoomCard')
   },
-  async asyncData({ store, route, error }) {
+  computed: {
+    rooms() {
+      return this.$store.getters['rooms/allByBuildingId'](
+        Number(this.$route.params.buildingId)
+      )
+    }
+  },
+  async asyncData({ store, route }) {
     await Promise.all([
       // TODO: 最初にまとめて呼べるようにしたい
-      store.dispatch('auth/getCurrentUser')
-    ])
-    const buildingId = route.params.buildingId
-    const buildingNum = 51 + Number(buildingId)
-    const rooms = Array(16)
-      .fill(0)
-      .map((value, index) => {
-        const roomId = (buildingId - 1) * 16 + index + 1
-        const roomIdInBuilding = roomId % 16 || 16
-        return {
-          id: roomId,
-          name:
-            buildingNum +
-            '-' +
-            Math.ceil(roomIdInBuilding / 4) +
-            '0' +
-            (roomIdInBuilding % 4 || 4)
-        }
+      store.dispatch('auth/fetchCurrentUser'),
+      store.dispatch('rooms/fetchByBuildingId', {
+        buildingId: route.params.buildingId
       })
-    return { buildingId, rooms }
+    ])
   }
 }
 </script>

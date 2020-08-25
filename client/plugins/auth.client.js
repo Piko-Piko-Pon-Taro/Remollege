@@ -3,7 +3,7 @@ export default ({ app, route, store }) => {
     if (to.name === 'login') {
       await store.dispatch('auth/autoLogin')
       if (store.getters['auth/isLogined']) {
-        await store.dispatch('auth/getCurrentUser')
+        await store.dispatch('auth/fetchCurrentUser')
         next(route.query.prev)
       } else {
         next()

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <ExitButton :to="'/buildings/' + buildingId" />
+      <ExitButton :to="`/buildings/${room.buildingId}`" />
       <TeacherBanner
         v-if="seatedTableId"
         :img="teacher.img"
@@ -13,18 +13,16 @@
     <VideoArea
       v-show="seatedTableId"
       :user="currentUser"
-      :roomId="
-        seatedTableId ? String(roomId) + '-' + String(seatedTableId) : null
-      "
+      :roomId="seatedTableId ? `${room.id}-${seatedTableId}` : null"
       @leave="leave"
     />
 
     <v-card :color="$const.BASE_COLOR2">
       <v-row no-gutters>
-        <v-col v-for="k in 15" :key="k" cols="4">
+        <v-col v-for="table in room.tables" :key="table.id" cols="4">
           <TableCard
             :seatedTableId="seatedTableId"
-            :table="tables[k - 1]"
+            :table="table"
             @sitDown="sitDown"
             @leave="leave"
             class="my-3 mx-3"
@@ -56,58 +54,34 @@ export default {
   computed: {
     currentUser() {
       return this.$store.getters['auth/user']
+    },
+    room() {
+      return this.$store.getters['rooms/oneByRoomId'](
+        Number(this.$route.params.roomId)
+      )
     }
   },
-  async asyncData({ store, route, error }) {
+  async asyncData({ store, route }) {
     await Promise.all([
       // TODO: 最初にまとめて呼べるようにしたい
-      store.dispatch('auth/getCurrentUser')
-    ])
-    const roomId = route.params.roomId
-    const buildingId = 1 // あとでDBから取ってくる
-    // const tables = this.$api.get('/rooms/' + roomId + '/tables/', {headers:{
-    // Authorization: `Bearer ${this.token}`
-    // }})
-    const tables = Array(16)
-      .fill(0)
-      .map((value, index) => {
-        if (index === 3) {
-          return {
-            id: index + 1,
-            users: [
-              { id: 2, name: '井上 智裕', img: 'sampleIcon2.png' },
-              { id: 3, name: '渡辺 豪志', img: 'sampleIcon3.jpg' }
-              // { id: 4, name: '西井 祐貴', img: 'sampleIcon4.jpg' },
-              // { id: 5, name: '平 和也', img: 'sampleIcon5.jpeg' }
-            ]
-          }
-        } else {
-          return {
-            id: index + 1,
-            users: []
-          }
-        }
+      store.dispatch('auth/fetchCurrentUser'),
+      store.dispatch('rooms/updateByRoomId', {
+        roomId: Number(route.params.roomId)
       })
-    return { buildingId, roomId, tables }
+    ])
   },
   methods: {
     sitDown(value) {
       this.seatedTableId = value
-      this.tables.forEach((table, index) => {
-        if (table.id === this.seatedTableId) {
-          this.tables[index].users.push(this.currentUser)
-        }
+      this.$store.dispatch('rooms/seatAtTable', {
+        roomId: this.room.id,
+        tableId: this.seatedTableId
       })
     },
     leave() {
-      this.tables.forEach((table, index) => {
-        if (table.id === this.seatedTableId) {
-          table.users.forEach((user, index2) => {
-            if (user.id === this.currentUser.id) {
-              this.tables[index].users.splice(index2, 1)
-            }
-          })
-        }
+      this.$store.dispatch('rooms/leaveFromTable', {
+        roomId: this.room.id,
+        tableId: this.seatedTableId
       })
       this.seatedTableId = null
     }

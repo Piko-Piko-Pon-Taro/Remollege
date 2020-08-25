@@ -60,7 +60,7 @@ export const actions = {
       expiresInSec: data.expiresInSec,
       refreshExpiresInSec: data.refreshExpiresInSec
     })
-    dispatch('getCurrentUser')
+    dispatch('updateCurrentUser')
     this.$router.push('/')
   },
   async login({ dispatch }, { email, password }) {
@@ -71,7 +71,7 @@ export const actions = {
       expiresInSec: data.expiresInSec,
       refreshExpiresInSec: data.refreshExpiresInSec
     })
-    dispatch('getCurrentUser')
+    dispatch('updateCurrentUser')
     this.$router.push('/')
   },
   async refreshToken({ dispatch }, { refreshToken }) {
@@ -120,7 +120,11 @@ export const actions = {
     localStorage.removeItem('refreshExpireAt')
     this.$router.push('/login')
   },
-  async getCurrentUser({ getters, commit }) {
+  fetchCurrentUser({ state, dispatch }) {
+    if (Object.keys(state.user).length > 0) return
+    dispatch('updateCurrentUser')
+  },
+  async updateCurrentUser({ commit, getters }) {
     const { data } = await this.$api.get('/auth/user', {
       headers: {
         Authorization: `Bearer ${getters.token}` // TODO: plugin/apiにまとめたい
