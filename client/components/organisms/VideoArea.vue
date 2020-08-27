@@ -19,7 +19,7 @@
             :name="user.name"
             :width="videoWidth"
             class="mx-2"
-          /> -->
+          />-->
         </v-col>
         <v-col
           v-for="peerStream in peerStreams"
@@ -41,7 +41,7 @@
             :width="videoWidth"
             class="mx-2"
             style="display: block;"
-          /> -->
+          />-->
         </v-col>
       </v-row>
     </div>
@@ -73,9 +73,9 @@
         <span value="speaker">Speaker</span>
         <v-icon>mdi-volume-high</v-icon>
         <v-icon>mdi-volume-off</v-icon>
-      </v-btn> -->
+      </v-btn>-->
 
-      <v-dialog v-if="roomId" v-model="dialog" persistent max-width="600px">
+      <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
           <v-btn v-bind="attrs" v-on="on" value="cog">
             <span>Settings</span>
@@ -128,7 +128,7 @@
     <!-- <div class="UI"> -->
     <!-- <p>ルーム名:{{ getCurrentRoom }}</p> -->
     <!-- </div> -->
-    <!-- {{ roomId }} -->
+    <!-- {{ chatId }} -->
   </v-card>
 </template>
 
@@ -148,14 +148,14 @@ export default {
       type: Object,
       default: null
     },
-    roomId: {
+    chatId: {
       type: String,
       default: null
     }
   },
   data() {
     return {
-      dialog: true,
+      dialog: false,
       bottomNav: 'cog',
       APIKey: process.env.SKYWAY_API_KEY,
       selectedAudio: '',
@@ -176,12 +176,12 @@ export default {
   },
   // computed: {
   //   getCurrentRoom() {
-  //     if (this.roomId) {
+  //     if (this.chatId) {
   //       this.makeCall()
   //     } else if (this.existingCall) {
   //       this.endCall()
   //     }
-  //     return this.roomId
+  //     return this.chatId
   //   }
   // },
   mounted() {
@@ -218,7 +218,7 @@ export default {
 
     this.peer = new Peer({
       key: this.APIKey,
-      debug: 1
+      debug: 3
     })
 
     this.peer.on('open', () => {
@@ -269,10 +269,10 @@ export default {
     makeCall() {
       this.dialog = false
       console.log('start makeCall')
-      if (!this.roomId) {
+      if (!this.chatId) {
         return
       }
-      const call = this.peer.joinRoom(this.roomId, {
+      const call = this.peer.joinRoom(this.chatId, {
         mode: 'sfu',
         stream: this.localStream
       })

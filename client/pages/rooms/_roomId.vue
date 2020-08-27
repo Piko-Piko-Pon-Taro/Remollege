@@ -13,7 +13,7 @@
     <VideoArea
       v-show="seatedTableId"
       :user="currentUser"
-      :roomId="seatedTableId ? `${room.id}-${seatedTableId}` : null"
+      :chatId="seatedTableId ? `${room.id}-${seatedTableId}` : null"
       @leave="leave"
     />
 
