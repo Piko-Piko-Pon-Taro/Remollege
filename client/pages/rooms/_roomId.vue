@@ -11,6 +11,7 @@
     <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="my-5" />
 
     <VideoArea
+      ref="videoArea"
       v-show="seatedTableId"
       :user="currentUser"
       :chatId="seatedTableId ? `${room.id}-${seatedTableId}` : null"
@@ -73,6 +74,7 @@ export default {
   methods: {
     sitDown(value) {
       this.seatedTableId = value
+      this.$refs.videoArea.makeCall()
       this.$store.dispatch('rooms/seatAtTable', {
         roomId: this.room.id,
         tableId: this.seatedTableId

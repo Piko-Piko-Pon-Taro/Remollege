@@ -69,6 +69,7 @@
         <v-icon v-if="isMute">mdi-microphone-off</v-icon>
       </v-btn>
 
+      <!-- 相手の音ミュート用 -->
       <!-- <v-btn>
         <span value="speaker">Speaker</span>
         <v-icon>mdi-volume-high</v-icon>
@@ -95,7 +96,7 @@
                 <v-col cols="12" class="my-0 py-0">
                   <v-select
                     v-model="selectedAudio"
-                    @change="onChange"
+                    @change="onDeviceChange"
                     :items="audioDevices"
                     label="Select Audio"
                     outlined
@@ -104,7 +105,7 @@
                 <v-col cols="12" class="my-0 py-0">
                   <v-select
                     v-model="selectedVideo"
-                    @change="onChange"
+                    @change="onDeviceChange"
                     :items="videoDevices"
                     label="Select Camera"
                     outlined
@@ -116,7 +117,7 @@
           <v-card-actions>
             <ActionButton
               v-if="selectedAudio && selectedVideo"
-              @click="makeCall"
+              @click="dialog = false"
               text="OK"
               class="mx-auto my-0 py-0"
             />
@@ -124,11 +125,8 @@
         </v-card>
       </v-dialog>
     </v-bottom-navigation>
-
-    <!-- <div class="UI"> -->
-    <!-- <p>ルーム名:{{ getCurrentRoom }}</p> -->
-    <!-- </div> -->
-    <!-- {{ chatId }} -->
+    <p>audio: {{ selectedAudio }}</p>
+    <p>video: {{ selectedVideo }}</p>
   </v-card>
 </template>
 
@@ -174,48 +172,7 @@ export default {
       isCamOn: true
     }
   },
-  // computed: {
-  //   getCurrentRoom() {
-  //     if (this.chatId) {
-  //       this.makeCall()
-  //     } else if (this.existingCall) {
-  //       this.endCall()
-  //     }
-  //     return this.chatId
-  //   }
-  // },
   mounted() {
-    // 利用可能デバイスの取得
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then(() =>
-        navigator.mediaDevices
-          .enumerateDevices()
-          .then((deviceInfos) => {
-            for (let i = 0; i !== deviceInfos.length; ++i) {
-              const deviceInfo = deviceInfos[i]
-              if (deviceInfo.kind === 'audioinput') {
-                this.audioDevices.push({
-                  text:
-                    deviceInfo.label ||
-                    `Microphone ${this.audioDevices.length}`,
-                  value: deviceInfo.deviceId
-                })
-              } else if (deviceInfo.kind === 'videoinput') {
-                this.videoDevices.push({
-                  text:
-                    deviceInfo.label || `Camera  ${this.videoDevices.length}`,
-                  value: deviceInfo.deviceId
-                })
-              }
-            }
-          })
-          .catch(function(error) {
-            console.error('mediaDevices.enumerateDevices() error:', error)
-          })
-      )
-      .catch((err) => alert(`${err.name} ${err.message}`))
-
     this.peer = new Peer({
       key: this.APIKey,
       debug: 3
@@ -236,13 +193,44 @@ export default {
   },
 
   methods: {
-    onChange() {
-      if (this.selectedAudio !== '' && this.selectedVideo !== '') {
-        this.connectLocalCamera()
-      }
-    },
+    getDefaultDevices() {
+      console.log('start getDefault')
+      navigator.mediaDevices
+        .enumerateDevices()
+        .then((deviceInfos) => {
+          for (let i = 0; i !== deviceInfos.length; ++i) {
+            const deviceInfo = deviceInfos[i]
+            if (deviceInfo.kind === 'audioinput') {
+              this.audioDevices.push({
+                text:
+                  deviceInfo.label || `Microphone ${this.audioDevices.length}`,
+                value: deviceInfo.deviceId
+              })
+            } else if (deviceInfo.kind === 'videoinput') {
+              this.videoDevices.push({
+                text: deviceInfo.label || `Camera  ${this.videoDevices.length}`,
+                value: deviceInfo.deviceId
+              })
+            }
+          }
+          this.selectedAudio = this.audioDevices[0].value
+          this.selectedVideo = this.videoDevices[0].value
+          console.log('aaa:', this.selectedAudio, this.selectedVideo)
+          this.connectSelectedDevices()
+          // navigator.mediaDevices
+          //   .getUserMedia(constraints)
+          //   .then((stream) => {
+          //     this.localStream = stream
+          //   })
+          //   .catch((err) => {
+          //     console.log(err.name + ': ' + err.message)
+          //   })
+        })
+        .catch((err) => {
+          console.log(err.name + ': ' + err.message)
+        })
 
-    async connectLocalCamera() {
+      /*
       const constraints = {
         audio: this.selectedAudio
           ? { deviceId: { exact: this.selectedAudio } }
@@ -251,23 +239,84 @@ export default {
           ? { deviceId: { exact: this.selectedVideo } }
           : false
       }
+      constraints.video.width = {
+        exact: this.videoWidth
+      }
+      constraints.video.height = {
+        exact: this.videoHeight
+      }
+*/
+
+      console.log('end getDefault')
+    },
+
+    getDeviceList() {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then(() =>
+          navigator.mediaDevices
+            .enumerateDevices()
+            .then((deviceInfos) => {
+              for (let i = 0; i !== deviceInfos.length; ++i) {
+                const deviceInfo = deviceInfos[i]
+                if (deviceInfo.kind === 'audioinput') {
+                  this.audioDevices.push({
+                    text:
+                      deviceInfo.label ||
+                      `Microphone ${this.audioDevices.length}`,
+                    value: deviceInfo.deviceId
+                  })
+                } else if (deviceInfo.kind === 'videoinput') {
+                  this.videoDevices.push({
+                    text:
+                      deviceInfo.label || `Camera  ${this.videoDevices.length}`,
+                    value: deviceInfo.deviceId
+                  })
+                }
+              }
+            })
+            .catch(function(error) {
+              console.error('mediaDevices.enumerateDevices() error:', error)
+            })
+        )
+        .catch((err) => alert(`${err.name} ${err.message}`))
+    },
+
+    onDeviceChange() {
+      // ダイアログ閉じたときに後で変更
+      if (this.selectedAudio !== '' && this.selectedVideo !== '') {
+        // this.connectSelectedDevices()
+        // return
+      }
+    },
+
+    async connectSelectedDevices() {
+      const constraints = {
+        audio: this.SelectedAudio
+          ? { deviceId: { exact: this.selectedAudio } }
+          : false,
+        video: this.selectedVideo
+          ? { deviceId: { exact: this.selectedVideo } }
+          : false
+      }
       if (constraints.video) {
         constraints.video.width = {
-          min: this.videoWidth,
-          max: this.videoWidth
+          exact: this.videoWidth
         }
         constraints.video.height = {
-          min: this.videoHeight,
-          max: this.videoHeight
+          exact: this.videoHeight
         }
       }
-
+      console.log('constraints:', constraints)
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
       this.localStream = stream
     },
 
     makeCall() {
-      this.dialog = false
+      this.getDefaultDevices()
+      // 利用可能デバイスの取得
+      // this.getDeviceList()
+
       console.log('start makeCall')
       if (!this.chatId) {
         return
@@ -295,7 +344,7 @@ export default {
       this.connectedRoomId = call.name
 
       call.on('stream', (stream) => {
-        console.log('in strem')
+        console.log('in stream')
         this.addVideo(stream)
       })
 
