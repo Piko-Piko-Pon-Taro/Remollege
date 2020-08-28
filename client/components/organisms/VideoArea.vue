@@ -196,62 +196,6 @@ export default {
     getDefaultDevices() {
       console.log('start getDefault')
       navigator.mediaDevices
-        .enumerateDevices()
-        .then((deviceInfos) => {
-          for (let i = 0; i !== deviceInfos.length; ++i) {
-            const deviceInfo = deviceInfos[i]
-            if (deviceInfo.kind === 'audioinput') {
-              this.audioDevices.push({
-                text:
-                  deviceInfo.label || `Microphone ${this.audioDevices.length}`,
-                value: deviceInfo.deviceId
-              })
-            } else if (deviceInfo.kind === 'videoinput') {
-              this.videoDevices.push({
-                text: deviceInfo.label || `Camera  ${this.videoDevices.length}`,
-                value: deviceInfo.deviceId
-              })
-            }
-          }
-          this.selectedAudio = this.audioDevices[0].value
-          this.selectedVideo = this.videoDevices[0].value
-          console.log('aaa:', this.selectedAudio, this.selectedVideo)
-          this.connectSelectedDevices()
-          // navigator.mediaDevices
-          //   .getUserMedia(constraints)
-          //   .then((stream) => {
-          //     this.localStream = stream
-          //   })
-          //   .catch((err) => {
-          //     console.log(err.name + ': ' + err.message)
-          //   })
-        })
-        .catch((err) => {
-          console.log(err.name + ': ' + err.message)
-        })
-
-      /*
-      const constraints = {
-        audio: this.selectedAudio
-          ? { deviceId: { exact: this.selectedAudio } }
-          : false,
-        video: this.selectedVideo
-          ? { deviceId: { exact: this.selectedVideo } }
-          : false
-      }
-      constraints.video.width = {
-        exact: this.videoWidth
-      }
-      constraints.video.height = {
-        exact: this.videoHeight
-      }
-*/
-
-      console.log('end getDefault')
-    },
-
-    getDeviceList() {
-      navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
         .then(() =>
           navigator.mediaDevices
@@ -274,13 +218,76 @@ export default {
                   })
                 }
               }
+              this.selectedAudio = this.audioDevices[0].value
+              this.selectedVideo = this.videoDevices[0].value
+              console.log('aaa:', this.selectedAudio, this.selectedVideo)
+              this.connectSelectedDevices()
+              // navigator.mediaDevices
+              //   .getUserMedia(constraints)
+              //   .then((stream) => {
+              //     this.localStream = stream
+              //   })
+              //   .catch((err) => {
+              //     console.log(err.name + ': ' + err.message)
+              //   })
             })
-            .catch(function(error) {
-              console.error('mediaDevices.enumerateDevices() error:', error)
+            .catch((err) => {
+              console.log(err.name + ': ' + err.message)
             })
         )
         .catch((err) => alert(`${err.name} ${err.message}`))
+
+      /*
+      const constraints = {
+        audio: this.selectedAudio
+          ? { deviceId: { exact: this.selectedAudio } }
+          : false,
+        video: this.selectedVideo
+          ? { deviceId: { exact: this.selectedVideo } }
+          : false
+      }
+      constraints.video.width = {
+        exact: this.videoWidth
+      }
+      constraints.video.height = {
+        exact: this.videoHeight
+      }
+*/
+
+      console.log('end getDefault')
     },
+
+    // getDeviceList() {
+    //   navigator.mediaDevices
+    //     .getUserMedia({ video: true, audio: true })
+    //     .then(() =>
+    //       navigator.mediaDevices
+    //         .enumerateDevices()
+    //         .then((deviceInfos) => {
+    //           for (let i = 0; i !== deviceInfos.length; ++i) {
+    //             const deviceInfo = deviceInfos[i]
+    //             if (deviceInfo.kind === 'audioinput') {
+    //               this.audioDevices.push({
+    //                 text:
+    //                   deviceInfo.label ||
+    //                   `Microphone ${this.audioDevices.length}`,
+    //                 value: deviceInfo.deviceId
+    //               })
+    //             } else if (deviceInfo.kind === 'videoinput') {
+    //               this.videoDevices.push({
+    //                 text:
+    //                   deviceInfo.label || `Camera  ${this.videoDevices.length}`,
+    //                 value: deviceInfo.deviceId
+    //               })
+    //             }
+    //           }
+    //         })
+    //         .catch(function(error) {
+    //           console.error('mediaDevices.enumerateDevices() error:', error)
+    //         })
+    //     )
+    //     .catch((err) => alert(`${err.name} ${err.message}`))
+    // },
 
     onDeviceChange() {
       // ダイアログ閉じたときに後で変更
