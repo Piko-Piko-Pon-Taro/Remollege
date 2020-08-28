@@ -34,6 +34,7 @@ router.post("/signup/", async (req, res, next) => {
 
     // ユーザー作成
     req.body.password = hashedPassword;
+    req.body.img = 'sampleIcon1.jpg'; // TODO: 画像アップロードできるようになったら削除する
     await User.create(req.body);
 
     // 認証

@@ -4,8 +4,9 @@ export const state = () => ({
 
 export const getters = {
   allByBuildingId: (state) => (buildingId) =>
-    state.rooms.filter((r) => r.buildingId === buildingId),
-  oneByRoomId: (state) => (roomId) => state.rooms.find((r) => r.id === roomId)
+    state.rooms.filter((r) => r.buildingId === Number(buildingId)),
+  oneByRoomId: (state) => (roomId) =>
+    state.rooms.find((r) => r.id === Number(roomId))
 }
 
 export const mutations = {
@@ -31,12 +32,12 @@ export const mutations = {
       state.rooms.push(room)
     }
   },
-  seatAtTable(state, { roomId, tableId, currentUser }) {
+  seatAtTable(state, { roomId, tableId, user }) {
     state.rooms = state.rooms.map((stateRoom) => {
       if (stateRoom.id === roomId) {
         stateRoom.tables = stateRoom.tables.map((stateTable) => {
           if (stateTable.id === tableId) {
-            stateTable.users.push(currentUser)
+            stateTable.users.push(user)
           }
           return stateTable
         })
@@ -44,13 +45,13 @@ export const mutations = {
       return stateRoom
     })
   },
-  leaveFromTable(state, { roomId, tableId, currentUser }) {
+  leaveFromTable(state, { roomId, tableId, userId }) {
     state.rooms = state.rooms.map((stateRoom) => {
       if (stateRoom.id === roomId) {
         stateRoom.tables = stateRoom.tables.map((stateTable) => {
           if (stateTable.id === tableId) {
             stateTable.users = stateTable.users.filter(
-              (stateUser) => stateUser.id !== currentUser.id
+              (stateUser) => stateUser.id !== userId
             )
           }
           return stateTable
@@ -70,20 +71,18 @@ export const actions = {
     const { data } = await this.$api.get(`rooms/${roomId}`)
     commit('updateOne', { room: data.room })
   },
-  seatAtTable({ commit, rootGetters }, { roomId, tableId }) {
-    // TODO: socket.ioでみなさんにも反映させる
+  SOCKET_someOneSitsDown({ commit }, { roomId, tableId, user }) {
     commit('seatAtTable', {
       roomId,
       tableId,
-      currentUser: rootGetters['auth/user']
+      user
     })
   },
-  leaveFromTable({ commit, rootGetters }, { roomId, tableId }) {
-    // TODO: socket.ioでみなさんにも反映させる
+  SOCKET_someOneStandsUp({ commit }, { roomId, tableId, userId }) {
     commit('leaveFromTable', {
       roomId,
       tableId,
-      currentUser: rootGetters['auth/user']
+      userId
     })
   }
 }

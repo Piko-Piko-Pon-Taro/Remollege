@@ -56,9 +56,7 @@ export default {
       return this.$store.getters['auth/user']
     },
     room() {
-      return this.$store.getters['rooms/oneByRoomId'](
-        Number(this.$route.params.roomId)
-      )
+      return this.$store.getters['rooms/oneByRoomId'](this.$route.params.roomId)
     }
   },
   async asyncData({ store, route }) {
@@ -66,22 +64,31 @@ export default {
       // TODO: 最初にまとめて呼べるようにしたい
       store.dispatch('auth/fetchCurrentUser'),
       store.dispatch('rooms/updateByRoomId', {
-        roomId: Number(route.params.roomId)
+        roomId: route.params.roomId
       })
     ])
+  },
+  mounted() {
+    this.socket = this.$nuxtSocket({})
+    this.socket.emit('enter', {
+      roomId: this.room.id,
+      userId: this.currentUser.id
+    })
   },
   methods: {
     sitDown(value) {
       this.seatedTableId = value
-      this.$store.dispatch('rooms/seatAtTable', {
+      this.socket.emit('sitDown', {
         roomId: this.room.id,
-        tableId: this.seatedTableId
+        tableId: this.seatedTableId,
+        userId: this.currentUser.id
       })
     },
     leave() {
-      this.$store.dispatch('rooms/leaveFromTable', {
+      this.socket.emit('standUp', {
         roomId: this.room.id,
-        tableId: this.seatedTableId
+        tableId: this.seatedTableId,
+        userId: this.currentUser.id
       })
       this.seatedTableId = null
     }
