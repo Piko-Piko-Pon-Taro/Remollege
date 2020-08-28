@@ -1,6 +1,8 @@
 <template>
   <v-card :color="$const.BASE_COLOR" class="mx-auto pa-5 elevation-0">
     <div id="videos-container">
+      peerStreams:{{ peerStreams.length }}
+
       <v-row no-gutters>
         <v-col :width="videoWidth">
           <VideoCard
@@ -171,7 +173,7 @@ export default {
   mounted() {
     this.peer = new Peer({
       key: this.APIKey,
-      debug: 3
+      debug: 0
     })
 
     this.peer.on('open', () => {
@@ -189,7 +191,7 @@ export default {
   },
 
   methods: {
-    getDefaultDevices() {
+    getDefaultDevices(chatId) {
       console.log('start getDefault')
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true }) // デバイス許可求める
@@ -216,8 +218,29 @@ export default {
               }
               this.selectedAudio = this.audioDevices[0].value
               this.selectedVideo = this.videoDevices[0].value
-              console.log('aaa:', this.selectedAudio, this.selectedVideo)
-              this.connectSelectedDevices()
+              // this.connectSelectedDevices()
+              const constraints = {
+                audio: this.selectedAudio
+                  ? { deviceId: { exact: this.selectedAudio } }
+                  : false,
+                video: this.selectedVideo
+                  ? { deviceId: { exact: this.selectedVideo } }
+                  : false
+              }
+              if (constraints.video) {
+                constraints.video.width = {
+                  exact: this.videoWidth
+                }
+                constraints.video.height = {
+                  exact: this.videoHeight
+                }
+              }
+              navigator.mediaDevices
+                .getUserMedia(constraints)
+                .then((stream) => {
+                  this.localStream = stream
+                  this.makeCall(chatId)
+                })
             })
             .catch((err) => {
               console.log(err.name + ': ' + err.message)
@@ -244,7 +267,6 @@ export default {
           ? { deviceId: { exact: this.selectedVideo } }
           : false
       }
-      console.log('a:', constraints)
       if (constraints.video) {
         constraints.video.width = {
           exact: this.videoWidth
@@ -253,43 +275,36 @@ export default {
           exact: this.videoHeight
         }
       }
-      console.log('constraints:', constraints)
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
       this.localStream = stream
     },
 
+    initChat(chatId) {
+      console.log('start init_chat')
+      this.getDefaultDevices(chatId)
+      console.log('end init_chat')
+    },
     makeCall(chatId) {
-      this.getDefaultDevices()
+      console.log('start makeCall:', chatId, this.localStream)
 
-      console.log('start makeCall')
-      // if (!chatId) {
-      //   return
-      // }
       const call = this.peer.joinRoom(chatId, {
         mode: 'sfu',
         stream: this.localStream
       })
-      console.log('not chatIda')
+      console.log('call:', call)
       this.setupCallEventHandlers(call)
       console.log('end makeCall')
-    },
-    closeCall() {
-      // 通話がつながっているなら通話から抜ける
-      if (this.existingCall) {
-        this.existingCall.close()
-      }
     },
 
     setupCallEventHandlers(call) {
       console.log('in setupCallEventHandlers')
-      if (this.existingCall) {
-        this.existingCall.close()
-      }
+      this.closeCall() // 既存の通話を抜ける
 
       this.existingCall = call
-      console.log('existing call:', this.existingCall)
       this.setupEndCallUI()
+      console.log('call:', call)
       this.connectedRoomId = call.name
+      console.log('end call:')
 
       call.on('stream', (stream) => {
         console.log('in stream')
@@ -305,6 +320,7 @@ export default {
         this.removeAllVideos()
         this.setupMakeCallUI()
       })
+      console.log('out setupCallEventHandlers')
     },
 
     addVideo(stream) {
@@ -341,6 +357,15 @@ export default {
         const videoTrack = this.localStream.getVideoTracks()[0]
         videoTrack.enabled = !videoTrack.enabled
         this.isCamOn = videoTrack.enabled
+      }
+    },
+    closeCall() {
+      console.log('in close call:', this.existingCall)
+      // 通話がつながっているなら通話から抜ける
+      if (this.existingCall) {
+        this.existingCall.close()
+        this.existingCall = null
+        console.log('closed call:', this.existingCall)
       }
     }
   }

@@ -78,7 +78,7 @@ export default {
   methods: {
     sitDown(value) {
       this.seatedTableId = value
-      this.$refs.videoArea.makeCall(
+      this.$refs.videoArea.initChat(
         this.$route.params.roomId + '-' + this.seatedTableId
       )
       this.socket.emit('sitDown', {
