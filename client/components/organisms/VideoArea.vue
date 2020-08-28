@@ -222,38 +222,12 @@ export default {
               this.selectedVideo = this.videoDevices[0].value
               console.log('aaa:', this.selectedAudio, this.selectedVideo)
               this.connectSelectedDevices()
-              // navigator.mediaDevices
-              //   .getUserMedia(constraints)
-              //   .then((stream) => {
-              //     this.localStream = stream
-              //   })
-              //   .catch((err) => {
-              //     console.log(err.name + ': ' + err.message)
-              //   })
             })
             .catch((err) => {
               console.log(err.name + ': ' + err.message)
             })
         )
         .catch((err) => alert(`${err.name} ${err.message}`))
-
-      /*
-      const constraints = {
-        audio: this.selectedAudio
-          ? { deviceId: { exact: this.selectedAudio } }
-          : false,
-        video: this.selectedVideo
-          ? { deviceId: { exact: this.selectedVideo } }
-          : false
-      }
-      constraints.video.width = {
-        exact: this.videoWidth
-      }
-      constraints.video.height = {
-        exact: this.videoHeight
-      }
-*/
-
       console.log('end getDefault')
     },
 
@@ -298,14 +272,17 @@ export default {
     },
 
     async connectSelectedDevices() {
+      console.log('selectedA:', this.selectedAudio)
+      console.log(this.selectedAudio, this.selectedVideo)
       const constraints = {
-        audio: this.SelectedAudio
+        audio: this.selectedAudio
           ? { deviceId: { exact: this.selectedAudio } }
           : false,
         video: this.selectedVideo
           ? { deviceId: { exact: this.selectedVideo } }
           : false
       }
+      console.log('a:', constraints)
       if (constraints.video) {
         constraints.video.width = {
           exact: this.videoWidth

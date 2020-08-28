@@ -79,6 +79,7 @@ export default {
   methods: {
     sitDown(value) {
       this.seatedTableId = value
+      this.$refs.videoArea.makeCall()
       this.socket.emit('sitDown', {
         roomId: this.room.id,
         tableId: this.seatedTableId,
