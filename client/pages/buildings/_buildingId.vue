@@ -18,7 +18,7 @@ export default {
   computed: {
     rooms() {
       return this.$store.getters['rooms/allByBuildingId'](
-        Number(this.$route.params.buildingId)
+        this.$route.params.buildingId
       )
     }
   },

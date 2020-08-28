@@ -131,7 +131,6 @@ export const actions = {
       }
     })
     const user = data.user
-    user.img = 'sampleIcon1.jpg' // FIXME: apiから取得するようにしたら削除する
     commit('updateUser', { user })
   }
 }

@@ -64,32 +64,14 @@ export default {
   io: {
     sockets: [
       {
-        name: 'api',
         url: 'http://localhost:3000',
-        // url: 'https://nuxt-socket-io.herokuapp.com',
-        default: true,
         vuex: {
           actions: [
-            {
-              // When key is received,
-              // dispatch action value
-              newMessage: 'SOCKET_newMessage',
-              updateUsers: 'SOCKET_updateUsers'
-            }
+            // When "key" is received,
+            // dispatch action "value"
+            { someOneSitsDown: 'rooms/SOCKET_someOneSitsDown' },
+            { someOneStandsUp: 'rooms/SOCKET_someOneStandsUp' }
           ]
-          // emitBacks: [
-          //   // When "examples/sample" state changes,
-          //   // emit back the event "examples/sample"
-          //   'examples/sample',
-          //   {
-          //     // When "examples/sample2" state changes,
-          //     // emit back the event "sample2"
-          //     'examples/sample2': 'sample2'
-          //   },
-          //   // Alternatively, the previous entry
-          //   // could be written with the arrow format:
-          //   'examples/sample2 <-- sample2'  // S/A
-          // ]
         }
       }
     ]
