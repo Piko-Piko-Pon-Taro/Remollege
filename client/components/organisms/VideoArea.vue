@@ -171,7 +171,7 @@ export default {
     }
   },
   mounted() {
-    this.peer = new Peer({
+    this.peer = new Peer(this.user.id, {
       key: this.APIKey,
       debug: 0
     })
@@ -185,8 +185,10 @@ export default {
       this.setupCallEventHandlers(call)
     })
 
-    this.peer.on('error', () => {
-      alert('接続エラー')
+    this.peer.on('error', (error) => {
+      console.log('error!!!:', JSON.stringify(error))
+      console.log('err type:', typeof error)
+      alert(error)
     })
   },
 

@@ -75,6 +75,18 @@ export default {
       userId: this.currentUser.id
     })
   },
+  beforeDestroy() {
+    console.log('before destroy')
+    // console.log(
+    //   // this.room.id, // だめ
+    //   this.seatedTableId, //ok
+    //   this.$route.params.roomId, // だめ
+    //   this.currentUser.id // ok
+    // )
+
+    // this.leave()
+    this.$refs.videoArea.closeCall()
+  },
   methods: {
     sitDown(value) {
       this.seatedTableId = value
