@@ -187,8 +187,8 @@ export default {
       this.setupCallEventHandlers(call)
     })
 
-    this.peer.on('error', (err) => {
-      alert(err.message)
+    this.peer.on('error', () => {
+      alert('接続エラー')
     })
   },
 
@@ -196,7 +196,7 @@ export default {
     getDefaultDevices() {
       console.log('start getDefault')
       navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
+        .getUserMedia({ video: true, audio: true }) // デバイス許可求める
         .then(() =>
           navigator.mediaDevices
             .enumerateDevices()
