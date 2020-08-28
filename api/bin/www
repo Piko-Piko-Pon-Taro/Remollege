@@ -22,64 +22,54 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
- * WebSocket // TODO:
+ * WebSocket
  */
-// const models = require(global.models);
-// const User = models.User;
-// var io = require('socket.io')(server);
-// const m = (name, text, id) => ({ name, text, id });
-// io.on('connection', socket => {
-//   socket.on('addUser', (data, cb) => {
-//     if (!data.name || !data.room) {
-//       return cb('incorrect data')
-//     }
+const models = require(global.models);
+const User = models.User;
+const TableUser = models.TableUser;
+const io = require('socket.io')(server);
+io.on('connection', socket => {
 
-//     socket.join(data.room)
+  socket.on('enter', ({ roomId, userId }) => {
+    socket.join(`user-${userId}`);
+    socket.join(`room-${roomId}`);
+  });
 
-//     users.remove(socket.id)
-//     users.add({
-//       id: socket.id,
-//       name: data.name,
-//       room: data.room
-//     })
+  socket.on('sitDown', async ({ roomId, tableId, userId }) => {
+    socket.join(`table-${tableId}`);
+    const tableUser = await TableUser.create({ tableId, userId });
+    const user = await User.findByPk(tableUser.userId);
+    io.to(`room-${roomId}`).emit('someOneSitsDown', { roomId, tableId, user });
+  });
 
-//     cb({ userId: socket.id })
-//     io.to(data.room).emit('updateUsers', users.getByRoom(data.room))
+  socket.on('standUp', async ({ roomId, tableId, userId }) => {
+    io.to(`room-${roomId}`).emit('someOneStandsUp', { roomId, tableId, userId });
+    await TableUser.destroy({ where: { userId }, force: true });
+    socket.leave(`table-${tableId}`);
+  });
 
-//     socket.emit('newMessage', m('admin', `Wellcome in our room ${data.name}`))
-//     socket.broadcast
-//       .to(data.room)
-//       .emit('newMessage', m('admin', `${data.name} joined to room`))
-//   })
+  socket.on('disconnecting', () => {
+    const isStillSitting = Object.keys(socket.rooms).some(r => {
+      return /^table-/.test(r);
+    });
+    if (isStillSitting) {
+      let roomId = null, tableId = null, userId = null;
+      Object.keys(socket.rooms).forEach(r => {
+        if (/^room-/.test(r)) {
+          roomId = r.slice(5);
+        } else if (/^table-/.test(r)) {
+          tableId = r.slice(6);
+        } else if (/^user-/.test(r)) {
+          userId = r.slice(5);
+        }
+      });
+      io.to(`room-${roomId}`).emit('someOneStandsUp', { roomId, tableId, userId });
+      TableUser.destroy({ where: { userId }, force: true });
+    }
+  });
 
-//   socket.on('createMessage', (data, cb) => {
-//     if (!data.text) {
-//       return cb('Can not send without text!')
-//     }
-//     const user = users.get(data.id)
-//     if (user) {
-//       io.to(user.room).emit('newMessage', m(user.name, data.text, data.id))
-//     }
-//     cb()
-//   })
-
-//   socket.on('userLeft', (id, cb) => {
-//     const user = users.remove(id)
-//     if (user) {
-//       io.to(user.room).emit('updateUsers', users.getByRoom(user.room))
-//       io.to(user.room).emit('newMessage', m('admin', `${user.name} left room!`))
-//     }
-//     cb()
-//   })
-
-//   socket.on('disconnect', () => {
-//     const user = users.remove(socket.id)
-//     if (user) {
-//       io.to(user.room).emit('updateUsers', users.getByRoom(user.room))
-//       io.to(user.room).emit('newMessage', m('admin', `${user.name} left room!`))
-//     }
-//   })
-// });
+  socket.on('disconnect', () => {});
+});
 
 /**
  * Listen on provided port, on all network interfaces.
