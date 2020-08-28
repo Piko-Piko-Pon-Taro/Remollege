@@ -52,7 +52,7 @@
       :background-color="$const.BASE_COLOR2"
       horizontal
     >
-      <v-btn @click="endCall" value="hangup">
+      <v-btn @click="$emit('leave')" value="hangup">
         <span>Leave</span>
         <v-icon>mdi-phone-hangup</v-icon>
       </v-btn>
@@ -145,10 +145,6 @@ export default {
     user: {
       type: Object,
       default: null
-    },
-    chatId: {
-      type: String,
-      default: null
     }
   },
   data() {
@@ -231,38 +227,6 @@ export default {
       console.log('end getDefault')
     },
 
-    // getDeviceList() {
-    //   navigator.mediaDevices
-    //     .getUserMedia({ video: true, audio: true })
-    //     .then(() =>
-    //       navigator.mediaDevices
-    //         .enumerateDevices()
-    //         .then((deviceInfos) => {
-    //           for (let i = 0; i !== deviceInfos.length; ++i) {
-    //             const deviceInfo = deviceInfos[i]
-    //             if (deviceInfo.kind === 'audioinput') {
-    //               this.audioDevices.push({
-    //                 text:
-    //                   deviceInfo.label ||
-    //                   `Microphone ${this.audioDevices.length}`,
-    //                 value: deviceInfo.deviceId
-    //               })
-    //             } else if (deviceInfo.kind === 'videoinput') {
-    //               this.videoDevices.push({
-    //                 text:
-    //                   deviceInfo.label || `Camera  ${this.videoDevices.length}`,
-    //                 value: deviceInfo.deviceId
-    //               })
-    //             }
-    //           }
-    //         })
-    //         .catch(function(error) {
-    //           console.error('mediaDevices.enumerateDevices() error:', error)
-    //         })
-    //     )
-    //     .catch((err) => alert(`${err.name} ${err.message}`))
-    // },
-
     onDeviceChange() {
       // ダイアログ閉じたときに後で変更
       if (this.selectedAudio !== '' && this.selectedVideo !== '') {
@@ -272,8 +236,6 @@ export default {
     },
 
     async connectSelectedDevices() {
-      console.log('selectedA:', this.selectedAudio)
-      console.log(this.selectedAudio, this.selectedVideo)
       const constraints = {
         audio: this.selectedAudio
           ? { deviceId: { exact: this.selectedAudio } }
@@ -296,25 +258,26 @@ export default {
       this.localStream = stream
     },
 
-    makeCall() {
+    makeCall(chatId) {
       this.getDefaultDevices()
-      // 利用可能デバイスの取得
-      // this.getDeviceList()
 
       console.log('start makeCall')
-      if (!this.chatId) {
-        return
-      }
-      const call = this.peer.joinRoom(this.chatId, {
+      // if (!chatId) {
+      //   return
+      // }
+      const call = this.peer.joinRoom(chatId, {
         mode: 'sfu',
         stream: this.localStream
       })
+      console.log('not chatIda')
       this.setupCallEventHandlers(call)
       console.log('end makeCall')
     },
-    endCall() {
-      this.existingCall.close()
-      this.$emit('leave')
+    closeCall() {
+      // 通話がつながっているなら通話から抜ける
+      if (this.existingCall) {
+        this.existingCall.close()
+      }
     },
 
     setupCallEventHandlers(call) {
@@ -324,6 +287,7 @@ export default {
       }
 
       this.existingCall = call
+      console.log('existing call:', this.existingCall)
       this.setupEndCallUI()
       this.connectedRoomId = call.name
 

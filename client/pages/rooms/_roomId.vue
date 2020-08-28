@@ -14,7 +14,6 @@
       ref="videoArea"
       v-show="seatedTableId"
       :user="currentUser"
-      :chatId="seatedTableId ? `${room.id}-${seatedTableId}` : null"
       @leave="leave"
     />
 
@@ -79,7 +78,9 @@ export default {
   methods: {
     sitDown(value) {
       this.seatedTableId = value
-      this.$refs.videoArea.makeCall()
+      this.$refs.videoArea.makeCall(
+        this.$route.params.roomId + '-' + this.seatedTableId
+      )
       this.socket.emit('sitDown', {
         roomId: this.room.id,
         tableId: this.seatedTableId,
@@ -87,6 +88,7 @@ export default {
       })
     },
     leave() {
+      this.$refs.videoArea.closeCall()
       this.socket.emit('standUp', {
         roomId: this.room.id,
         tableId: this.seatedTableId,
