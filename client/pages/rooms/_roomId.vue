@@ -86,7 +86,6 @@ export default {
     // ブラウザバック・ページ遷移した時用
     this.leave()
     this.$refs.videoArea.peer.disconnect()
-    console.log('disconnected from video server')
     next()
   },
   methods: {
