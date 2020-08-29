@@ -184,6 +184,7 @@ export default {
       call.answer(this.localStream)
       this.setupCallEventHandlers(call)
     })
+
     this.peer.on('error', () => {
       alert('接続エラー')
     })

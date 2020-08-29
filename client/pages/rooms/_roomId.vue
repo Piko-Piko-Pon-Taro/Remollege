@@ -74,18 +74,6 @@ export default {
       roomId: this.room.id
     })
   },
-  beforeDestroy() {
-    console.log('before destroy')
-    // console.log(
-    //   // this.room.id, // だめ
-    //   this.seatedTableId, //ok
-    //   this.$route.params.roomId, // だめ
-    //   this.currentUser.id // ok
-    // )
-
-    // this.leave()
-    this.$refs.videoArea.closeCall()
-  },
   created() {
     // リロード用
     window.addEventListener('beforeunload', this.leave) // eslint-disable-line
@@ -97,6 +85,8 @@ export default {
   beforeRouteLeave(to, from, next) {
     // ブラウザバック・ページ遷移した時用
     this.leave()
+    this.$refs.videoArea.peer.disconnect()
+    console.log('disconnected from video server')
     next()
   },
   methods: {
