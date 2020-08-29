@@ -12,12 +12,21 @@ global.models = path.join(__dirname, "models/index.js");
 
 // 認証
 // http://www.passportjs.org/
-const passport = require("./passport");
+const passport = require("./passport")
 
 // CORS設定
 const cors = require("cors");
+
+if ( process.env.NODE_ENV == 'production' ) {
+  client_url = 'https://pikopikopon1.uc.r.appspot.com'
+} else if ( process.env.NODE_ENV == 'development_in_docker' ) {
+  client_url = 'http://api:3001'
+} else {
+  client_url = 'http://localhost:3001'
+}
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:3001',
+  origin: client_url,
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions));

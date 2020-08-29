@@ -17,7 +17,6 @@ services:
       - db
     environment:
       NODE_ENV: development_in_docker
-      CLIENT_URL: http://client:${CLIENT_PORT}
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: always
