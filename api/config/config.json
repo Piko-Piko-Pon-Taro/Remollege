@@ -21,12 +21,12 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": "sekikundaisuki",
+    "username": "MYSQL_USER",
+    "password": "MYSQL_PASSWORD",
     "database": "remollege",
     "dialect": "mysql",
     "dialectOptions": {
-        "socketPath": "/cloudsql/pikopikopon1:us-central1:remollege-database",
+        "socketPath": "MYSQL_SOCKET_PATH",
 	"supportBigNumbers": false,
 	"bigNumberStrings": false
     }
