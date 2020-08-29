@@ -16,8 +16,6 @@ services:
     depends_on:
       - db
       - api
-    environment:
-      NODE_ENV: development_in_docker
   api:
     image: node:12
     ports:
@@ -33,8 +31,6 @@ services:
       - ${API_PORT}
     depends_on:
       - db
-    environment:
-      NODE_ENV: development_in_docker
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: always

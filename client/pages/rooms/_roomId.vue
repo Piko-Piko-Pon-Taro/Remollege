@@ -71,8 +71,7 @@ export default {
   mounted() {
     this.socket = this.$nuxtSocket({})
     this.socket.emit('enter', {
-      roomId: this.room.id,
-      userId: this.currentUser.id
+      roomId: this.room.id
     })
   },
   beforeDestroy() {
@@ -86,6 +85,19 @@ export default {
 
     // this.leave()
     this.$refs.videoArea.closeCall()
+  },
+  created() {
+    // リロード用
+    window.addEventListener('beforeunload', this.leave) // eslint-disable-line
+  },
+  destroyed() {
+    // リロード用
+    window.removeEventListener('beforeunload', this.leave)
+  },
+  beforeRouteLeave(to, from, next) {
+    // ブラウザバック・ページ遷移した時用
+    this.leave()
+    next()
   },
   methods: {
     sitDown(value) {
