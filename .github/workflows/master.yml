@@ -13,9 +13,6 @@ jobs:
       with:
         node-version: '12'
 
-    - name: take a shit
-      run: echo 'BURBURIBURIBURIBURIBURIBURI'
-
     - name: npm install, build
       run: |
           cd client
@@ -23,6 +20,12 @@ jobs:
           npm run build
           cd ../api
           npm install
+          cd ..
+
+    - name: setting SKYWAY_API_KEY
+      run: |
+          cd client
+          echo '${{ secrets.SKYWAY_API_KEY }}' >> .env
           cd ..
 
     - name: GAE login
