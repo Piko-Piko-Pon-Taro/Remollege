@@ -1,21 +1,5 @@
 version: "3"
 services:
-  client:
-    image: node:12
-    ports:
-      - ${CLIENT_PORT}:${CLIENT_PORT}
-    env_file: .env
-    volumes:
-      - ../client/:/src/client:cached
-      - /src/client/node_modules/
-    working_dir: /src/client
-    tty: true
-    command: bash -c 'npm install && npm run dev'
-    expose:
-      - ${CLIENT_PORT}
-    depends_on:
-      - db
-      - api
   api:
     image: node:12
     ports:
@@ -31,6 +15,9 @@ services:
       - ${API_PORT}
     depends_on:
       - db
+    environment:
+      NODE_ENV: development_in_docker
+      CLIENT_URL: http://client:${CLIENT_PORT}
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: always

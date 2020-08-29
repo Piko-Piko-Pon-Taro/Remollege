@@ -4,6 +4,10 @@ require('dotenv').config()
 
 export default {
   mode: 'universal',
+
+  env: {
+    apiUrl: process.env.API_URL || 'http://localhost:3000'
+  },
   /*
    ** Headers of the page
    */
@@ -64,7 +68,7 @@ export default {
   io: {
     sockets: [
       {
-        url: 'http://localhost:3000',
+        url: process.env.API_URL || 'http://localhost:3000',
         vuex: {
           actions: [
             // When "key" is received,

@@ -17,7 +17,7 @@ const passport = require("./passport");
 // CORS設定
 const cors = require("cors");
 const corsOptions = {
-  origin: 'http://localhost:3001', // FIXME: 環境変数に移行する
+  origin: process.env.CLIENT_URL || 'http://localhost:3001', // FIXME: 環境変数に移行する
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions));
