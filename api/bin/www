@@ -30,8 +30,7 @@ const TableUser = models.TableUser;
 const io = require('socket.io')(server);
 io.on('connection', socket => {
 
-  socket.on('enter', ({ roomId, userId }) => {
-    socket.join(`user-${userId}`);
+  socket.on('enter', ({ roomId }) => {
     socket.join(`room-${roomId}`);
   });
 
@@ -48,25 +47,7 @@ io.on('connection', socket => {
     socket.leave(`table-${tableId}`);
   });
 
-  socket.on('disconnecting', () => {
-    const isStillSitting = Object.keys(socket.rooms).some(r => {
-      return /^table-/.test(r);
-    });
-    if (isStillSitting) {
-      let roomId = null, tableId = null, userId = null;
-      Object.keys(socket.rooms).forEach(r => {
-        if (/^room-/.test(r)) {
-          roomId = r.slice(5);
-        } else if (/^table-/.test(r)) {
-          tableId = r.slice(6);
-        } else if (/^user-/.test(r)) {
-          userId = r.slice(5);
-        }
-      });
-      io.to(`room-${roomId}`).emit('someOneStandsUp', { roomId, tableId, userId });
-      TableUser.destroy({ where: { userId }, force: true });
-    }
-  });
+  socket.on('disconnecting', () => {});
 
   socket.on('disconnect', () => {});
 });
