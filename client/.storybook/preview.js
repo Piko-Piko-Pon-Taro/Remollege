@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.css";
 import colors from 'vuetify/es5/util/colors'
+import { action } from '@storybook/addon-actions';
 
 Vue.use(Vuetify, {
   customVariables: ['~/assets/variables.scss'],
@@ -20,6 +21,16 @@ Vue.use(Vuetify, {
       }
     }
 });
+
+Vue.component('nuxt-link', {
+  props:   ['to'],
+  methods: {
+    log() {
+      action('nuxt-link')(this.to)
+    },
+  },
+  template: `<a href="#" @click.prevent="log()"><slot>NuxtLink</slot></a>`,
+})
 
 require('../plugins/const.js')
 

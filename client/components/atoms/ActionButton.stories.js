@@ -1,15 +1,11 @@
+import { base, filename } from 'paths.macro';
 import ActionButton from './ActionButton.vue';
 
 export default {
-  title: 'Atoms/ActionButton',
+  title: `${base.replace("/components/","")}${filename.replace(".stories", "")}`,
   component: ActionButton,
   argTypes: {
-    icon: "mdi-door",
-    text: "EXIT",
-    to: "./",
-    xlarge: false,
     onClick: { action: 'clicked' }
-    //size: { control: { type: 'select', options: ['small', 'medium', 'large'] } },
   },
 };
 
@@ -28,9 +24,5 @@ Default.args = {
 };
 
 export const XLarge = Template.bind({});
-XLarge.args = {
-  icon: "mdi-door",
-  text: "EXIT",
-  to: "./",
-  xlarge: true,
-};
+XLarge.args = { ...Default.args }
+XLarge.args.xlarge = true;
