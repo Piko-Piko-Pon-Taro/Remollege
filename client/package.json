@@ -36,6 +36,7 @@
     "@nuxtjs/dotenv": "^1.4.1",
     "nuxt": "^2.14.1",
     "nuxt-socket-io": "^1.1.8",
+    "paths.macro": "^3.0.1",
     "skyway-js": "^3.0.2"
   },
   "devDependencies": {
