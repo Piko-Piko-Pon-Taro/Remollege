@@ -21,8 +21,8 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "MYSQL_USER",
-    "password": "MYSQL_PASSWORD",
+    "username": "root",
+    "password": "sekikundaisuki",
     "database": "remollege",
     "dialect": "mysql",
     "dialectOptions": {
