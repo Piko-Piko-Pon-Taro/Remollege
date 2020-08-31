@@ -22,11 +22,15 @@ jobs:
           npm install
           cd ..
 
-    - name: setting SKYWAY_API_KEY
+    - name: setting config files
       run: |
           cd client
           echo '${{ secrets.SKYWAY_API_KEY }}' >> .env
           cd ..
+          cd api/config
+          sed -i 's/MYSQL_USER/${{ secrets.MYSQL_USER }}/g' config.json
+          sed -i 's/MYSQL_PASSWORD/${{ secrets.MYSQL_PASSWORD }}/g' config.json
+          sed -i 's/MYSQL_SOCKET_PATH/${{ secrets.MYSQL_SOCKET_PATH }}/g' config.json
 
     - name: GAE login
       run: |
