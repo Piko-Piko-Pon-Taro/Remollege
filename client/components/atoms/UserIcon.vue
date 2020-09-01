@@ -1,10 +1,10 @@
 <template>
-  <v-list-item-avatar>
+  <v-list-item-avatar :size="size" :large="size == undefined">
     <v-img v-if="src" :src="require('@/assets/image/' + src)" />
-    <v-icon v-else-if="icon" :size="size" :large="size == undefined">
+    <v-icon v-else-if="icon">
       {{ icon }}
     </v-icon>
-    <v-icon v-else :size="size" :large="size == undefined">
+    <v-icon v-else>
       mdi-account-circle
     </v-icon>
   </v-list-item-avatar>
