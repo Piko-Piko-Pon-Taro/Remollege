@@ -3,6 +3,7 @@ import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.css";
 import colors from 'vuetify/es5/util/colors'
 import { action } from '@storybook/addon-actions';
+import { addDecorator } from '@storybook/vue'
 
 Vue.use(Vuetify, {
   customVariables: ['~/assets/variables.scss'],
@@ -59,3 +60,14 @@ export const parameters = {
       ],
     }
 }
+
+const vuetifyConfig = new Vuetify({
+	theme: {
+		dark: false
+	}
+})
+
+addDecorator(() => ({
+  vuetify: vuetifyConfig,
+  template: '<v-app style="background-color: inherit;"><story/></v-app>'
+}))
