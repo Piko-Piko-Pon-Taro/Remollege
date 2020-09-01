@@ -17,9 +17,9 @@ const passport = require("./passport");
 // CORS設定
 const cors = require("cors");
 
-if ( process.env.NODE_ENV == 'production' ) {
+if ( process.env.NODE_ENV === 'production' ) {
   client_url = 'https://pikopikopon1.uc.r.appspot.com';
-} else if ( process.env.NODE_ENV == 'development_in_docker' ) {
+} else if ( process.env.NODE_ENV === 'development_in_docker' ) {
   client_url = 'http://client:3001';
 } else {
   client_url = 'http://localhost:3001';
