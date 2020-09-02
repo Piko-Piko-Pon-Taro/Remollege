@@ -1,28 +1,31 @@
-import { base, filename } from 'paths.macro';
-import UserBanner from './UserBanner.vue';
+import { base, filename } from 'paths.macro'
+import UserBanner from './UserBanner.vue'
 
 export default {
-  title: `${base.replace("/components/","")}${filename.replace(".stories", "")}`,
+  title: `${base.replace('/components/', '')}${filename.replace(
+    '.stories',
+    ''
+  )}`,
   component: UserBanner,
   argTypes: {
     onClick: { action: 'clicked' }
-  },
-};
+  }
+}
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { UserBanner },
-  template: '<UserBanner @click="onClick" v-bind="$props"/>',
-});
+  template: '<UserBanner @click="onClick" v-bind="$props"/>'
+})
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 Default.args = {
-  img: "sampleIcon1.jpg",
-  name: "ピコピコぽん太郎",
-};
+  img: 'sampleIcon1.jpg',
+  name: 'ピコピコぽん太郎'
+}
 
-export const NoImage = Template.bind({});
+export const NoImage = Template.bind({})
 NoImage.args = {
   img: null,
-  name: "ピコピコぽん太郎",
-};
+  name: 'ピコピコぽん太郎'
+}
