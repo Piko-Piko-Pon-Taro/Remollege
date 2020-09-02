@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: db
--- 生成日時: 2020 年 8 月 15 日 03:53
+-- 生成日時: 2020 年 9 月 01 日 15:16
 -- サーバのバージョン： 5.7.31
 -- PHP のバージョン: 7.4.8
 
@@ -20,34 +20,6 @@ SET time_zone = "+00:00";
 --
 -- データベース: `remollege`
 --
-CREATE DATABASE IF NOT EXISTS `remollege` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `remollege`;
-
--- --------------------------------------------------------
-
---
--- テーブルの構造 `Chats`
---
-
-CREATE TABLE `Chats` (
-  `id` int(11) NOT NULL,
-  `tableId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- テーブルのデータのダンプ `Chats`
---
-
-INSERT INTO `Chats` (`id`, `tableId`, `userId`, `content`, `createdAt`, `updatedAt`) VALUES
-(1, 1, 1, 'ぴこぴこポンはおいしいね！', '2020-08-14 00:00:00', '2020-08-14 00:00:00'),
-(2, 1, 4, 'ヤサイニンニクアブラ', '2020-08-14 13:57:57', '2020-08-14 13:57:57'),
-(3, 1, 1, 'ヤサイマシマシニンニクマシマシアブラマシマシ', '2020-08-14 13:58:51', '2020-08-14 13:58:51'),
-(4, 1, 1, 'ヤサイマシマシニンニクマシマシアブラマシマシ', '2020-08-14 15:21:11', '2020-08-14 15:21:11'),
-(5, 1, 1, 'ヤサイマシマシニンニクマシマシアブラマシマシ', '2020-08-14 17:10:08', '2020-08-14 17:10:08');
 
 -- --------------------------------------------------------
 
@@ -68,103 +40,29 @@ CREATE TABLE `Rooms` (
 --
 
 INSERT INTO `Rooms` (`id`, `buildingId`, `name`, `createdAt`, `updatedAt`) VALUES
-(1, 1, 'ピコピコポン西早稲田店', '2020-08-14 00:00:00', '2020-08-14 00:00:00'),
-(2, 1, 'ピコピコポン57号館店', '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(3, 1, 'ピコピコポン63号館店', '2020-08-15 00:00:00', '2020-08-15 00:00:00');
-
--- --------------------------------------------------------
-
---
--- テーブルの構造 `Tables`
---
-
-CREATE TABLE `Tables` (
-  `id` int(11) NOT NULL,
-  `roomId` int(11) NOT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- テーブルのデータのダンプ `Tables`
---
-
-INSERT INTO `Tables` (`id`, `roomId`, `createdAt`, `updatedAt`) VALUES
-(1, 1, '2020-08-14 00:00:00', '2020-08-14 00:00:00'),
-(2, 1, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(3, 1, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(4, 2, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(5, 2, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(6, 3, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(7, 3, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(8, 3, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(9, 2, '2020-08-15 00:00:00', '2020-08-15 00:00:00');
-
--- --------------------------------------------------------
-
---
--- テーブルの構造 `TablesUsers`
---
-
-CREATE TABLE `TablesUsers` (
-  `id` int(11) NOT NULL,
-  `tableId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- テーブルのデータのダンプ `TablesUsers`
---
-
-INSERT INTO `TablesUsers` (`id`, `tableId`, `userId`, `createdAt`, `updatedAt`) VALUES
-(1, 1, 1, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(2, 2, 2, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(3, 3, 3, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(7, 1, 4, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(8, 2, 5, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(9, 3, 6, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(10, 4, 7, '2020-08-15 00:00:00', '2020-08-15 00:00:00');
-
--- --------------------------------------------------------
-
---
--- テーブルの構造 `Users`
---
-
-CREATE TABLE `Users` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `img` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- テーブルのデータのダンプ `Users`
---
-
-INSERT INTO `Users` (`id`, `name`, `email`, `password`, `img`, `createdAt`, `updatedAt`) VALUES
-(1, 'user', 'turunasi@ruri.waseda.jp', 'userpass', NULL, '2020-08-14 00:00:00', '2020-08-14 00:00:00'),
-(2, '店長', 'pikopiko@gmai.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(3, '関くん', 'pikopiko@gmail.com', 'userpass', NULL, '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(4, '西井', 'nishii@gmai.com', 'userpass', 'sampleIcon4.jpg', '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(5, '井上', 'inoue@gmai.com', 'userpass', 'sampleIcon2.png', '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(6, '平', 'taira@gmai.com', 'userpass', 'sampleIcon5.jpeg', '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
-(7, '渡邉', 'watanabe@gmai.com', 'userpass', 'sampleIcon3.jpg', '2020-08-15 00:00:00', '2020-08-15 00:00:00');
+(1, 1, 'ピコピコポン53号館店', '2020-08-14 00:00:00', '2020-08-14 00:00:00'),
+(2, 2, 'ピコピコポン54号館店', '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(3, 3, 'ピコピコポン55号館店', '2020-08-15 00:00:00', '2020-08-15 00:00:00'),
+(4, 1, 'ラーメン荘 夢を語れ 53号館店', '2020-09-02 00:11:32', '2020-09-02 00:11:32'),
+(5, 2, 'ラーメン荘 夢を語れ 54号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(6, 3, 'ラーメン荘 夢を語れ 55号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(7, 4, 'ラーメン荘 夢を語れ 56号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(8, 1, 'ラーメン二郎 53号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(9, 2, 'ラーメン二郎 54号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(10, 3, 'ラーメン二郎 55号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(11, 4, 'ラーメン二郎 56号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(12, 1, '天下一品 53号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(13, 2, '天下一品 54号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(14, 3, '天下一品 55号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(15, 4, '天下一品 56号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(16, 1, '立ち食いパスタ アッパーカット 53号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(17, 1, '立ち食いパスタ アッパーカット 54号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(18, 1, '立ち食いパスタ アッパーカット 55号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20'),
+(19, 1, '立ち食いパスタ アッパーカット 56号館店', '2020-09-02 00:15:20', '2020-09-02 00:15:20');
 
 --
 -- ダンプしたテーブルのインデックス
 --
-
---
--- テーブルのインデックス `Chats`
---
-ALTER TABLE `Chats`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- テーブルのインデックス `Rooms`
@@ -173,56 +71,14 @@ ALTER TABLE `Rooms`
   ADD PRIMARY KEY (`id`);
 
 --
--- テーブルのインデックス `Tables`
---
-ALTER TABLE `Tables`
-  ADD PRIMARY KEY (`id`);
-
---
--- テーブルのインデックス `TablesUsers`
---
-ALTER TABLE `TablesUsers`
-  ADD PRIMARY KEY (`id`);
-
---
--- テーブルのインデックス `Users`
---
-ALTER TABLE `Users`
-  ADD PRIMARY KEY (`id`);
-
---
 -- ダンプしたテーブルのAUTO_INCREMENT
 --
-
---
--- テーブルのAUTO_INCREMENT `Chats`
---
-ALTER TABLE `Chats`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- テーブルのAUTO_INCREMENT `Rooms`
 --
 ALTER TABLE `Rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- テーブルのAUTO_INCREMENT `Tables`
---
-ALTER TABLE `Tables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- テーブルのAUTO_INCREMENT `TablesUsers`
---
-ALTER TABLE `TablesUsers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- テーブルのAUTO_INCREMENT `Users`
---
-ALTER TABLE `Users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
