@@ -20,8 +20,16 @@ module.exports = (sequelize, DataTypes) => {
           len: [1, 255],
         },
       },
+      img: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          len: [1, 255],
+        },
+      },
     },
     {
+      paranoid: true,
       defaultScope: {},
       scopes: {},
     }
