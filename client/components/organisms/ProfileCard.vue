@@ -1,8 +1,24 @@
 <template>
-  <v-card max-width="600" class="mx-auto">
-    <v-img src="https://cdn.vuetifyjs.com/images/lists/ali.png" height="250px">
+  <v-card width="600" class="mx-auto">
+    <v-img :src="require('@/assets/image/waseda.jpg')" height="250px">
       <v-row class="fill-height">
-        <UserIcon :src="image" size="200" class="mx-auto" />
+        <UserIcon  v-if="!isBeingEdited" :src="image" size="200" class="mx-auto" />
+        <UserIcon  v-if="isBeingEdited" :src="imageEdited" size="200" class="mx-auto">
+          <v-row>
+            <v-layout style="width: 100%; margin: auto;">
+              <v-overlay absolute>
+                  <v-file-input
+                    class="justify-center"
+                    accept="image/png, image/jpeg, image/bmp"
+                    prepend-icon="mdi-camera-plus-outline"
+                    style="text-align: center;"
+                    hide-input
+                    @change="handleImageAdded"
+                  />
+              </v-overlay>
+            </v-layout>
+          </v-row>
+        </UserIcon>
       </v-row>
     </v-img>
 
@@ -17,7 +33,7 @@
           <v-list-item-title v-if="!isBeingEdited">{{ name }}</v-list-item-title>
           <v-list-item-title v-if="isBeingEdited">
             <v-text-field
-              v-model="_name"
+              v-model="nameEdited"
               filled
               flat
               dense
@@ -34,29 +50,26 @@
 
         <v-list-item-content>
           <v-list-item-subtitle>プロフィール</v-list-item-subtitle>
-          <v-list-item-content v-if="!isBeingEdited">{{ text }}</v-list-item-content>
-          
-      <v-textarea
-        v-model="_text"
-        auto-grow
-        filled
-        color="deep-purple"
-        rows="1"
-        v-if="isBeingEdited"
-      />
+          <v-list-item-content v-if="!isBeingEdited">{{ profile }}</v-list-item-content>
+          <v-textarea
+            v-model="profileEdited"
+            auto-grow
+            filled
+            color="deep-purple"
+            rows="1"
+            v-if="isBeingEdited"
+          />
         </v-list-item-content>
       </v-list-item>
       <v-list-item class="mx-auto" v-if="isEditable">
 
-      <v-btn class="ml-auto" v-if="!isBeingEdited" :color="iconColor || $const.ACCENT_COLOR" dark @click.stop="isBeingEdited = true; _name = name; _text = text;">
+      <v-btn class="ml-auto" v-if="!isBeingEdited" :color="iconColor || $const.ACCENT_COLOR" dark @click.stop="setValuesToEdit">
         プロフィールを編集
       </v-btn>
-      <v-btn class="ml-auto" v-if="isBeingEdited" :color="iconColor || $const.ACCENT_COLOR" dark @click.stop="isBeingEdited = false">
+      <v-btn class="ml-auto mr-3" v-if="isBeingEdited" :color="iconColor || $const.ACCENT_COLOR" dark @click.stop="isBeingEdited = false">
         編集を取り消し
       </v-btn>
-      <v-btn v-if="isBeingEdited" :color="iconColor || $const.ACCENT_COLOR" dark @click.stop="upload">
-        アイコン画像をアップロード
-      </v-btn>
+      
       <v-btn v-if="isBeingEdited" :color="iconColor || $const.ACCENT_COLOR" dark @click.stop="save">
         編集を保存
       </v-btn>
@@ -80,7 +93,7 @@ export default {
       type: String,
       default: null
     },
-    text: {
+    profile: {
       type: String,
       default: null
     },
@@ -95,19 +108,39 @@ export default {
   },
   data: () => {
     return {
-      isBeingEdited: false
+      isBeingEdited: false,
+      profileEdited: null,
+      nameEdited: null,
+      imageEdited: null,
     }
   },
   methods: {
+    setValuesToEdit() {
+      this.isBeingEdited = true
+      this.imageEdited = this.image
+      this.nameEdited = this.name
+      this.profileEdited = this.profile
+    },
+    handleImageAdded(file) {
+      if (file) {
+        this.file = file
+        this.createImage(file)
+      }
+    },
+    createImage(file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        this.imageEdited = e.target.result
+      }
+      reader.readAsDataURL(file)
+    },
     save() {
       this.isBeingEdited = false
-      this.name = this._name
-      this.text = this._text
-    },
-    upload() {
-      this.isBeingEdited = false
-      this.name = this._name
-      this.text = this._text
+      const value = {
+        name: this.nameEdited,
+        profile: this.profileEdited,
+      }
+      this.$emit('save', value, this.file)
     }
   }
 }
