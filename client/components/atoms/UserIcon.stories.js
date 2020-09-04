@@ -15,19 +15,19 @@ export default {
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { UserIcon },
-  template: '<UserIcon @click="onClick" v-bind="$props"/>'
+  template: '<UserIcon @click="onClick" v-bind="$props" />'
 })
 
 export const Default = Template.bind({})
 Default.args = {
-  src: 'sampleIcon1.jpg',
+  src: 'https://storage.googleapis.com/remollege-storage/1599218148359sampleIcon1.jpg',
   icon: null,
-  size: null
+  size: 200
 }
 
 export const NoImage = Template.bind({})
 NoImage.args = {
   src: null,
   icon: null,
-  size: null
+  size: 200
 }
