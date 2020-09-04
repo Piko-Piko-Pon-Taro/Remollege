@@ -45,7 +45,7 @@
 
       <v-list-item>
         <v-list-item-icon>
-          <v-icon :color="iconColor || $const.ACCENT_COLOR">mdi-email</v-icon>
+          <v-icon :color="iconColor || $const.ACCENT_COLOR">mdi-information</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
