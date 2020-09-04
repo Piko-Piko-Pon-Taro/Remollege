@@ -11,9 +11,9 @@
     <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="my-5" />
 
     <VideoArea
+      ref="videoArea"
       v-show="seatedTableId"
       :user="currentUser"
-      :roomId="seatedTableId ? `${room.id}-${seatedTableId}` : null"
       @leave="leave"
     />
 
@@ -71,13 +71,29 @@ export default {
   mounted() {
     this.socket = this.$nuxtSocket({})
     this.socket.emit('enter', {
-      roomId: this.room.id,
-      userId: this.currentUser.id
+      roomId: this.room.id
     })
+  },
+  created() {
+    // リロード用
+    window.addEventListener('beforeunload', this.leave) // eslint-disable-line
+  },
+  destroyed() {
+    // リロード用
+    window.removeEventListener('beforeunload', this.leave)
+  },
+  beforeRouteLeave(to, from, next) {
+    // ブラウザバック・ページ遷移した時用
+    this.leave()
+    this.$refs.videoArea.peer.disconnect()
+    next()
   },
   methods: {
     sitDown(value) {
       this.seatedTableId = value
+      this.$refs.videoArea.initChat(
+        this.$route.params.roomId + '-' + this.seatedTableId
+      )
       this.socket.emit('sitDown', {
         roomId: this.room.id,
         tableId: this.seatedTableId,
@@ -85,6 +101,7 @@ export default {
       })
     },
     leave() {
+      this.$refs.videoArea.closeCall()
       this.socket.emit('standUp', {
         roomId: this.room.id,
         tableId: this.seatedTableId,

@@ -2,8 +2,30 @@ import colors from 'vuetify/es5/util/colors'
 
 require('dotenv').config()
 
+let apiUrl
+let host
+let port
+
+if (process.env.NODE_ENV === 'production') {
+  apiUrl = 'https://api-dot-pikopikopon1.uc.r.appspot.com'
+  host = 'localhost'
+  port = process.env.PORT
+} else {
+  apiUrl = 'http://localhost:3000'
+  host = '0.0.0.0'
+  port = '3001'
+}
+
 export default {
   mode: 'universal',
+  server: {
+    host,
+    port
+  },
+
+  env: {
+    apiUrl
+  },
   /*
    ** Headers of the page
    */
@@ -64,7 +86,7 @@ export default {
   io: {
     sockets: [
       {
-        url: 'http://localhost:3000',
+        url: apiUrl,
         vuex: {
           actions: [
             // When "key" is received,
