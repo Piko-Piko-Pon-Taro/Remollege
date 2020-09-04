@@ -1,10 +1,12 @@
 <template>
-  <v-list-item-avatar>
-    <v-img v-if="src" :src="require('@/assets/image/' + src)" />
-    <v-icon v-else-if="icon" :size="size" :large="size == undefined">
+  <v-list-item-avatar :size="Number(size)">
+    <v-img v-if="src" :src="src">
+      <slot></slot>
+    </v-img>
+    <v-icon v-else-if="icon" :size="Number(size)">
       {{ icon }}
     </v-icon>
-    <v-icon v-else :size="size" :large="size == undefined">
+    <v-icon v-else :size="Number(size)">
       mdi-account-circle
     </v-icon>
   </v-list-item-avatar>
@@ -22,8 +24,8 @@ export default {
       default: null
     },
     size: {
-      type: Number,
-      default: undefined
+      type: [Number, String],
+      default: 40
     }
   }
 }
