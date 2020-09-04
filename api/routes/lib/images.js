@@ -2,7 +2,7 @@ const Storage = require("@google-cloud/storage");
 const CLOUD_BUCKET = "remollege-storage";
 const storage = new Storage.Storage({
   projectId: "pikopikopon1",
-  keyFilename: "pikopikopon1-3b74f04bdc9f.json",
+  keyFilename: "pikopikopon1-76b13a33bb22.json",
 });
 const bucket = storage.bucket(CLOUD_BUCKET);
 var multer = require("multer");
