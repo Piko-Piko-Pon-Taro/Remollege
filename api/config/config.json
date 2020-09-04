@@ -6,6 +6,13 @@
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
+  "development_in_docker": {
+    "username": "root",
+    "password": "adminpass",
+    "database": "remollege",
+    "host": "db",
+    "dialect": "mysql"
+  },
   "test": {
     "username": "root",
     "password": null,
@@ -14,10 +21,14 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "MYSQL_USER",
+    "password": "MYSQL_PASSWORD",
+    "database": "remollege",
+    "dialect": "mysql",
+    "dialectOptions": {
+        "socketPath": "MYSQL_SOCKET_PATH",
+	"supportBigNumbers": false,
+	"bigNumberStrings": false
+    }
   }
 }
