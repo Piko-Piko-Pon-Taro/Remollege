@@ -149,7 +149,6 @@ export default {
     return {
       dialog: false,
       bottomNav: 'cog',
-      APIKey: process.env.SKYWAY_API_KEY,
       selectedAudio: '',
       selectedVideo: '',
       audioDevices: [],
@@ -168,7 +167,7 @@ export default {
   },
   mounted() {
     this.peer = new Peer(this.user.id, {
-      key: this.APIKey,
+      key: process.env.SKYWAY_API_KEY,
       debug: 0
     })
 
@@ -181,8 +180,8 @@ export default {
       this.setupCallEventHandlers(call)
     })
 
-    this.peer.on('error', () => {
-      alert('接続エラー')
+    this.peer.on('error', (err) => {
+      alert(err)
     })
     // this.peer.on('error', (error) => {
     //   //console.log('error!!!:', JSON.stringify(error))
@@ -193,7 +192,6 @@ export default {
 
   methods: {
     getDefaultDevices(chatId) {
-      // console.log('start getDefault')
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true }) // デバイス許可求める
         .then(() =>
@@ -245,8 +243,7 @@ export default {
             })
             .catch((err) => alert(err))
         )
-        .catch((err) => alert(err))
-      // console.log('end getDefault')
+        .catch(() => console.log('接続エラー'))
     },
 
     onDeviceChange() {
@@ -279,34 +276,24 @@ export default {
     },
 
     initChat(chatId) {
-      // console.log('start init_chat')
       this.getDefaultDevices(chatId)
-      // console.log('end init_chat')
     },
     makeCall(chatId) {
-      // console.log('start makeCall:', chatId, this.localStream)
-
       const call = this.peer.joinRoom(chatId, {
         mode: 'sfu',
         stream: this.localStream
       })
-      // console.log('call:', call)
       this.setupCallEventHandlers(call)
-      // console.log('end makeCall')
     },
 
     setupCallEventHandlers(call) {
-      // console.log('in setupCallEventHandlers')
-      this.closeCall() // 既存の通話を抜ける
+      this.closeCall()
 
       this.existingCall = call
       this.setupEndCallUI()
-      // console.log('call:', call)
       this.connectedRoomId = call.name
-      // console.log('end call:')
 
       call.on('stream', (stream) => {
-        // console.log('in stream')
         this.addVideo(stream)
       })
 
@@ -314,12 +301,10 @@ export default {
         this.removeVideo(peerId)
       })
 
-      // 自分が部屋を抜けた時
       call.on('close', () => {
         this.removeAllVideos()
         this.setupMakeCallUI()
       })
-      // console.log('out setupCallEventHandlers')
     },
 
     addVideo(stream) {
@@ -359,12 +344,9 @@ export default {
       }
     },
     closeCall() {
-      // console.log('in close call:', this.existingCall)
-      // 通話がつながっているなら通話から抜ける
       if (this.existingCall) {
         this.existingCall.close()
         this.existingCall = null
-        // console.log('closed call:', this.existingCall)
       }
     }
   }
