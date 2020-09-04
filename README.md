@@ -15,8 +15,15 @@
 ## Requires
 - docker-compose@1.26.2
 ## Steps
+### Setup local env
 ```
 git clone git@github.com:Piko-Piko-Pon-Taro/Remollege.git
 cd Remollege/test
 docker-compose up -d
+```
+### Migrations & Seeding
+```
+docker-compose exec api bash
+npx sequelize-cli db:migrate
+npx sequelize-cli db:seed:all
 ```
