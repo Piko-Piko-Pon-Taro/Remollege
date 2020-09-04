@@ -4,12 +4,6 @@
   "description": "My remarkable Nuxt.js project",
   "author": "piko_piko_pon_taro",
   "private": true,
-  "config": {
-    "nuxt": {
-      "host": "0.0.0.0",
-      "port": "3001"
-    }
-  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
@@ -21,7 +15,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged --allow-empty"
     }
   },
   "lint-staged": {
@@ -32,6 +26,7 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.12.1",
     "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/vuetify": "^1.0.0",
     "nuxt": "^2.14.1",
     "nuxt-socket-io": "^1.1.8",
     "skyway-js": "^3.0.2"
@@ -39,7 +34,6 @@
   "devDependencies": {
     "@nuxtjs/eslint-config": "^1.0.1",
     "@nuxtjs/eslint-module": "^1.0.0",
-    "@nuxtjs/vuetify": "^1.0.0",
     "@vue/test-utils": "^1.0.0-beta.27",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",

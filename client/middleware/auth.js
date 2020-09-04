@@ -1,6 +1,6 @@
 export default function({ store, route, redirect }) {
-  // ユーザーが認証されていないとき
-  if (!store.getters['auth/token'] && route.name !== 'login') {
-    return redirect('/login')
+  // FIXME: リロードする時に一瞬ログイン画面見えるのどうにかしたい
+  if (!store.getters['auth/isLogined'] && route.name !== 'login') {
+    return redirect(302, '/login', { prev: route.path })
   }
 }

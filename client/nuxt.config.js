@@ -2,8 +2,30 @@ import colors from 'vuetify/es5/util/colors'
 
 require('dotenv').config()
 
+let apiUrl
+let host
+let port
+
+if (process.env.NODE_ENV === 'production') {
+  apiUrl = 'https://api-dot-pikopikopon1.uc.r.appspot.com'
+  host = 'localhost'
+  port = process.env.PORT
+} else {
+  apiUrl = 'http://localhost:3000'
+  host = '0.0.0.0'
+  port = '3001'
+}
+
 export default {
   mode: 'universal',
+  server: {
+    host,
+    port
+  },
+
+  env: {
+    apiUrl
+  },
   /*
    ** Headers of the page
    */
@@ -34,18 +56,14 @@ export default {
    */
   plugins: [
     { src: '~plugins/const.js' },
-    { src: '~plugins/init.js', ssr: false },
     { src: '~plugins/validate.js' },
-    { src: '~plugins/api.js' }
+    { src: '~plugins/api.js' },
+    { src: '~plugins/auth.client.js' }
   ],
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify'
-  ],
+  buildModules: ['@nuxtjs/vuetify'],
   /*
    ** Nuxt.js modules
    */
@@ -68,32 +86,14 @@ export default {
   io: {
     sockets: [
       {
-        name: 'api',
-        url: 'http://localhost:3000',
-        // url: 'https://nuxt-socket-io.herokuapp.com',
-        default: true,
+        url: apiUrl,
         vuex: {
           actions: [
-            {
-              // When key is received,
-              // dispatch action value
-              newMessage: 'SOCKET_newMessage',
-              updateUsers: 'SOCKET_updateUsers'
-            }
+            // When "key" is received,
+            // dispatch action "value"
+            { someOneSitsDown: 'rooms/SOCKET_someOneSitsDown' },
+            { someOneStandsUp: 'rooms/SOCKET_someOneStandsUp' }
           ]
-          // emitBacks: [
-          //   // When "examples/sample" state changes,
-          //   // emit back the event "examples/sample"
-          //   'examples/sample',
-          //   {
-          //     // When "examples/sample2" state changes,
-          //     // emit back the event "sample2"
-          //     'examples/sample2': 'sample2'
-          //   },
-          //   // Alternatively, the previous entry
-          //   // could be written with the arrow format:
-          //   'examples/sample2 <-- sample2'  // S/A
-          // ]
         }
       }
     ]

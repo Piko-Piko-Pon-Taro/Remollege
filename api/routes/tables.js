@@ -1,10 +1,10 @@
-var express = require("express");
-var router = express.Router();
-const models = require(global.models);
-const Table = models.Table;
+const router = require("express").Router();
+const boom = require('@hapi/boom');
+const addStatusOK = require('./lib/addStatusOK');
+const Table = require(global.models).Table;
 
 /* GetTableChats */
-router.get("/:id/chats/", async (req, res) => {
+router.get("/:id/chats/", async (req, res, next) => {
   try {
     let { Chats: chats } = await Table.scope("withChats").findByPk(
       req.params.id
@@ -15,9 +15,9 @@ router.get("/:id/chats/", async (req, res) => {
       const userDataValues = user.dataValues;
       return { ...chat, ...userDataValues };
     });
-    return res.json({ chats });
+    res.json(addStatusOK({ chats }));
   } catch (e) {
-    res.json(e);
+    next(e);
   }
 });
 
