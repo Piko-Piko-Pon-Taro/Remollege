@@ -16,10 +16,19 @@ const passport = require("./passport");
 
 // CORS設定
 const cors = require("cors");
-const corsOptions = {
-  origin: 'http://localhost:3001', // FIXME: 環境変数に移行する
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+
+if (process.env.NODE_ENV === "production") {
+  client_url = "https://pikopikopon1.uc.r.appspot.com";
+} else if (process.env.NODE_ENV === "development_in_docker") {
+  client_url = "http://client:3001";
+} else {
+  client_url = "http://localhost:3001";
 }
+
+const corsOptions = {
+  origin: client_url,
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 app.use(cors(corsOptions));
 
 // デフォルトのミドルウェアたち
@@ -39,8 +48,8 @@ app.use("/auth", require("./routes/auth"));
 
 // エラーハンドリング
 // catch 404 and forward to error handler
-app.use((req, res, next) => next(require('@hapi/boom').notFound('missing')));
+app.use((req, res, next) => next(require("@hapi/boom").notFound("missing")));
 // https://hapi.dev/module/boom/api
-app.use(require('./middleware/error'));
+app.use(require("./middleware/error"));
 
 module.exports = app;

@@ -15,7 +15,7 @@
       {{ text }}
     </v-btn>
     <v-btn
-      v-else="to"
+      v-else
       :color="$const.ACCENT_COLOR"
       @click.stop="click"
       :x-large="xlarge"

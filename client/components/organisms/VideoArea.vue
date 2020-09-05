@@ -181,19 +181,15 @@ export default {
     })
 
     this.peer.on('error', (err) => {
-      alert(err)
+      if (err.type === 'invalid-key') alert('接続できません')
+      else alert(err)
     })
-    // this.peer.on('error', (error) => {
-    //   //console.log('error!!!:', JSON.stringify(error))
-    //   //console.log('err type:', typeof error)
-    //   alert(error)
-    // })
   },
 
   methods: {
     getDefaultDevices(chatId) {
       navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true }) // デバイス許可求める
+        .getUserMedia({ video: true, audio: true })
         .then(() =>
           navigator.mediaDevices
             .enumerateDevices()
@@ -217,7 +213,6 @@ export default {
               }
               this.selectedAudio = this.audioDevices[0].value
               this.selectedVideo = this.videoDevices[0].value
-              // this.connectSelectedDevices()
               const constraints = {
                 audio: this.selectedAudio
                   ? { deviceId: { exact: this.selectedAudio } }

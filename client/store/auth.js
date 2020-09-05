@@ -132,5 +132,18 @@ export const actions = {
     })
     const user = data.user
     commit('updateUser', { user })
+  },
+  async update({ dispatch, getters }, { user, file }) {
+    const formData = new FormData()
+    await formData.append('id', user.id)
+    await formData.append('name', user.name)
+    await formData.append('profile', user.profile)
+    await formData.append('file', file)
+    await this.$api.post(`/users/update/id/${user.id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${getters.token}` // TODO: plugin/apiにまとめたい
+      }
+    })
+    dispatch('updateCurrentUser')
   }
 }

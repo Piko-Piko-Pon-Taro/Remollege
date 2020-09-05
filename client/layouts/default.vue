@@ -26,6 +26,28 @@
           </v-list-item>
         </nuxt-link>
 
+        <v-dialog v-model="dialog" width="600">
+          <template v-slot:activator="{ on, attrs }">
+            <v-list-item v-bind="attrs" v-on="on" v-show="isAuthenticated" link>
+              <v-list-item-action>
+                <v-icon>mdi-account</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  MY PROFILE
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <ProfileCard
+            :name="currentUser.name"
+            :image="currentUser.img"
+            :profile="currentUser.profile"
+            @save="updateProfile"
+            is-editable
+          />
+        </v-dialog>
+
         <nuxt-link
           v-show="!isAuthenticated"
           :to="'/login'"
@@ -104,7 +126,8 @@
 <script>
 export default {
   components: {
-    UserIcon: () => import('@/components/atoms/UserIcon')
+    UserIcon: () => import('@/components/atoms/UserIcon'),
+    ProfileCard: () => import('@/components/organisms/ProfileCard')
   },
   data() {
     return {
@@ -114,7 +137,8 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Remollege'
+      title: 'Remollege',
+      dialog: false
     }
   },
   computed: {
@@ -128,6 +152,10 @@ export default {
   methods: {
     async logout() {
       await this.$store.dispatch('auth/logout')
+    },
+    async updateProfile(value, file) {
+      value.id = this.currentUser.id
+      await this.$store.dispatch('auth/update', { user: value, file })
     }
   }
 }
