@@ -181,8 +181,8 @@ export default {
     })
 
     this.peer.on('error', (err) => {
-      if (err.type === 'invalid-key') alert('接続できません')
-      else alert(err)
+      if (err.type === 'invalid-key')
+        alert('ビデオ通話サーバーに接続できません')
     })
   },
 
@@ -190,10 +190,9 @@ export default {
     getDefaultDevices(chatId) {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
-        .then(() =>
-          navigator.mediaDevices
-            .enumerateDevices()
-            .then((deviceInfos) => {
+        .then(
+          () =>
+            navigator.mediaDevices.enumerateDevices().then((deviceInfos) => {
               for (let i = 0; i !== deviceInfos.length; ++i) {
                 const deviceInfo = deviceInfos[i]
                 if (deviceInfo.kind === 'audioinput') {
@@ -236,9 +235,9 @@ export default {
                   this.makeCall(chatId)
                 })
             })
-            .catch((err) => alert(err))
+          // .catch((err) => alert(err))
         )
-        .catch(() => console.log('接続エラー'))
+        .catch(() => console.log('デバイスに接続できません'))
     },
 
     onDeviceChange() {
