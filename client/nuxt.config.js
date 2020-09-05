@@ -24,7 +24,8 @@ export default {
   },
 
   env: {
-    apiUrl
+    apiUrl,
+    SKYWAY_API_KEY: process.env.SKYWAY_API_KEY
   },
   /*
    ** Headers of the page
