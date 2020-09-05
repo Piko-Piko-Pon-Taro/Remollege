@@ -49,7 +49,6 @@ services:
     env_file: .env
     volumes:
       - ../database/my.cnf:/etc/mysql/conf.d/my.cnf:cached
-      - ../database/init:/docker-entrypoint-initdb.d:cached
     expose:
       - 3306
   swagger-editor:
