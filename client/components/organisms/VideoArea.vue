@@ -149,7 +149,7 @@ export default {
     return {
       dialog: false,
       bottomNav: 'cog',
-      APIKey: process.env.SKYWAY_API_KEY,
+      APIKey: process.env.skywayApiKey,
       selectedAudio: '',
       selectedVideo: '',
       audioDevices: [],
