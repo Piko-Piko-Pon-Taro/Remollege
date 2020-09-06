@@ -2,6 +2,7 @@ echo "==== START SETUP ===="
 if ! npm install; then
   exitWithError "npm install"
 fi
+npx sequelize-cli db:migrate:undo:all
 if ! npx sequelize-cli db:migrate; then
   exitWithError "migration"
 fi
