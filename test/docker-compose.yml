@@ -26,7 +26,7 @@ services:
       - /src/api/node_modules/
     working_dir: /src/api
     tty: true
-    command: bash -c 'sh setup.sh'
+    command: npm run setup
     expose:
       - ${API_PORT}
     depends_on:

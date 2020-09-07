@@ -1,3 +1,9 @@
+#!/usr/bin/bash
+function exitWithError() {
+  echo "$1 failed! stop setup..."
+  exit 1
+}
+
 echo "==== START SETUP ===="
 if ! npm install; then
   exitWithError "npm install"
@@ -11,8 +17,3 @@ if ! npx sequelize-cli db:seed:all; then
 fi
 echo "==== COMPLETE SETUP ===="
 npm run dev
-
-function exitWithError() {
-  echo "$1 failed! stop setup..."
-  exit 1
-}
