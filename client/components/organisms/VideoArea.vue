@@ -181,6 +181,12 @@ export default {
       this.peer.on('open', () => {
         this.peerId = this.peer.id
       })
+      this.peer.on('expiresin', (sec) => {
+        // Create new credential and Update the credential here.
+        this.getCredential().then((credential) => {
+          this.peer.updateCredential(credential)
+        })
+      })
 
       this.peer.on('call', (call) => {
         call.answer(this.localStream)
@@ -192,6 +198,7 @@ export default {
           alert('ビデオ通話サーバーに接続できません')
       })
     },
+
     async getCredential() {
       try {
         const { data } = await this.$api.post('/video/authenticate', {
