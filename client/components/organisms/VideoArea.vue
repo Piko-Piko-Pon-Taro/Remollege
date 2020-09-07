@@ -175,7 +175,7 @@ export default {
       this.peer = new Peer(this.user.id, {
         key: process.env.SKYWAY_API_KEY,
         credential,
-        debug: 0
+        debug: process.env.NODE_ENV === 'production' ? 0 : 3
       })
 
       this.peer.on('open', () => {
