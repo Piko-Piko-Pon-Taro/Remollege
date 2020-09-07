@@ -165,28 +165,45 @@ export default {
       isCamOn: true
     }
   },
-  mounted() {
-    this.peer = new Peer(this.user.id, {
-      key: process.env.SKYWAY_API_KEY,
-      debug: 0
-    })
-
-    this.peer.on('open', () => {
-      this.peerId = this.peer.id
-    })
-
-    this.peer.on('call', (call) => {
-      call.answer(this.localStream)
-      this.setupCallEventHandlers(call)
-    })
-
-    this.peer.on('error', (err) => {
-      if (err.type === 'invalid-key')
-        alert('ビデオ通話サーバーに接続できません')
-    })
+  created() {
+    this.initPeer()
   },
 
   methods: {
+    async initPeer() {
+      const credential = await this.getCredential()
+      this.peer = new Peer(this.user.id, {
+        key: process.env.SKYWAY_API_KEY,
+        credential,
+        debug: 0
+      })
+
+      this.peer.on('open', () => {
+        this.peerId = this.peer.id
+      })
+
+      this.peer.on('call', (call) => {
+        call.answer(this.localStream)
+        this.setupCallEventHandlers(call)
+      })
+
+      this.peer.on('error', (err) => {
+        if (err.type === 'invalid-key')
+          alert('ビデオ通話サーバーに接続できません')
+      })
+    },
+    async getCredential() {
+      try {
+        const { data } = await this.$api.post('/video/authenticate', {
+          peerId: this.user.id,
+          sessionToken: '' // sessionTokenチェック未使用
+        })
+        return data
+      } catch (err) {
+        alert(err)
+      }
+    },
+
     getDefaultDevices(chatId) {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
