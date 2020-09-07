@@ -45,6 +45,7 @@ app.use("/chats", require("./routes/chats"));
 app.use("/rooms", require("./routes/rooms"));
 app.use("/tables", require("./routes/tables"));
 app.use("/auth", require("./routes/auth"));
+app.use("/video", require("./routes/video"));
 
 // エラーハンドリング
 // catch 404 and forward to error handler
