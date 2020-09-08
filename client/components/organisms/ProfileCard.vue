@@ -109,7 +109,6 @@
 <script>
 export default {
   components: {
-    // ActionButton: () => import('@/components/atoms/ActionButton'),
     UserIcon: () => import('@/components/atoms/UserIcon')
   },
   props: {

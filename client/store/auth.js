@@ -134,7 +134,7 @@ export const actions = {
     commit('updateUser', { user })
   },
   async update({ dispatch, getters }, { user, file }) {
-    const formData = new FormData()
+    let formData = new FormData() // eslint-disable-line
     await formData.append('id', user.id)
     await formData.append('name', user.name)
     await formData.append('profile', user.profile)
