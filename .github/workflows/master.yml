@@ -21,6 +21,7 @@ jobs:
           sed -i 's|MYSQL_USER|${{ secrets.MYSQL_USER }}|g' config.json
           sed -i 's|MYSQL_PASSWORD|${{ secrets.MYSQL_PASSWORD }}|g' config.json
           sed -i 's|MYSQL_SOCKET_PATH|${{ secrets.MYSQL_SOCKET_PATH }}|g' config.json
+          cd ../..
 
     - name: npm install, build
       run: |
