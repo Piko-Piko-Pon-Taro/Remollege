@@ -13,6 +13,16 @@ jobs:
       with:
         node-version: '12'
 
+    - name: setting config files
+      run: |
+          cd client
+          echo '${{ secrets.SKYWAY_API_KEY }}' >> .env
+          cd ../api/config
+          sed -i 's|MYSQL_USER|${{ secrets.MYSQL_USER }}|g' config.json
+          sed -i 's|MYSQL_PASSWORD|${{ secrets.MYSQL_PASSWORD }}|g' config.json
+          sed -i 's|MYSQL_SOCKET_PATH|${{ secrets.MYSQL_SOCKET_PATH }}|g' config.json
+          cd ../..
+
     - name: npm install, build
       run: |
           cd client
@@ -21,17 +31,6 @@ jobs:
           cd ../api
           npm install
           cd ..
-
-    - name: setting config files
-      run: |
-          cd client
-          echo '${{ secrets.SKYWAY_API_KEY }}' >> .env
-          cd ../api
-          echo 'NODE_ENV=production' >> .env
-          cd config
-          sed -i 's|MYSQL_USER|${{ secrets.MYSQL_USER }}|g' config.json
-          sed -i 's|MYSQL_PASSWORD|${{ secrets.MYSQL_PASSWORD }}|g' config.json
-          sed -i 's|MYSQL_SOCKET_PATH|${{ secrets.MYSQL_SOCKET_PATH }}|g' config.json
 
     - name: GAE login
       run: |

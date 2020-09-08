@@ -46,7 +46,7 @@ export default {
     return {
       teacher: {
         name: '田中愛治総長',
-        img: 'teacher.jpg'
+        img: 'https://storage.googleapis.com/remollege-storage/1599556564604teacher.jpg'
       },
       seatedTableId: null
     }

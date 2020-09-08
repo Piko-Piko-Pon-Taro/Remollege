@@ -5,6 +5,7 @@ require('dotenv').config()
 let apiUrl
 let host
 let port
+const { SKYWAY_API_KEY } = process.env
 
 if (process.env.NODE_ENV === 'production') {
   apiUrl = 'https://api-dot-pikopikopon1.uc.r.appspot.com'
@@ -24,7 +25,8 @@ export default {
   },
 
   env: {
-    apiUrl
+    apiUrl,
+    SKYWAY_API_KEY
   },
   /*
    ** Headers of the page
