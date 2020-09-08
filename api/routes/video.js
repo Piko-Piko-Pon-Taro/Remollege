@@ -1,7 +1,7 @@
 "use strict";
 const router = require("express").Router();
-
 const boom = require("@hapi/boom");
+const addStatusOK = require("./lib/addStatusOK");
 const hmac = require("crypto-js/hmac-sha256");
 const CryptoJS = require("crypto-js");
 
@@ -32,7 +32,7 @@ router.post("/authenticate", (req, res, next) => {
       authToken: calculateAuthToken(peerId, unixTimestamp),
     };
 
-    res.send(credential);
+    res.json(addStatusOK(credential));
     // })
     // .catch(() => {
     //   // Session token check failed
