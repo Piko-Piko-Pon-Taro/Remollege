@@ -26,24 +26,26 @@
           </v-list-item>
         </nuxt-link>
 
-        <v-dialog
-          v-model="dialog"
-          width="600"
-        >
+        <v-dialog v-model="dialog" width="600">
           <template v-slot:activator="{ on, attrs }">
-              <v-list-item link v-bind="attrs" v-on="on" 
-          v-show="isAuthenticated">
-                <v-list-item-action>
-                  <v-icon>mdi-account</v-icon>
-                </v-list-item-action>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    MY PROFILE
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
+            <v-list-item v-bind="attrs" v-on="on" v-show="isAuthenticated" link>
+              <v-list-item-action>
+                <v-icon>mdi-account</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  MY PROFILE
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </template>
-          <ProfileCard :name="currentUser.name" :image="currentUser.img" :profile="currentUser.profile" isEditable @save="updateProfile"/>
+          <ProfileCard
+            :name="currentUser.name"
+            :image="currentUser.img"
+            :profile="currentUser.profile"
+            @save="updateProfile"
+            is-editable
+          />
         </v-dialog>
 
         <nuxt-link
@@ -125,7 +127,7 @@
 export default {
   components: {
     UserIcon: () => import('@/components/atoms/UserIcon'),
-    ProfileCard: () => import('@/components/organisms/ProfileCard'),
+    ProfileCard: () => import('@/components/organisms/ProfileCard')
   },
   data() {
     return {
@@ -136,7 +138,7 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Remollege',
-      dialog: false,
+      dialog: false
     }
   },
   computed: {

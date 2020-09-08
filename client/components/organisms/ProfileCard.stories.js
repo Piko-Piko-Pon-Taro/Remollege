@@ -22,7 +22,8 @@ const Template = (args, { argTypes }) => ({
 export const MyProfileCard = Template.bind({})
 MyProfileCard.args = {
   name: 'ピコピコぽん太郎',
-  image: 'https://storage.googleapis.com/remollege-storage/1599218148359sampleIcon1.jpg',
+  image:
+    'https://storage.googleapis.com/remollege-storage/1599218148359sampleIcon1.jpg',
   profile:
     '先進理工学部二郎系学科3年生です。\n東京都西早稲田駅近くにある二郎系ラーメン店ピコピコポンが激推しです。おいしいよ。',
   isEditable: true

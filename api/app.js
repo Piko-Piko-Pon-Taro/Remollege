@@ -1,4 +1,5 @@
 // デフォルトのモジュールたち
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -46,6 +47,7 @@ app.use("/buildings", require("./routes/buildings"));
 app.use("/rooms", require("./routes/rooms"));
 app.use("/tables", require("./routes/tables"));
 app.use("/auth", require("./routes/auth"));
+app.use("/video", require("./routes/video"));
 
 // エラーハンドリング
 // catch 404 and forward to error handler

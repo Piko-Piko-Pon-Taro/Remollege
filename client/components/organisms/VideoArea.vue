@@ -149,7 +149,6 @@ export default {
     return {
       dialog: false,
       bottomNav: 'cog',
-      APIKey: process.env.SKYWAY_API_KEY,
       selectedAudio: '',
       selectedVideo: '',
       audioDevices: [],
@@ -166,35 +165,58 @@ export default {
       isCamOn: true
     }
   },
-  mounted() {
-    this.peer = new Peer(this.user.id, {
-      key: this.APIKey,
-      debug: 0
-    })
-
-    this.peer.on('open', () => {
-      this.peerId = this.peer.id
-    })
-
-    this.peer.on('call', (call) => {
-      call.answer(this.localStream)
-      this.setupCallEventHandlers(call)
-    })
-
-    this.peer.on('error', (err) => {
-      if (err.type === 'invalid-key') alert('接続できません')
-      else alert(err)
-    })
+  created() {
+    this.initPeer()
   },
 
   methods: {
+    async initPeer() {
+      const credential = await this.getCredential()
+      this.peer = new Peer(this.user.id, {
+        key: process.env.SKYWAY_API_KEY,
+        credential,
+        debug: process.env.NODE_ENV === 'production' ? 0 : 3
+      })
+
+      this.peer.on('open', () => {
+        this.peerId = this.peer.id
+      })
+      this.peer.on('expiresin', (sec) => {
+        // Create new credential and Update the credential here.
+        this.getCredential().then((credential) => {
+          this.peer.updateCredential(credential)
+        })
+      })
+
+      this.peer.on('call', (call) => {
+        call.answer(this.localStream)
+        this.setupCallEventHandlers(call)
+      })
+
+      this.peer.on('error', (err) => {
+        if (err.type === 'invalid-key')
+          alert('ビデオ通話サーバーに接続できません')
+      })
+    },
+
+    async getCredential() {
+      try {
+        const { data } = await this.$api.post('/video/authenticate', {
+          peerId: this.user.id,
+          sessionToken: '' // sessionTokenチェック未使用
+        })
+        return data
+      } catch (err) {
+        alert(err)
+      }
+    },
+
     getDefaultDevices(chatId) {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
-        .then(() =>
-          navigator.mediaDevices
-            .enumerateDevices()
-            .then((deviceInfos) => {
+        .then(
+          () =>
+            navigator.mediaDevices.enumerateDevices().then((deviceInfos) => {
               for (let i = 0; i !== deviceInfos.length; ++i) {
                 const deviceInfo = deviceInfos[i]
                 if (deviceInfo.kind === 'audioinput') {
@@ -237,9 +259,9 @@ export default {
                   this.makeCall(chatId)
                 })
             })
-            .catch((err) => alert(err))
+          // .catch((err) => alert(err))
         )
-        .catch((err) => alert(err))
+        .catch(() => console.log('デバイスに接続できません'))
     },
 
     onDeviceChange() {
