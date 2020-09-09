@@ -203,6 +203,9 @@ export default {
               '他のタブやデバイスから教室に入室済みです。\n他の接続を切断してから入室しなおしてください。'
             )
             break
+          case 'authentication':
+            alert('認証に失敗しました。')
+            break
           case 'socket-error':
             alert('サーバーとの接続が失われました。')
             break
