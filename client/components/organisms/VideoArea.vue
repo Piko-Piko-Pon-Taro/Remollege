@@ -220,8 +220,8 @@ export default {
             break
           default:
             alert('接続エラー')
-            break
         }
+        this.$emit('leave')
       })
     },
 
@@ -319,7 +319,10 @@ export default {
       this.localStream = stream
     },
 
-    initChat(chatId) {
+    async initChat(chatId) {
+      if (!this.peer.open) {
+        await this.initPeer()
+      }
       this.getDefaultDevices(chatId)
     },
     makeCall(chatId) {
