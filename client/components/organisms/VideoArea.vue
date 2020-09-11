@@ -149,8 +149,8 @@ export default {
     return {
       dialog: false,
       bottomNav: 'cog',
-      selectedAudio: '',
-      selectedVideo: '',
+      selectedAudio: null, // deviceId
+      selectedVideo: null, // deviceId
       audioDevices: [],
       videoDevices: [],
       videoWidth: 300,
@@ -175,7 +175,7 @@ export default {
       this.peer = new Peer(this.user.id, {
         key: process.env.SKYWAY_API_KEY,
         credential,
-        debug: process.env.NODE_ENV === 'production' ? 0 : 3
+        debug: process.env.NODE_ENV === 'production' ? 0 : 1
       })
 
       this.peer.on('open', () => {
@@ -240,17 +240,26 @@ export default {
       }
     },
 
-    async setDefaultDevices() {
+    // sets stream with default devices
+    async setDefaultStream() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true
         })
         this.localStream = stream
-        const audio = this.localStream.getAudioTracks()
-        const video = this.localStream.getVideoTracks()
-        this.selectedAudio = audio[0].id
-        this.selectedVideo = video[0].id
+
+        // get current deviceId (used in settings)
+        const connectedAudio = this.localStream.getAudioTracks()[0].label
+        const connectedVideo = this.localStream.getVideoTracks()[0].label
+        await this.setDeviceList()
+        this.selectedAudio = this.audioDevices.find(
+          (audio) => audio.text === connectedAudio
+        )
+
+        this.selectedVideo = this.videoDevices.find(
+          (video) => video.text === connectedVideo
+        )
       } catch (err) {
         alert('デバイスに接続できません')
       }
@@ -259,7 +268,6 @@ export default {
     async setDeviceList() {
       try {
         const deviceInfos = await navigator.mediaDevices.enumerateDevices()
-
         for (let i = 0; i !== deviceInfos.length; ++i) {
           const deviceInfo = deviceInfos[i]
           if (deviceInfo.kind === 'audioinput') {
@@ -280,6 +288,7 @@ export default {
       }
     },
 
+    // sets stream with selected devices
     async setLocalStream() {
       try {
         const constraints = {
@@ -309,11 +318,11 @@ export default {
       }
 
       if (!this.selectedAudio || !this.selectedVideo) {
-        await this.setDefaultDevices()
+        await this.setDefaultStream()
       } else {
+        await this.setDeviceList() // 利用可能なデバイスが増えたor減った時用
         await this.setLocalStream()
       }
-      await this.setDeviceList()
       this.makeCall(chatId)
     },
 
