@@ -47,7 +47,6 @@
     </div>
 
     <v-bottom-navigation
-      v-model="bottomNav"
       :color="$const.MAIN_COLOR"
       :background-color="$const.BASE_COLOR2"
       horizontal
@@ -148,7 +147,7 @@ export default {
   data() {
     return {
       dialog: false,
-      bottomNav: 'cog',
+      // bottomNav: 'cog',
       selectedAudio: null, // deviceId
       selectedVideo: null, // deviceId
       audioDevices: [],
