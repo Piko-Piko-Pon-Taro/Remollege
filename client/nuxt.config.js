@@ -59,8 +59,7 @@ export default {
   plugins: [
     { src: '~plugins/const.js' },
     { src: '~plugins/validate.js' },
-    { src: '~plugins/api.js' },
-    { src: '~plugins/auth.client.js' }
+    { src: '~plugins/axios.js' }
   ],
   /*
    ** Nuxt.js dev-modules
@@ -72,15 +71,55 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    // Doc: https://auth.nuxtjs.org/
+    '@nuxtjs/auth',
     '@nuxtjs/dotenv',
     // Doc: https://nuxt-socket-io.netlify.app/
-    'nuxt-socket-io'
+    'nuxt-socket-io',
+    '@nuxtjs/toast'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: apiUrl
+  },
+  /*
+   ** auth module configuration
+   */
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: '/login',
+      home: '/'
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: `${apiUrl}/auth/login`, method: 'post' },
+          logout: false,
+          user: {
+            url: `${apiUrl}/auth/user`,
+            method: 'get',
+            propertyName: 'user'
+          }
+        },
+        tokenRequired: true,
+        tokenType: 'bearer',
+        globalToken: true,
+        autoFetchUser: true
+      },
+      waseda: {
+        _scheme: 'oauth2',
+        authorization_endpoint: 'https://accounts.google.com/o/oauth2/auth',
+        scope: ['openid', 'profile', 'email'],
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        userinfo_endpoint: false
+      }
+    }
+  },
   /*
    ** io module configuration
    ** See https://nuxt-socket-io.netlify.app/configuration
@@ -99,6 +138,13 @@ export default {
         }
       }
     ]
+  },
+  /*
+   ** toast module configuration
+   ** See https://www.npmjs.com/package/@nuxtjs/toast
+   */
+  toast: {
+    position: 'top-center'
   },
   /*
    ** vuetify module configuration
@@ -131,6 +177,6 @@ export default {
     extend(config, ctx) {}
   },
   router: {
-    middleware: 'auth'
+    middleware: ['auth']
   }
 }

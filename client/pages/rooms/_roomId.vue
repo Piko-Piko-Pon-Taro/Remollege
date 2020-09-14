@@ -13,7 +13,7 @@
     <VideoArea
       ref="videoArea"
       v-show="seatedTableId"
-      :user="currentUser"
+      :user="$auth.user"
       @leave="leave"
     />
 
@@ -52,9 +52,6 @@ export default {
     }
   },
   computed: {
-    currentUser() {
-      return this.$store.getters['auth/user']
-    },
     room() {
       return this.$store.getters['rooms/oneByRoomId'](this.$route.params.roomId)
     }
@@ -62,7 +59,6 @@ export default {
   async asyncData({ store, route }) {
     await Promise.all([
       // TODO: 最初にまとめて呼べるようにしたい
-      store.dispatch('auth/fetchCurrentUser'),
       store.dispatch('rooms/updateByRoomId', {
         roomId: route.params.roomId
       })
@@ -97,7 +93,7 @@ export default {
       this.socket.emit('sitDown', {
         roomId: this.room.id,
         tableId: this.seatedTableId,
-        userId: this.currentUser.id
+        userId: this.$auth.user.id
       })
     },
     leave() {
@@ -105,7 +101,7 @@ export default {
       this.socket.emit('standUp', {
         roomId: this.room.id,
         tableId: this.seatedTableId,
-        userId: this.currentUser.id
+        userId: this.$auth.user.id
       })
       this.seatedTableId = null
     }
