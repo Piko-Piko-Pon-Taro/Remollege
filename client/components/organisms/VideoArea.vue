@@ -149,8 +149,8 @@ export default {
     return {
       dialog: false,
       bottomNav: 'cog',
-      selectedAudio: '',
-      selectedVideo: '',
+      selectedAudio: null, // deviceId
+      selectedVideo: null, // deviceId
       audioDevices: [],
       videoDevices: [],
       videoWidth: 300,
@@ -175,7 +175,7 @@ export default {
       this.peer = new Peer(this.user.id, {
         key: process.env.SKYWAY_API_KEY,
         credential,
-        debug: process.env.NODE_ENV === 'production' ? 0 : 3
+        debug: process.env.NODE_ENV === 'production' ? 0 : 1
       })
 
       this.peer.on('open', () => {
@@ -240,94 +240,92 @@ export default {
       }
     },
 
-    getDefaultDevices(chatId) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
-        .then(
-          () =>
-            navigator.mediaDevices.enumerateDevices().then((deviceInfos) => {
-              for (let i = 0; i !== deviceInfos.length; ++i) {
-                const deviceInfo = deviceInfos[i]
-                if (deviceInfo.kind === 'audioinput') {
-                  this.audioDevices.push({
-                    text:
-                      deviceInfo.label ||
-                      `Microphone ${this.audioDevices.length}`,
-                    value: deviceInfo.deviceId
-                  })
-                } else if (deviceInfo.kind === 'videoinput') {
-                  this.videoDevices.push({
-                    text:
-                      deviceInfo.label || `Camera  ${this.videoDevices.length}`,
-                    value: deviceInfo.deviceId
-                  })
-                }
-              }
-              this.selectedAudio = this.audioDevices[0].value
-              this.selectedVideo = this.videoDevices[0].value
-              const constraints = {
-                audio: this.selectedAudio
-                  ? { deviceId: { exact: this.selectedAudio } }
-                  : false,
-                video: this.selectedVideo
-                  ? { deviceId: { exact: this.selectedVideo } }
-                  : false
-              }
-              if (constraints.video) {
-                constraints.video.width = {
-                  exact: this.videoWidth
-                }
-                constraints.video.height = {
-                  exact: this.videoHeight
-                }
-              }
-              navigator.mediaDevices
-                .getUserMedia(constraints)
-                .then((stream) => {
-                  this.localStream = stream
-                  this.makeCall(chatId)
-                })
-            })
-          // .catch((err) => alert(err))
+    // sets stream with default devices
+    async setDefaultStream() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        })
+        this.localStream = stream
+
+        // get current deviceId (used in settings)
+        const connectedAudio = this.localStream.getAudioTracks()[0].label
+        const connectedVideo = this.localStream.getVideoTracks()[0].label
+        await this.setDeviceList()
+        this.selectedAudio = this.audioDevices.find(
+          (audio) => audio.text === connectedAudio
         )
-        .catch(() => alert('デバイスに接続できません'))
+
+        this.selectedVideo = this.videoDevices.find(
+          (video) => video.text === connectedVideo
+        )
+      } catch (err) {
+        alert('デバイスに接続できません')
+      }
     },
 
-    onDeviceChange() {
-      // ダイアログ閉じたときに後で変更
-      if (this.selectedAudio !== '' && this.selectedVideo !== '') {
-        // this.connectSelectedDevices()
-        // return
+    async setDeviceList() {
+      try {
+        const deviceInfos = await navigator.mediaDevices.enumerateDevices()
+        for (let i = 0; i !== deviceInfos.length; ++i) {
+          const deviceInfo = deviceInfos[i]
+          if (deviceInfo.kind === 'audioinput') {
+            this.audioDevices.push({
+              text:
+                deviceInfo.label || `Microphone ${this.audioDevices.length}`,
+              value: deviceInfo.deviceId
+            })
+          } else if (deviceInfo.kind === 'videoinput') {
+            this.videoDevices.push({
+              text: deviceInfo.label || `Camera  ${this.videoDevices.length}`,
+              value: deviceInfo.deviceId
+            })
+          }
+        }
+      } catch (err) {
+        alert('デバイスに接続できません')
       }
     },
 
-    async connectSelectedDevices() {
-      const constraints = {
-        audio: this.selectedAudio
-          ? { deviceId: { exact: this.selectedAudio } }
-          : false,
-        video: this.selectedVideo
-          ? { deviceId: { exact: this.selectedVideo } }
-          : false
-      }
-      if (constraints.video) {
-        constraints.video.width = {
-          exact: this.videoWidth
+    // sets stream with selected devices
+    async setLocalStream() {
+      try {
+        const constraints = {
+          audio: this.selectedAudio ? { deviceId: this.selectedAudio } : false,
+          video: this.selectedVideo ? { deviceId: this.selectedVideo } : false
         }
-        constraints.video.height = {
-          exact: this.videoHeight
+
+        if (constraints.video) {
+          constraints.video.width = {
+            exact: this.videoWidth
+          }
+          constraints.video.height = {
+            exact: this.videoHeight
+          }
         }
+        const stream = await navigator.mediaDevices.getUserMedia(constraints)
+        this.localStream = stream
+      } catch (err) {
+        alert(err)
       }
-      const stream = await navigator.mediaDevices.getUserMedia(constraints)
-      this.localStream = stream
     },
 
     async initChat(chatId) {
+      // wifi切れた時用
       if (!this.peer.open) {
         await this.initPeer()
       }
-      this.getDefaultDevices(chatId)
+
+      if (!this.selectedAudio || !this.selectedVideo) {
+        await this.setDefaultStream()
+      } else {
+        await this.setDeviceList() // 利用可能なデバイスが増えたor減った時用
+        await this.setLocalStream()
+      }
+      this.makeCall(chatId)
     },
+
     makeCall(chatId) {
       const call = this.peer.joinRoom(chatId, {
         mode: 'sfu',
@@ -392,6 +390,9 @@ export default {
         videoTrack.enabled = !videoTrack.enabled
         this.isCamOn = videoTrack.enabled
       }
+    },
+    onDeviceChange() {
+      // later
     },
     closeCall() {
       if (this.existingCall) {
