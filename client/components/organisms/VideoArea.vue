@@ -115,11 +115,16 @@
           </v-card-text>
           <v-card-actions>
             <ActionButton
-              v-if="selectedAudio && selectedVideo"
-              @click="dialog = false"
-              text="OK"
+              @click="onApplyChanges"
+              text="Ok"
               class="mx-auto my-0 py-0"
             />
+            <!-- <ActionButton
+              v-if="deviceModified"
+              @click="onApplyChanges"
+              text="Apply"
+              class="mx-auto my-0 py-0"
+            /> -->
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -147,7 +152,6 @@ export default {
   data() {
     return {
       dialog: false,
-      // bottomNav: 'cog',
       selectedAudio: null, // deviceId
       selectedVideo: null, // deviceId
       audioDevices: [],
@@ -163,6 +167,7 @@ export default {
       defDeviceOn: false, // 通話参加時のmic/video
       isMicOn: false,
       isCamOn: false
+      // deviceModified: false
     }
   },
   created() {
@@ -344,7 +349,6 @@ export default {
 
     setupCallEventHandlers(call) {
       this.closeCall()
-
       this.existingCall = call
       this.setupEndCallUI()
       this.connectedRoomId = call.name
@@ -400,7 +404,21 @@ export default {
       }
     },
     onDeviceChange() {
+      // this.deviceModified = true
       // later
+    },
+    async onApplyChanges() {
+      try {
+        await this.setLocalStream() // set localStream
+        // carry on device status
+        this.localStream.getAudioTracks()[0].enabled = this.isMicOn
+        this.localStream.getVideoTracks()[0].enabled = this.isCamOn
+        this.existingCall.replaceStream(this.localStream)
+
+        this.dialog = false
+      } catch (err) {
+        alert(err)
+      }
     },
     closeCall() {
       if (this.existingCall) {
