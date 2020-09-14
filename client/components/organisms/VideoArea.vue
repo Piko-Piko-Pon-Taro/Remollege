@@ -194,8 +194,37 @@ export default {
       })
 
       this.peer.on('error', (err) => {
-        if (err.type === 'invalid-key')
-          alert('ビデオ通話サーバーに接続できません')
+        switch (err.type) {
+          case 'invalid-key':
+            alert('ビデオ通話サーバーに接続できません')
+            break
+          case 'unavailable-id':
+            alert(
+              '他のタブやデバイスから教室に入室済みです。\n他の接続を切断してから入室しなおしてください。'
+            )
+            break
+          case 'authentication':
+            alert('認証に失敗しました。')
+            break
+          case 'socket-error':
+            alert('サーバーとの接続が失われました。')
+            break
+          case 'server-error':
+            alert(
+              'サーバーとの接続中に問題がありました。\n 少し待って、リトライしてください。'
+            )
+            break
+          case 'signaling-limited':
+          case 'sfu-limited':
+          case 'turn-limited':
+            alert(
+              'サーバーが停止中です。\nしばらく時間をおいてから再度お試しください。'
+            )
+            break
+          default:
+            alert('接続エラー')
+        }
+        this.$emit('leave')
       })
     },
 
@@ -261,7 +290,7 @@ export default {
             })
           // .catch((err) => alert(err))
         )
-        .catch(() => console.log('デバイスに接続できません'))
+        .catch(() => alert('デバイスに接続できません'))
     },
 
     onDeviceChange() {
@@ -293,7 +322,10 @@ export default {
       this.localStream = stream
     },
 
-    initChat(chatId) {
+    async initChat(chatId) {
+      if (!this.peer.open) {
+        await this.initPeer()
+      }
       this.getDefaultDevices(chatId)
     },
     makeCall(chatId) {
