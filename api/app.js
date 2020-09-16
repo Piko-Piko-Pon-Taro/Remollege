@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 // デフォルトのモジュールたち
 require("dotenv").config();
 const express = require("express");
@@ -41,12 +43,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // ルーティング
 app.use("/", require("./routes/index"));
-app.use("/users", require("./routes/users"));
-app.use("/chats", require("./routes/chats"));
-app.use("/buildings", require("./routes/buildings"));
-app.use("/rooms", require("./routes/rooms"));
-app.use("/tables", require("./routes/tables"));
 app.use("/auth", require("./routes/auth"));
+app.use("/buildings", passport.authenticate("jwt", { session: false }), require("./routes/buildings"));
+app.use("/chats", passport.authenticate("jwt", { session: false }), require("./routes/chats"));
+app.use("/rooms", passport.authenticate("jwt", { session: false }), require("./routes/rooms"));
+app.use("/tables", passport.authenticate("jwt", { session: false }), require("./routes/tables"));
+app.use("/users", passport.authenticate("jwt", { session: false }), require("./routes/users"));
 app.use("/video", require("./routes/video"));
 
 // エラーハンドリング
