@@ -26,10 +26,13 @@
     ]
   },
   "dependencies": {
+    "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.12.1",
     "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/toast": "^3.3.1",
     "@nuxtjs/vuetify": "^1.0.0",
     "nuxt": "^2.14.1",
+    "nuxt-auth-refresh": "^1.1.0",
     "nuxt-socket-io": "^1.1.8",
     "paths.macro": "^3.0.1",
     "skyway-js": "^3.0.2"
