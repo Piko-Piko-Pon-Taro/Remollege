@@ -64,11 +64,11 @@ export const mutations = {
 
 export const actions = {
   async fetchByBuildingId({ commit }, { buildingId }) {
-    const { data } = await this.$api.get(`rooms/buildingId/${buildingId}`)
+    const { data } = await this.$axios.get(`rooms/buildingId/${buildingId}`)
     commit('addMany', { rooms: data.rooms })
   },
   async updateByRoomId({ commit }, { roomId }) {
-    const { data } = await this.$api.get(`rooms/${roomId}`)
+    const { data } = await this.$axios.get(`rooms/${roomId}`)
     commit('updateOne', { room: data.room })
   },
   SOCKET_someOneSitsDown({ commit }, { roomId, tableId, user }) {

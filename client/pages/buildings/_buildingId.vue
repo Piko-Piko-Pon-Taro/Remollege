@@ -25,7 +25,6 @@ export default {
   async asyncData({ store, route }) {
     await Promise.all([
       // TODO: 最初にまとめて呼べるようにしたい
-      store.dispatch('auth/fetchCurrentUser'),
       store.dispatch('rooms/fetchByBuildingId', {
         buildingId: route.params.buildingId
       })

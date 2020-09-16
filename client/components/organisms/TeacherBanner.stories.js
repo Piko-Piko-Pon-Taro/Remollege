@@ -21,5 +21,6 @@ const Template = (args, { argTypes }) => ({
 export const Default = Template.bind({})
 Default.args = {
   name: '田中愛治総長',
-  img: 'https://storage.googleapis.com/remollege-storage/1599556564604teacher.jpg',
+  img:
+    'https://storage.googleapis.com/remollege-storage/1599556564604teacher.jpg'
 }

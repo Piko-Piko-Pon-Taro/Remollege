@@ -20,9 +20,8 @@ const Template = (args, { argTypes }) => ({
 
 export const Default = Template.bind({})
 Default.args = {
-    building: {
-        id: 1,
-        num: 56
-    },
+  building: {
+    id: 1,
+    num: 56
+  }
 }
-

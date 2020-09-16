@@ -17,7 +17,10 @@ jobs:
       run: |
           cd client
           echo '${{ secrets.SKYWAY_API_KEY }}' >> .env
-          cd ../api/config
+          echo '${{ secrets.GOOGLE_CLIENT_ID }}' >> .env
+          cd ../api
+          echo '${{ secrets.JWT_SECRET }}' >> .env
+          cd config
           sed -i 's|MYSQL_USER|${{ secrets.MYSQL_USER }}|g' config.json
           sed -i 's|MYSQL_PASSWORD|${{ secrets.MYSQL_PASSWORD }}|g' config.json
           sed -i 's|MYSQL_SOCKET_PATH|${{ secrets.MYSQL_SOCKET_PATH }}|g' config.json
