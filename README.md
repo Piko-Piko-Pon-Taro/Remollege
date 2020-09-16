@@ -1,15 +1,24 @@
 # Remollege
-<img src="https://img.shields.io/github/issues/Piko-Piko-Pon-Taro/Remollege.git">
-<img src="https://img.shields.io/github/forks/Piko-Piko-Pon-Taro/Remollege.git">
-<img src="https://img.shields.io/github/stars/Piko-Piko-Pon-Taro/Remollege.git">
-<img src="https://img.shields.io/github/license/Piko-Piko-Pon-Taro/Remollege.git">
-[Remollege](https://pikopikopon1.uc.r.appspot.com/)
+<div style="text-align:center">
+    <a href="https://pikopikopon1.uc.r.appspot.com">
+        <img src="https://storage.googleapis.com/remollege-storage/static/main_visual.png" style="text-align:center; width:400px">
+    </a>
+    <div>
+        <img src="https://img.shields.io/github/issues/Piko-Piko-Pon-Taro/Remollege?style=flat-square&logo=appveyor">
+        <img src="https://img.shields.io/github/issues-pr/Piko-Piko-Pon-Taro/Remollege?style=flat-square&logo=appveyor">
+        <img src="https://img.shields.io/github/forks/Piko-Piko-Pon-Taro/Remollege?style=flat-square&logo=appveyor">
+        <img src="https://img.shields.io/github/stars/Piko-Piko-Pon-Taro/Remollege?style=flat-square&logo=appveyor">
+        <img src="https://img.shields.io/github/workflow/status/Piko-Piko-Pon-Taro/Remollege/CI?style=flat-square&logo=appveyor">
+    </div>
+</div>
+
 # Environment
 - Nuxt.js
-- Swagger
 - Express
 - MySQL
 - Docker
+- GAE
+- Google Cloud SQL
 
 # Installation
 ## Requires
@@ -20,6 +29,8 @@
 git clone git@github.com:Piko-Piko-Pon-Taro/Remollege.git
 cd Remollege/test
 docker-compose up -d
+cd ../client
+npm install || npm run dev
 ```
 ### Migrations & Seeding
 ```
