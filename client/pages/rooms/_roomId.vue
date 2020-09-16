@@ -72,12 +72,16 @@ export default {
     })
   },
   created() {
-    // リロード用
-    window.addEventListener('beforeunload', this.leave) // eslint-disable-line
+    if (process.client) {
+      // リロード用
+      window.addEventListener('beforeunload', this.leave) // eslint-disable-line
+    }
   },
   destroyed() {
-    // リロード用
-    window.removeEventListener('beforeunload', this.leave)
+    if (process.client) { // eslint-disable-line
+      // リロード用
+      window.removeEventListener('beforeunload', this.leave)
+    }
   },
   beforeRouteLeave(to, from, next) {
     // ブラウザバック・ページ遷移した時用

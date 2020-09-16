@@ -37,7 +37,8 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "sequelize": "^6.3.4",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "sequelize-cli": "^6.2.0"
   },
   "devDependencies": {
     "eslint": "^7.6.0",
@@ -46,7 +47,6 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "nodemon": "^2.0.4",
-    "prettier": "^2.0.5",
-    "sequelize-cli": "^6.2.0"
+    "prettier": "^2.0.5"
   }
 }

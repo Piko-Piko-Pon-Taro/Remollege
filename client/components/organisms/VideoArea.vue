@@ -235,7 +235,7 @@ export default {
 
     async getCredential() {
       try {
-        const { data } = await this.$api.post('/video/authenticate', {
+        const { data } = await this.$axios.post('/video/authenticate', {
           peerId: this.user.id,
           sessionToken: '' // sessionTokenチェック未使用
         })
