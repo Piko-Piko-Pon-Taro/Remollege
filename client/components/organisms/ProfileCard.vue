@@ -2,19 +2,29 @@
   <v-card width="600" class="mx-auto">
     <v-img :src="require('@/assets/image/waseda.jpg')" height="250px">
       <v-row class="fill-height">
-        <UserIcon  v-if="!isBeingEdited" :src="image" size="200" class="mx-auto" />
-        <UserIcon  v-if="isBeingEdited" :src="imageEdited" size="200" class="mx-auto">
+        <UserIcon
+          v-if="!isBeingEdited"
+          :src="image"
+          size="200"
+          class="mx-auto"
+        />
+        <UserIcon
+          v-if="isBeingEdited"
+          :src="imageEdited"
+          size="200"
+          class="mx-auto"
+        >
           <v-row>
             <v-layout style="width: 100%; margin: auto;">
               <v-overlay absolute>
-                  <v-file-input
-                    class="justify-center"
-                    accept="image/png, image/jpeg, image/bmp"
-                    prepend-icon="mdi-camera-plus-outline"
-                    style="text-align: center;"
-                    hide-input
-                    @change="handleImageAdded"
-                  />
+                <v-file-input
+                  @change="handleImageAdded"
+                  class="justify-center"
+                  accept="image/png, image/jpeg, image/bmp"
+                  prepend-icon="mdi-camera-plus-outline"
+                  style="text-align: center;"
+                  hide-input
+                />
               </v-overlay>
             </v-layout>
           </v-row>
@@ -30,13 +40,11 @@
 
         <v-list-item-content>
           <v-list-item-subtitle>名前</v-list-item-subtitle>
-          <v-list-item-title v-if="!isBeingEdited">{{ name }}</v-list-item-title>
+          <v-list-item-title v-if="!isBeingEdited">{{
+            name
+          }}</v-list-item-title>
           <v-list-item-title v-if="isBeingEdited">
-            <v-text-field
-              v-model="nameEdited"
-              filled
-              flat
-              dense
+            <v-text-field v-model="nameEdited" filled flat dense
           /></v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -45,34 +53,54 @@
 
       <v-list-item>
         <v-list-item-icon>
-          <v-icon :color="iconColor || $const.ACCENT_COLOR">mdi-information</v-icon>
+          <v-icon :color="iconColor || $const.ACCENT_COLOR"
+            >mdi-information</v-icon
+          >
         </v-list-item-icon>
 
         <v-list-item-content>
           <v-list-item-subtitle>プロフィール</v-list-item-subtitle>
-          <v-list-item-content v-if="!isBeingEdited">{{ profile }}</v-list-item-content>
+          <v-list-item-content v-if="!isBeingEdited">{{
+            profile
+          }}</v-list-item-content>
           <v-textarea
             v-model="profileEdited"
+            v-if="isBeingEdited"
             auto-grow
             filled
             color="deep-purple"
             rows="1"
-            v-if="isBeingEdited"
           />
         </v-list-item-content>
       </v-list-item>
-      <v-list-item class="mx-auto" v-if="isEditable">
+      <v-list-item v-if="isEditable" class="mx-auto">
+        <v-btn
+          v-if="!isBeingEdited"
+          :color="iconColor || $const.ACCENT_COLOR"
+          @click.stop="setValuesToEdit"
+          class="ml-auto"
+          dark
+        >
+          プロフィールを編集
+        </v-btn>
+        <v-btn
+          v-if="isBeingEdited"
+          :color="iconColor || $const.ACCENT_COLOR"
+          @click.stop="isBeingEdited = false"
+          class="ml-auto mr-3"
+          dark
+        >
+          編集を取り消し
+        </v-btn>
 
-      <v-btn class="ml-auto" v-if="!isBeingEdited" :color="iconColor || $const.ACCENT_COLOR" dark @click.stop="setValuesToEdit">
-        プロフィールを編集
-      </v-btn>
-      <v-btn class="ml-auto mr-3" v-if="isBeingEdited" :color="iconColor || $const.ACCENT_COLOR" dark @click.stop="isBeingEdited = false">
-        編集を取り消し
-      </v-btn>
-      
-      <v-btn v-if="isBeingEdited" :color="iconColor || $const.ACCENT_COLOR" dark @click.stop="save">
-        編集を保存
-      </v-btn>
+        <v-btn
+          v-if="isBeingEdited"
+          :color="iconColor || $const.ACCENT_COLOR"
+          @click.stop="save"
+          dark
+        >
+          編集を保存
+        </v-btn>
       </v-list-item>
     </v-list>
   </v-card>
@@ -81,7 +109,6 @@
 <script>
 export default {
   components: {
-    ActionButton: () => import('@/components/atoms/ActionButton'),
     UserIcon: () => import('@/components/atoms/UserIcon')
   },
   props: {
@@ -111,7 +138,7 @@ export default {
       isBeingEdited: false,
       profileEdited: null,
       nameEdited: null,
-      imageEdited: null,
+      imageEdited: null
     }
   },
   methods: {
@@ -138,7 +165,7 @@ export default {
       this.isBeingEdited = false
       const value = {
         name: this.nameEdited,
-        profile: this.profileEdited,
+        profile: this.profileEdited
       }
       this.$emit('save', value, this.file)
     }

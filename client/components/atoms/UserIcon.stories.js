@@ -20,7 +20,8 @@ const Template = (args, { argTypes }) => ({
 
 export const Default = Template.bind({})
 Default.args = {
-  src: 'https://storage.googleapis.com/remollege-storage/1599218148359sampleIcon1.jpg',
+  src:
+    'https://storage.googleapis.com/remollege-storage/1599218148359sampleIcon1.jpg',
   icon: null,
   size: 200
 }

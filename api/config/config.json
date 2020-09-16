@@ -26,9 +26,9 @@
     "database": "remollege",
     "dialect": "mysql",
     "dialectOptions": {
-        "socketPath": "MYSQL_SOCKET_PATH",
-	"supportBigNumbers": false,
-	"bigNumberStrings": false
+      "socketPath": "MYSQL_SOCKET_PATH",
+      "supportBigNumbers": false,
+      "bigNumberStrings": false
     }
   }
 }

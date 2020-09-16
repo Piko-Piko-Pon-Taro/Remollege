@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 // デフォルトのモジュールたち
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -48,6 +49,7 @@ app.use("/chats", passport.authenticate("jwt", { session: false }), require("./r
 app.use("/rooms", passport.authenticate("jwt", { session: false }), require("./routes/rooms"));
 app.use("/tables", passport.authenticate("jwt", { session: false }), require("./routes/tables"));
 app.use("/users", passport.authenticate("jwt", { session: false }), require("./routes/users"));
+app.use("/video", require("./routes/video"));
 
 // エラーハンドリング
 // catch 404 and forward to error handler
