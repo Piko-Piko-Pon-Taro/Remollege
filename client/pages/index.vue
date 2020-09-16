@@ -22,41 +22,29 @@ export default {
     // TODO: 最初にまとめて呼べるようにしたい
     await Promise.all([store.dispatch('buildings/fetchAll')])
   },
-  async beforeCreate() {
+  beforeCreate() {
     if (process.client) {
-      try {
-        switch (this.$auth.$storage.getUniversal('strategy')) {
-          case 'waseda':
-            const { data } = await this.$axios.post(
-              '/auth/waseda',
-              {},
-              {
+      switch (this.$auth.$storage.getUniversal('strategy')) {
+        case 'waseda':
+          setTimeout(() => {
+            this.$auth
+              .loginWith('local', {
                 headers: {
-                  Authorization: this.$auth.$storage.getUniversal(
+                  authorization: this.$auth.$storage.getUniversal(
                     '_token.waseda'
                   )
                 }
-              }
-            )
-            this.$auth.$storage.removeUniversal('_token.waseda')
-            this.$auth.$storage.setUniversal('strategy', 'local')
-            this.$axios.setToken(`Bearer ${data.accessToken}`)
-            this.$auth.$storage.setUniversal(
-              '_token.local',
-              `Bearer ${data.accessToken}`
-            )
-            this.$auth.$storage.setUniversal(
-              '_refresh_token.local',
-              `Bearer ${data.refreshToken}`
-            )
-            this.$auth.fetchUser()
-            break
-          default:
-            break
-        }
-      } catch (e) {
-        this.$auth.$storage.setState('loggedIn', false)
-        this.$toast.error('ログインできませんでした。')
+              })
+              .then((result) => {
+                this.$toast.success('ログインしました')
+              })
+              .catch((e) => {
+                this.$toast.error('ログインできませんでした')
+              })
+          }, 1000)
+          break
+        default:
+          break
       }
     }
   }

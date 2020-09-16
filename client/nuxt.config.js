@@ -56,11 +56,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [
-    { src: '~plugins/const.js' },
-    { src: '~plugins/validate.js' },
-    { src: '~plugins/axios.js' }
-  ],
+  plugins: [{ src: '~plugins/const.js' }, { src: '~plugins/validate.js' }],
   /*
    ** Nuxt.js dev-modules
    */
@@ -69,10 +65,10 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
     // Doc: https://auth.nuxtjs.org/
     '@nuxtjs/auth',
+    // Doc: https://axios.nuxtjs.org/usage
+    '@nuxtjs/axios',
     '@nuxtjs/dotenv',
     // Doc: https://nuxt-socket-io.netlify.app/
     'nuxt-socket-io',
@@ -98,7 +94,11 @@ export default {
     strategies: {
       local: {
         endpoints: {
-          login: { url: `${apiUrl}/auth/login`, method: 'post' },
+          login: {
+            url: `${apiUrl}/auth/waseda`,
+            method: 'post',
+            propertyName: 'accessToken'
+          },
           logout: false,
           user: {
             url: `${apiUrl}/auth/user`,
@@ -144,7 +144,8 @@ export default {
    ** See https://www.npmjs.com/package/@nuxtjs/toast
    */
   toast: {
-    position: 'top-center'
+    position: 'top-center',
+    duration: 1500
   },
   /*
    ** vuetify module configuration

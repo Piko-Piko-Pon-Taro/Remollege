@@ -11,7 +11,7 @@ const passport = require("passport");
 const bcrypt = require("bcrypt");
 
 // const expiresIn = 1800; // 30分
-const expiresIn = 24 * 3600; // 1日 FIXME: 30分に戻す
+const expiresIn = 7 * 24 * 3600; // 1週間 FIXME: 30分に戻す
 const refreshExpiresIn = 7 * 24 * 3600; // 1週間
 
 const axios = require('axios');
