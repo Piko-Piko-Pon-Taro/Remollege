@@ -16,7 +16,7 @@ jobs:
       - name: setting config files
         run: |
           cd client
-          echo '${{ secrets.SKYWAY_API_KEY }}' > .env
+          echo '${{ secrets.SKYWAY_API_KEY }}' >> .env
           echo '${{ secrets.SKYWAY_SECRET_KEY }}' >> .env
           cd ../api/config
           sed -i 's|MYSQL_USER|${{ secrets.MYSQL_USER }}|g' config.json
