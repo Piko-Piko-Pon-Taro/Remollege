@@ -147,7 +147,7 @@ export default {
       this.$auth.logout()
     },
     updateProfile(value, file) {
-      this.$store.dispatch('users/updateAuthUser', { user: value, file })
+      this.$store.dispatch('updateAuthUser', { user: value, file })
     }
   }
 }
