@@ -17,6 +17,7 @@ jobs:
       run: |
           cd client
           echo '${{ secrets.SKYWAY_API_KEY }}' >> .env
+          echo '${{ secrets.SKYWAY_SECRET_KEY }}' >> .env
           echo '${{ secrets.GOOGLE_CLIENT_ID }}' >> .env
           cd ../api
           echo '${{ secrets.JWT_SECRET }}' >> .env
@@ -49,5 +50,6 @@ jobs:
           cd ../api
           gcloud app deploy app.yaml --project 'pikopikopon1'
           cd ..
+
       env:
           CI: true
