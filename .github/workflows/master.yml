@@ -8,44 +8,41 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "12"
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12'
 
-      - name: setting config files
-        run: |
+    - name: setting config files
+      run: |
           cd client
-          echo '${{ secrets.SKYWAY_API_KEY }}' > .env
+          echo '${{ secrets.SKYWAY_API_KEY }}' >> .env
           echo '${{ secrets.SKYWAY_SECRET_KEY }}' >> .env
           cd ../api/config
           sed -i 's|MYSQL_USER|${{ secrets.MYSQL_USER }}|g' config.json
           sed -i 's|MYSQL_PASSWORD|${{ secrets.MYSQL_PASSWORD }}|g' config.json
           sed -i 's|MYSQL_SOCKET_PATH|${{ secrets.MYSQL_SOCKET_PATH }}|g' config.json
           cd ../..
-
-      - name: npm install, build
-        run: |
+    - name: npm install, build
+      run: |
           cd client
           npm install
           npm run build
           cd ../api
           npm install
           cd ..
-
-      - name: GAE login
-        run: |
+    - name: GAE login
+      run: |
           echo 'GAEにdeployすりゅ!'
           echo '${{ secrets.GAE_DEPLOY_KEY }}' > key.json
           gcloud auth activate-service-account --key-file key.json
           rm key.json
-
-      - name: GAE deploy
-        run: |
+    - name: GAE deploy
+      run: |
           cd client
           gcloud app deploy app.yaml --project 'pikopikopon1'
           cd ../api
           gcloud app deploy app.yaml --project 'pikopikopon1'
           cd ..
-        env:
+      env:
           CI: true
