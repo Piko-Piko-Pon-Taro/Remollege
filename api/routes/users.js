@@ -39,12 +39,12 @@ router.post(
       const user = await User.update(
         {
           name: req.body.name,
-          // profile: req.body.profile,
+          profile: req.body.profile,
           img: req.body.img,
         },
         {
           where: {
-            id: req.body.id,
+            id: req.user.id,
           },
         }
       );
