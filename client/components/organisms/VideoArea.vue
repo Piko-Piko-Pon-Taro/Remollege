@@ -47,7 +47,6 @@
     </div>
 
     <v-bottom-navigation
-      v-model="bottomNav"
       :color="$const.MAIN_COLOR"
       :background-color="$const.BASE_COLOR2"
       horizontal
@@ -63,10 +62,10 @@
         <v-icon v-if="!isCamOn">mdi-video-off</v-icon>
       </v-btn>
 
-      <v-btn @click="toggleMute" value="mic">
+      <v-btn @click="toggleMic" value="mic">
         <span>Mic</span>
-        <v-icon v-if="!isMute">mdi-microphone</v-icon>
-        <v-icon v-if="isMute">mdi-microphone-off</v-icon>
+        <v-icon v-if="isMicOn">mdi-microphone</v-icon>
+        <v-icon v-if="!isMicOn">mdi-microphone-off</v-icon>
       </v-btn>
 
       <!-- 相手の音ミュート用 -->
@@ -116,11 +115,16 @@
           </v-card-text>
           <v-card-actions>
             <ActionButton
-              v-if="selectedAudio && selectedVideo"
-              @click="dialog = false"
-              text="OK"
+              @click="onApplyChanges"
+              text="Ok"
               class="mx-auto my-0 py-0"
             />
+            <!-- <ActionButton
+              v-if="deviceModified"
+              @click="onApplyChanges"
+              text="Apply"
+              class="mx-auto my-0 py-0"
+            /> -->
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -148,7 +152,6 @@ export default {
   data() {
     return {
       dialog: false,
-      bottomNav: 'cog',
       selectedAudio: null, // deviceId
       selectedVideo: null, // deviceId
       audioDevices: [],
@@ -161,8 +164,10 @@ export default {
       connectedRoomId: '',
       existingCall: null,
       isTalking: false,
-      isMute: false,
-      isCamOn: true
+      defDeviceOn: false, // 通話参加時のmic/video
+      isMicOn: false,
+      isCamOn: false
+      // deviceModified: false
     }
   },
   created() {
@@ -230,7 +235,7 @@ export default {
 
     async getCredential() {
       try {
-        const { data } = await this.$api.post('/video/authenticate', {
+        const { data } = await this.$axios.post('/video/authenticate', {
           peerId: this.user.id,
           sessionToken: '' // sessionTokenチェック未使用
         })
@@ -239,32 +244,6 @@ export default {
         alert(err)
       }
     },
-
-    // sets stream with default devices
-    async setDefaultStream() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true
-        })
-        this.localStream = stream
-
-        // get current deviceId (used in settings)
-        const connectedAudio = this.localStream.getAudioTracks()[0].label
-        const connectedVideo = this.localStream.getVideoTracks()[0].label
-        await this.setDeviceList()
-        this.selectedAudio = this.audioDevices.find(
-          (audio) => audio.text === connectedAudio
-        )
-
-        this.selectedVideo = this.videoDevices.find(
-          (video) => video.text === connectedVideo
-        )
-      } catch (err) {
-        alert('デバイスに接続できません')
-      }
-    },
-
     async setDeviceList() {
       try {
         const deviceInfos = await navigator.mediaDevices.enumerateDevices()
@@ -283,6 +262,31 @@ export default {
             })
           }
         }
+      } catch (err) {
+        alert('デバイスに接続できません')
+      }
+    },
+
+    // sets stream with default devices
+    async setDefaultStream() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        })
+        this.localStream = stream
+
+        // get current deviceId (used in settings)
+        const connectedAudio = this.localStream.getAudioTracks()[0].label
+        const connectedVideo = this.localStream.getVideoTracks()[0].label
+        await this.setDeviceList()
+
+        this.selectedAudio = this.audioDevices.find(
+          (audio) => audio.text === connectedAudio
+        )
+        this.selectedVideo = this.videoDevices.find(
+          (video) => video.text === connectedVideo
+        )
       } catch (err) {
         alert('デバイスに接続できません')
       }
@@ -311,6 +315,14 @@ export default {
       }
     },
 
+    // ミュート＆カメラオフ用
+    setupDevices() {
+      this.isMicOn = this.defDeviceOn
+      this.isCamOn = this.defDeviceOn
+      this.localStream.getAudioTracks()[0].enabled = this.isMicOn
+      this.localStream.getVideoTracks()[0].enabled = this.isCamOn
+    },
+
     async initChat(chatId) {
       // wifi切れた時用
       if (!this.peer.open) {
@@ -327,6 +339,7 @@ export default {
     },
 
     makeCall(chatId) {
+      this.setupDevices()
       const call = this.peer.joinRoom(chatId, {
         mode: 'sfu',
         stream: this.localStream
@@ -336,7 +349,6 @@ export default {
 
     setupCallEventHandlers(call) {
       this.closeCall()
-
       this.existingCall = call
       this.setupEndCallUI()
       this.connectedRoomId = call.name
@@ -377,22 +389,36 @@ export default {
       this.isTalking = true
     },
 
-    toggleMute() {
+    toggleMic() {
       if (this.localStream) {
         const audioTrack = this.localStream.getAudioTracks()[0]
         audioTrack.enabled = !audioTrack.enabled
-        this.isMute = !audioTrack.enabled
+        this.isMicOn = !this.isMicOn
       }
     },
     toggleCamera() {
       if (this.localStream) {
         const videoTrack = this.localStream.getVideoTracks()[0]
         videoTrack.enabled = !videoTrack.enabled
-        this.isCamOn = videoTrack.enabled
+        this.isCamOn = !this.isCamOn
       }
     },
     onDeviceChange() {
+      // this.deviceModified = true
       // later
+    },
+    async onApplyChanges() {
+      try {
+        await this.setLocalStream() // set localStream
+        // carry on device status
+        this.localStream.getAudioTracks()[0].enabled = this.isMicOn
+        this.localStream.getVideoTracks()[0].enabled = this.isCamOn
+        this.existingCall.replaceStream(this.localStream)
+
+        this.dialog = false
+      } catch (err) {
+        alert(err)
+      }
     },
     closeCall() {
       if (this.existingCall) {
