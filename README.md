@@ -38,3 +38,7 @@ docker-compose exec api bash
 npx sequelize-cli db:migrate
 npx sequelize-cli db:seed:all
 ```
+### Connect Production Cloud Sql
+api直下にcloudsqlディレクトリをぶちこむ(渡辺にもらってください)
+### ローカル用.envファイル
+api直下、client直下にそれぞれ`.env`をぶちこむ(誰かにもらってください)

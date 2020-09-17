@@ -32,3 +32,6 @@ benchmarks/graphs
 
 # GCS
 pikopikopon1-76b13a33bb22.json
+
+# google cloud sql
+cloudsql
