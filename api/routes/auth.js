@@ -10,9 +10,53 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 
-const jwt_secret = "your_jwt_secret"; // FIXME: envファイルで管理する
-const expiresIn = 1800; // 30分
-const refreshExpiresIn = 3 * 30 * 24 * 3600; // 3ヶ月
+// const expiresIn = 1800; // 30分
+const expiresIn = 7 * 24 * 3600; // 1週間 FIXME: 30分に戻す
+const refreshExpiresIn = 7 * 24 * 3600; // 1週間
+
+const axios = require('axios');
+
+/* Waseda Signup & Login */
+router.post("/waseda/", async (req, res, next) => {
+  try {
+    // accessTokenでgoogleからuser情報を取得
+    let data;
+    try {
+      res_userinfo = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { authorization: req.headers.authorization }
+      });
+      data = res_userinfo.data
+    } catch (e) {
+      throw boom.unauthorized('Google auth failed');
+    }
+
+    // wasedaメールでない場合エラー
+    if (!data.hd.endsWith('waseda.jp')) throw boom.unauthorized("Email domain is not waseda");
+
+    // gmail未認証の場合エラー
+    if (!data.email_verified) throw boom.unauthorized('Email is not verified');
+
+    // 条件に応じてuserを新規追加および更新し、userを取得
+    let user = await User.scope('jwt').findOne({ where: { googleSub: data.sub } });
+    if (!user) { // 同一googleSubがない場合
+      user = await User.scope('jwt').findOne({ where: { email: data.email } });
+      if (!user) { // 同一emailがない場合
+        await User.create({ name: data.name, email: data.email, img: data.picture, googleSub: data.sub });
+      }　else { // 同一emailがある場合
+        await User.update({ googleSub: data.sub }, { where: { email: data.email } });
+      }
+      user = await User.scope('jwt').findOne({ where: { googleSub: data.sub } });
+    }
+    if (!user) throw boom.badImplementation();
+
+    // token作成
+    const accessToken = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn });
+    const refreshToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: refreshExpiresIn });
+    res.json(addStatusOK({ accessToken, refreshToken }));
+  } catch (e) {
+    next(e);
+  }
+});
 
 /* Signup */
 router.post("/signup/", async (req, res, next) => {
@@ -29,7 +73,7 @@ router.post("/signup/", async (req, res, next) => {
       where: { email: req.body.email },
     });
     if (doesUserExist) {
-      throw boom.conflict('user already exists');
+      throw boom.conflict('User already exists');
     }
 
     // ユーザー作成
@@ -46,11 +90,11 @@ router.post("/signup/", async (req, res, next) => {
       },
       (err, user, info) => {
         if (err || !user) {
-          throw boom.notImplemented('login failed', err)
+          throw boom.notImplemented('Login failed', err)
         }
         req.login(user, { session: false }, (err) => {
           if (err) {
-            throw boom.notImplemented('login failed', err)
+            throw boom.notImplemented('Login failed', err)
           }
           // JWTトークン作成
           const token = jwt.sign(
@@ -58,7 +102,7 @@ router.post("/signup/", async (req, res, next) => {
               id: user.id,
               name: user.name,
             },
-            jwt_secret,
+            process.env.JWT_SECRET,
             { expiresIn }
           );
           const refreshToken = jwt.sign(
@@ -66,7 +110,7 @@ router.post("/signup/", async (req, res, next) => {
               id: user.id,
               name: user.name,
             },
-            jwt_secret,
+            process.env.JWT_SECRET,
             { expiresIn: refreshExpiresIn }
           );
           // レスポンス
@@ -89,11 +133,11 @@ router.post("/login/", async (req, res, next) => {
       },
       (err, user, info) => {
         if (err || !user) {
-          throw boom.notImplemented('login failed', err)
+          throw boom.notImplemented('Login failed', err)
         }
         req.login(user, { session: false }, (err) => {
           if (err) {
-            throw boom.notImplemented('login failed', err)
+            throw boom.notImplemented('Login failed', err)
           }
           // JWTトークン作成
           const token = jwt.sign(
@@ -101,7 +145,7 @@ router.post("/login/", async (req, res, next) => {
               id: user.id,
               name: user.name,
             },
-            jwt_secret,
+            process.env.JWT_SECRET,
             { expiresIn }
           );
           const refreshToken = jwt.sign(
@@ -109,7 +153,7 @@ router.post("/login/", async (req, res, next) => {
               id: user.id,
               name: user.name,
             },
-            jwt_secret,
+            process.env.JWT_SECRET,
             { expiresIn: refreshExpiresIn }
           );
           // レスポンス
@@ -142,7 +186,7 @@ router.get(
 
       req.login(user, { session: false }, (err) => {
         if (err) {
-          throw boom.notImplemented('login failed', err)
+          throw boom.notImplemented('Login failed', err)
         }
         // JWTトークン作成
         const token = jwt.sign(
@@ -150,7 +194,7 @@ router.get(
             id: user.id,
             name: user.name,
           },
-          jwt_secret,
+          process.env.JWT_SECRET,
           { expiresIn }
         );
         const refreshToken = jwt.sign(
@@ -158,7 +202,7 @@ router.get(
             id: user.id,
             name: user.name,
           },
-          jwt_secret,
+          process.env.JWT_SECRET,
           { expiresIn: refreshExpiresIn }
         );
         // レスポンス
@@ -176,8 +220,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
-      const user = await User.scope("auth").findByPk(req.user.id);
-      res.json(addStatusOK({ user }));
+      res.json(addStatusOK({ user: req.user }));
     } catch (e) {
       next(e);
     }

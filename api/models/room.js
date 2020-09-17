@@ -20,8 +20,16 @@ module.exports = (sequelize, DataTypes) => {
           len: [1, 255],
         },
       },
+      img: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          len: [1, 255],
+        },
+      },
     },
     {
+      paranoid: true,
       defaultScope: {},
       scopes: {
         withUsers() {
@@ -46,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Room.associate = function (models) {
+    Room.belongsTo(models.Building, {
+      sourceKey: "buildingId",
+      foreignKey: "id",
+    });
     Room.hasMany(models.Table, {
       sourceKey: "id",
       foreignKey: "roomId",

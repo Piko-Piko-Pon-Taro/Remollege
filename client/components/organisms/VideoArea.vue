@@ -47,7 +47,6 @@
     </div>
 
     <v-bottom-navigation
-      v-model="bottomNav"
       :color="$const.MAIN_COLOR"
       :background-color="$const.BASE_COLOR2"
       horizontal
@@ -63,10 +62,10 @@
         <v-icon v-if="!isCamOn">mdi-video-off</v-icon>
       </v-btn>
 
-      <v-btn @click="toggleMute" value="mic">
+      <v-btn @click="toggleMic" value="mic">
         <span>Mic</span>
-        <v-icon v-if="!isMute">mdi-microphone</v-icon>
-        <v-icon v-if="isMute">mdi-microphone-off</v-icon>
+        <v-icon v-if="isMicOn">mdi-microphone</v-icon>
+        <v-icon v-if="!isMicOn">mdi-microphone-off</v-icon>
       </v-btn>
 
       <!-- 相手の音ミュート用 -->
@@ -116,11 +115,16 @@
           </v-card-text>
           <v-card-actions>
             <ActionButton
-              v-if="selectedAudio && selectedVideo"
-              @click="dialog = false"
-              text="OK"
+              @click="onApplyChanges"
+              text="Ok"
               class="mx-auto my-0 py-0"
             />
+            <!-- <ActionButton
+              v-if="deviceModified"
+              @click="onApplyChanges"
+              text="Apply"
+              class="mx-auto my-0 py-0"
+            /> -->
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -148,10 +152,8 @@ export default {
   data() {
     return {
       dialog: false,
-      bottomNav: 'cog',
-      APIKey: process.env.SKYWAY_API_KEY,
-      selectedAudio: '',
-      selectedVideo: '',
+      selectedAudio: null, // deviceId
+      selectedVideo: null, // deviceId
       audioDevices: [],
       videoDevices: [],
       videoWidth: 300,
@@ -162,119 +164,182 @@ export default {
       connectedRoomId: '',
       existingCall: null,
       isTalking: false,
-      isMute: false,
-      isCamOn: true
+      defDeviceOn: false, // 通話参加時のmic/video
+      isMicOn: false,
+      isCamOn: false
+      // deviceModified: false
     }
   },
-  mounted() {
-    this.peer = new Peer(this.user.id, {
-      key: this.APIKey,
-      debug: 0
-    })
-
-    this.peer.on('open', () => {
-      this.peerId = this.peer.id
-    })
-
-    this.peer.on('call', (call) => {
-      call.answer(this.localStream)
-      this.setupCallEventHandlers(call)
-    })
-
-    this.peer.on('error', (err) => {
-      if (err.type === 'invalid-key') alert('接続できません')
-      else alert(err)
-    })
+  created() {
+    this.initPeer()
   },
 
   methods: {
-    getDefaultDevices(chatId) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
-        .then(() =>
-          navigator.mediaDevices
-            .enumerateDevices()
-            .then((deviceInfos) => {
-              for (let i = 0; i !== deviceInfos.length; ++i) {
-                const deviceInfo = deviceInfos[i]
-                if (deviceInfo.kind === 'audioinput') {
-                  this.audioDevices.push({
-                    text:
-                      deviceInfo.label ||
-                      `Microphone ${this.audioDevices.length}`,
-                    value: deviceInfo.deviceId
-                  })
-                } else if (deviceInfo.kind === 'videoinput') {
-                  this.videoDevices.push({
-                    text:
-                      deviceInfo.label || `Camera  ${this.videoDevices.length}`,
-                    value: deviceInfo.deviceId
-                  })
-                }
-              }
-              this.selectedAudio = this.audioDevices[0].value
-              this.selectedVideo = this.videoDevices[0].value
-              const constraints = {
-                audio: this.selectedAudio
-                  ? { deviceId: { exact: this.selectedAudio } }
-                  : false,
-                video: this.selectedVideo
-                  ? { deviceId: { exact: this.selectedVideo } }
-                  : false
-              }
-              if (constraints.video) {
-                constraints.video.width = {
-                  exact: this.videoWidth
-                }
-                constraints.video.height = {
-                  exact: this.videoHeight
-                }
-              }
-              navigator.mediaDevices
-                .getUserMedia(constraints)
-                .then((stream) => {
-                  this.localStream = stream
-                  this.makeCall(chatId)
-                })
+    async initPeer() {
+      const credential = await this.getCredential()
+      this.peer = new Peer(this.user.id, {
+        key: process.env.SKYWAY_API_KEY,
+        credential,
+        debug: process.env.NODE_ENV === 'production' ? 0 : 1
+      })
+
+      this.peer.on('open', () => {
+        this.peerId = this.peer.id
+      })
+      this.peer.on('expiresin', (sec) => {
+        // Create new credential and Update the credential here.
+        this.getCredential().then((credential) => {
+          this.peer.updateCredential(credential)
+        })
+      })
+
+      this.peer.on('call', (call) => {
+        call.answer(this.localStream)
+        this.setupCallEventHandlers(call)
+      })
+
+      this.peer.on('error', (err) => {
+        switch (err.type) {
+          case 'invalid-key':
+            alert('ビデオ通話サーバーに接続できません')
+            break
+          case 'unavailable-id':
+            alert(
+              '他のタブやデバイスから教室に入室済みです。\n他の接続を切断してから入室しなおしてください。'
+            )
+            break
+          case 'authentication':
+            alert('認証に失敗しました。')
+            break
+          case 'socket-error':
+            alert('サーバーとの接続が失われました。')
+            break
+          case 'server-error':
+            alert(
+              'サーバーとの接続中に問題がありました。\n 少し待って、リトライしてください。'
+            )
+            break
+          case 'signaling-limited':
+          case 'sfu-limited':
+          case 'turn-limited':
+            alert(
+              'サーバーが停止中です。\nしばらく時間をおいてから再度お試しください。'
+            )
+            break
+          default:
+            alert('接続エラー')
+        }
+        this.$emit('leave')
+      })
+    },
+
+    async getCredential() {
+      try {
+        const { data } = await this.$axios.post('/video/authenticate', {
+          peerId: this.user.id,
+          sessionToken: '' // sessionTokenチェック未使用
+        })
+        return data
+      } catch (err) {
+        alert(err)
+      }
+    },
+    async setDeviceList() {
+      try {
+        const deviceInfos = await navigator.mediaDevices.enumerateDevices()
+        for (let i = 0; i !== deviceInfos.length; ++i) {
+          const deviceInfo = deviceInfos[i]
+          if (deviceInfo.kind === 'audioinput') {
+            this.audioDevices.push({
+              text:
+                deviceInfo.label || `Microphone ${this.audioDevices.length}`,
+              value: deviceInfo.deviceId
             })
-            .catch((err) => alert(err))
+          } else if (deviceInfo.kind === 'videoinput') {
+            this.videoDevices.push({
+              text: deviceInfo.label || `Camera  ${this.videoDevices.length}`,
+              value: deviceInfo.deviceId
+            })
+          }
+        }
+      } catch (err) {
+        alert('デバイスに接続できません')
+      }
+    },
+
+    // sets stream with default devices
+    async setDefaultStream() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        })
+        this.localStream = stream
+
+        // get current deviceId (used in settings)
+        const connectedAudio = this.localStream.getAudioTracks()[0].label
+        const connectedVideo = this.localStream.getVideoTracks()[0].label
+        await this.setDeviceList()
+
+        this.selectedAudio = this.audioDevices.find(
+          (audio) => audio.text === connectedAudio
         )
-        .catch((err) => alert(err))
-    },
-
-    onDeviceChange() {
-      // ダイアログ閉じたときに後で変更
-      if (this.selectedAudio !== '' && this.selectedVideo !== '') {
-        // this.connectSelectedDevices()
-        // return
+        this.selectedVideo = this.videoDevices.find(
+          (video) => video.text === connectedVideo
+        )
+      } catch (err) {
+        alert('デバイスに接続できません')
       }
     },
 
-    async connectSelectedDevices() {
-      const constraints = {
-        audio: this.selectedAudio
-          ? { deviceId: { exact: this.selectedAudio } }
-          : false,
-        video: this.selectedVideo
-          ? { deviceId: { exact: this.selectedVideo } }
-          : false
-      }
-      if (constraints.video) {
-        constraints.video.width = {
-          exact: this.videoWidth
+    // sets stream with selected devices
+    async setLocalStream() {
+      try {
+        const constraints = {
+          audio: this.selectedAudio ? { deviceId: this.selectedAudio } : false,
+          video: this.selectedVideo ? { deviceId: this.selectedVideo } : false
         }
-        constraints.video.height = {
-          exact: this.videoHeight
+
+        if (constraints.video) {
+          constraints.video.width = {
+            exact: this.videoWidth
+          }
+          constraints.video.height = {
+            exact: this.videoHeight
+          }
         }
+        const stream = await navigator.mediaDevices.getUserMedia(constraints)
+        this.localStream = stream
+      } catch (err) {
+        alert(err)
       }
-      const stream = await navigator.mediaDevices.getUserMedia(constraints)
-      this.localStream = stream
     },
 
-    initChat(chatId) {
-      this.getDefaultDevices(chatId)
+    // ミュート＆カメラオフ用
+    setupDevices() {
+      this.isMicOn = this.defDeviceOn
+      this.isCamOn = this.defDeviceOn
+      this.localStream.getAudioTracks()[0].enabled = this.isMicOn
+      this.localStream.getVideoTracks()[0].enabled = this.isCamOn
     },
+
+    async initChat(chatId) {
+      // wifi切れた時用
+      if (!this.peer.open) {
+        await this.initPeer()
+      }
+
+      if (!this.selectedAudio || !this.selectedVideo) {
+        await this.setDefaultStream()
+      } else {
+        await this.setDeviceList() // 利用可能なデバイスが増えたor減った時用
+        await this.setLocalStream()
+      }
+      this.makeCall(chatId)
+    },
+
     makeCall(chatId) {
+      this.setupDevices()
       const call = this.peer.joinRoom(chatId, {
         mode: 'sfu',
         stream: this.localStream
@@ -284,7 +349,6 @@ export default {
 
     setupCallEventHandlers(call) {
       this.closeCall()
-
       this.existingCall = call
       this.setupEndCallUI()
       this.connectedRoomId = call.name
@@ -325,18 +389,35 @@ export default {
       this.isTalking = true
     },
 
-    toggleMute() {
+    toggleMic() {
       if (this.localStream) {
         const audioTrack = this.localStream.getAudioTracks()[0]
         audioTrack.enabled = !audioTrack.enabled
-        this.isMute = !audioTrack.enabled
+        this.isMicOn = !this.isMicOn
       }
     },
     toggleCamera() {
       if (this.localStream) {
         const videoTrack = this.localStream.getVideoTracks()[0]
         videoTrack.enabled = !videoTrack.enabled
-        this.isCamOn = videoTrack.enabled
+        this.isCamOn = !this.isCamOn
+      }
+    },
+    onDeviceChange() {
+      // this.deviceModified = true
+      // later
+    },
+    async onApplyChanges() {
+      try {
+        await this.setLocalStream() // set localStream
+        // carry on device status
+        this.localStream.getAudioTracks()[0].enabled = this.isMicOn
+        this.localStream.getVideoTracks()[0].enabled = this.isCamOn
+        this.existingCall.replaceStream(this.localStream)
+
+        this.dialog = false
+      } catch (err) {
+        alert(err)
       }
     },
     closeCall() {

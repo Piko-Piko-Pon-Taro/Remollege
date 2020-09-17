@@ -3,7 +3,7 @@
     :color="$const.BASE_COLOR"
     class="mx-auto elevation-0"
     max-width="300"
-    max-height="260"
+    max-height="240"
     dark
   >
     <video
@@ -27,7 +27,7 @@ export default {
     },
     videoWidth: {
       type: Number,
-      default: 320
+      default: 300
     },
     videoHeight: {
       type: Number,

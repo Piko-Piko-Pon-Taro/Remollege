@@ -13,7 +13,7 @@
     <VideoArea
       ref="videoArea"
       v-show="seatedTableId"
-      :user="currentUser"
+      :user="$auth.user"
       @leave="leave"
     />
 
@@ -46,15 +46,13 @@ export default {
     return {
       teacher: {
         name: '田中愛治総長',
-        img: 'teacher.jpg'
+        img:
+          'https://storage.googleapis.com/remollege-storage/1599556564604teacher.jpg'
       },
       seatedTableId: null
     }
   },
   computed: {
-    currentUser() {
-      return this.$store.getters['auth/user']
-    },
     room() {
       return this.$store.getters['rooms/oneByRoomId'](this.$route.params.roomId)
     }
@@ -62,7 +60,6 @@ export default {
   async asyncData({ store, route }) {
     await Promise.all([
       // TODO: 最初にまとめて呼べるようにしたい
-      store.dispatch('auth/fetchCurrentUser'),
       store.dispatch('rooms/updateByRoomId', {
         roomId: route.params.roomId
       })
@@ -75,12 +72,16 @@ export default {
     })
   },
   created() {
-    // リロード用
-    window.addEventListener('beforeunload', this.leave) // eslint-disable-line
+    if (process.client) {
+      // リロード用
+      window.addEventListener('beforeunload', this.leave) // eslint-disable-line
+    }
   },
   destroyed() {
-    // リロード用
-    window.removeEventListener('beforeunload', this.leave)
+    if (process.client) { // eslint-disable-line
+      // リロード用
+      window.removeEventListener('beforeunload', this.leave)
+    }
   },
   beforeRouteLeave(to, from, next) {
     // ブラウザバック・ページ遷移した時用
@@ -97,7 +98,7 @@ export default {
       this.socket.emit('sitDown', {
         roomId: this.room.id,
         tableId: this.seatedTableId,
-        userId: this.currentUser.id
+        userId: this.$auth.user.id
       })
     },
     leave() {
@@ -105,7 +106,7 @@ export default {
       this.socket.emit('standUp', {
         roomId: this.room.id,
         tableId: this.seatedTableId,
-        userId: this.currentUser.id
+        userId: this.$auth.user.id
       })
       this.seatedTableId = null
     }

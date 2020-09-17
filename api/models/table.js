@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+      paranoid: true,
       defaultScope: {},
       scopes: {
         withUsers() {

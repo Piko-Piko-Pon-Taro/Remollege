@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
           len: [1, 255],
@@ -36,16 +36,32 @@ module.exports = (sequelize, DataTypes) => {
           len: [1, 255],
         },
       },
+      profile: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      googleSub: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
     },
     {
+      paranoid: true,
       defaultScope: {
         attributes: {
-          exclude: ["email", "password"],
+          exclude: ["email", "password", "googleSub"],
         },
       },
       scopes: {
         auth: () => {
           return {};
+        },
+        jwt: () => {
+          return {
+            attributes: {
+              exclude: ["password"]
+            }
+          };
         },
         forChat: () => {
           return {

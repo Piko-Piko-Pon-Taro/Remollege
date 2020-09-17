@@ -59,6 +59,17 @@ Content-Type: application/json
   "content": "ヤサイマシマシニンニクマシマシアブラマシマシ"
 }
 ###
+### ===== Building =====
+###
+# @name GetAllBuildings
+GET {{baseUrl}}/buildings/all/
+###
+# @name GetBuildingsByCampusId
+GET {{baseUrl}}/buildings/campusId/1
+###
+# @name GetOneBuilding
+GET {{baseUrl}}/buildings/1
+###
 ### ===== Room =====
 ###
 # @name GetOneRoom

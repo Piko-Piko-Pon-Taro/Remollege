@@ -10,7 +10,7 @@
     >
       <v-list dense>
         <nuxt-link
-          v-show="isAuthenticated"
+          v-show="$auth.loggedIn"
           :to="'/'"
           style="text-decoration: none;color:white;"
         >
@@ -26,28 +26,31 @@
           </v-list-item>
         </nuxt-link>
 
-        <v-dialog
-          v-model="dialog"
-          width="600"
-        >
+        <v-dialog v-model="dialog" width="600">
           <template v-slot:activator="{ on, attrs }">
-              <v-list-item link v-bind="attrs" v-on="on" 
-          v-show="isAuthenticated">
-                <v-list-item-action>
-                  <v-icon>mdi-account</v-icon>
-                </v-list-item-action>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    MY PROFILE
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
+            <v-list-item v-bind="attrs" v-on="on" v-show="$auth.loggedIn" link>
+              <v-list-item-action>
+                <v-icon>mdi-account</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  MY PROFILE
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </template>
-          <ProfileCard :name="currentUser.name" :image="currentUser.img" :profile="currentUser.profile" isEditable @save="updateProfile"/>
+          <ProfileCard
+            v-if="$auth.loggedIn"
+            :name="$auth.user.name"
+            :image="$auth.user.img"
+            :profile="$auth.user.profile"
+            @save="updateProfile"
+            is-editable
+          />
         </v-dialog>
 
         <nuxt-link
-          v-show="!isAuthenticated"
+          v-show="!$auth.loggedIn"
           :to="'/login'"
           style="text-decoration: none;color:white;"
         >
@@ -66,7 +69,7 @@
         <nuxt-link
           :to="'/login'"
           @click.native.stop="logout"
-          v-show="isAuthenticated"
+          v-show="$auth.loggedIn"
           style="color:white;text-decoration: none;"
         >
           <v-list-item link>
@@ -91,10 +94,10 @@
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
-      <v-card-actions v-if="isAuthenticated">
+      <v-card-actions v-if="$auth.loggedIn">
         <v-card-text class="white--text">
-          <UserIcon :src="currentUser.img" class="mr-2" />
-          {{ currentUser.name }}
+          <UserIcon :src="$auth.user.img" class="mr-2" />
+          {{ $auth.user.name }}
         </v-card-text>
       </v-card-actions>
     </v-app-bar>
@@ -125,7 +128,7 @@
 export default {
   components: {
     UserIcon: () => import('@/components/atoms/UserIcon'),
-    ProfileCard: () => import('@/components/organisms/ProfileCard'),
+    ProfileCard: () => import('@/components/organisms/ProfileCard')
   },
   data() {
     return {
@@ -136,24 +139,15 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Remollege',
-      dialog: false,
-    }
-  },
-  computed: {
-    isAuthenticated() {
-      return this.$store.getters['auth/isLogined']
-    },
-    currentUser() {
-      return this.$store.getters['auth/user']
+      dialog: false
     }
   },
   methods: {
-    async logout() {
-      await this.$store.dispatch('auth/logout')
+    logout() {
+      this.$auth.logout()
     },
-    async updateProfile(value, file) {
-      value.id = this.currentUser.id
-      await this.$store.dispatch('auth/update', { user: value, file })
+    updateProfile(value, file) {
+      this.$store.dispatch('updateAuthUser', { user: value, file })
     }
   }
 }
