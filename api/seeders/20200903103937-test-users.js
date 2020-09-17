@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('Users', [ 
+    await queryInterface.bulkInsert('Users', [
       { id:1, name:'user', email:'turunasi@ruri.waseda.jp', password:bcrypt.hashSync('userpass', bcrypt.genSaltSync(10)), img:'https://storage.googleapis.com/remollege-storage/1599226056137sampleIcon1.jpg', profile:'userです.', createdAt:'2020-08-14 00:00:00', updatedAt:'2020-08-14 00:00:00'},
       { id:2, name:'店長', email:'pikopiko@gmail.com', password:bcrypt.hashSync('userpass', bcrypt.genSaltSync(10)), img:'https://storage.googleapis.com/remollege-storage/1599226056137sampleIcon1.jpg', profile:'店長です.', createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'},
       { id:3, name:'店員', email:'pikopiko@gmail.com', password:bcrypt.hashSync('userpass', bcrypt.genSaltSync(10)), img:'https://storage.googleapis.com/remollege-storage/1599226056137sampleIcon1.jpg', profile:'店員です.', createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'},

@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('Rooms', [ 
+    await queryInterface.bulkInsert('Rooms', [
       { id:1, buildingId:1, name:'ピコピコポン53号館店', img:'https://storage.googleapis.com/remollege-storage/1599226839528ramen.jpg', createdAt:'2020-08-14 00:00:00', updatedAt:'2020-08-14 00:00:00'},
       { id:2, buildingId:2, name:'ピコピコポン54号館店', img:'https://storage.googleapis.com/remollege-storage/1599226839528ramen.jpg', createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'},
       { id:3, buildingId:3, name:'ピコピコポン55号館店', img:'https://storage.googleapis.com/remollege-storage/1599226839528ramen.jpg', createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'},

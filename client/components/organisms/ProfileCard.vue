@@ -1,6 +1,11 @@
 <template>
   <v-card width="600" class="mx-auto">
-    <v-img :src="require('@/assets/image/waseda.jpg')" height="250px">
+    <v-img
+      :src="
+        'https://storage.googleapis.com/remollege-storage/static/waseda.jpg'
+      "
+      height="250px"
+    >
       <v-row class="fill-height">
         <UserIcon
           v-if="!isBeingEdited"

@@ -21,6 +21,7 @@ router.get("/:id", async (req, res, next) => {
       id: room.id,
       buildingId: room.buildingId,
       name: room.name,
+      img: room.img,
       createdAt: room.createdAt,
       updatedAt: room.updatedAt,
       tables

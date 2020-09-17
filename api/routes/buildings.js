@@ -13,6 +13,16 @@ router.get("/all/", async (req, res, next) => {
   }
 });
 
+/* GetBuildingsByCampusId */
+router.get("/campusId/:campusId", async (req, res, next) => {
+  try {
+    const buildings = await Building.findAll({where: { campusId: req.params.campusId }});
+    res.json(addStatusOK({ buildings }));
+  } catch (e) {
+    next(e);
+  }
+})
+
 /* GetOneBuilding */
 router.get("/:id", async (req, res, next) => {
   try {
