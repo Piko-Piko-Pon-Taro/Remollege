@@ -20,7 +20,9 @@ export default {
   },
   async asyncData({ store }) {
     // TODO: 最初にまとめて呼べるようにしたい
-    await Promise.all([store.dispatch('buildings/fetchAll')])
+    await Promise.all([
+      store.dispatch('buildings/fetchByCanmpusId', { campusId: 1 })
+    ])
   },
   beforeCreate() {
     if (process.client) {

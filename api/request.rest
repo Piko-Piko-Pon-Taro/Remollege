@@ -64,6 +64,9 @@ Content-Type: application/json
 # @name GetAllBuildings
 GET {{baseUrl}}/buildings/all/
 ###
+# @name GetBuildingsByCampusId
+GET {{baseUrl}}/buildings/campusId/1
+###
 # @name GetOneBuilding
 GET {{baseUrl}}/buildings/1
 ###
