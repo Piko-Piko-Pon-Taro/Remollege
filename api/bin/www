@@ -41,6 +41,10 @@ io.on('connection', socket => {
     io.to(`room-${roomId}`).emit('someOneSitsDown', { roomId, tableId, user });
   });
 
+  socket.on('sendChat', ({ tableId, chat }) => {
+    io.to(`table-${tableId}`).emit('someOneSendChat', { chat });
+  })
+
   socket.on('standUp', async ({ roomId, tableId, userId }) => {
     io.to(`room-${roomId}`).emit('someOneStandsUp', { roomId, tableId, userId });
     await TableUser.destroy({ where: { userId }, force: true });

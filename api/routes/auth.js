@@ -31,7 +31,7 @@ router.post("/waseda/", async (req, res, next) => {
     }
 
     // wasedaメールでない場合エラー
-    if (!data.hd.endsWith('waseda.jp')) throw boom.unauthorized("Email domain is not waseda");
+    // if (!data.hd.endsWith('waseda.jp')) throw boom.unauthorized("Email domain is not waseda"); // FIXME: 早稲田生のみにするときにコメントアウト外す
 
     // gmail未認証の場合エラー
     if (!data.email_verified) throw boom.unauthorized('Email is not verified');
