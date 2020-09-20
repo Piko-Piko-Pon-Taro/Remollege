@@ -19,21 +19,21 @@ const Template = (args, { argTypes }) => ({
 })
 
 const messages = [
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 1, name: "ピコピコポン太郎", text: "こんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
-  {id:1, userId: 2, name: "ピコピコポン太郎", text: "こんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
+  {id:1, userId: 2, name: "井上智裕", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556468017sampleIcon2.png"},
+  {id:1, userId: 3, name: "わたなべつよし", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556504706sampleIcon3.jpg"},
+  {id:1, userId: 4, name: "にしい", text: "こんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556513724sampleIcon4.jpg"},
+  {id:1, userId: 5, name: "たいら", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556527564sampleIcon5.jpeg"},
+  {id:1, userId: 1, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
+  {id:1, userId: 2, name: "井上智裕", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556468017sampleIcon2.png"},
+  {id:1, userId: 3, name: "わたなべつよし", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556504706sampleIcon3.jpg"},
+  {id:1, userId: 4, name: "にしい", text: "こんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556513724sampleIcon4.jpg"},
+  {id:1, userId: 5, name: "たいら", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556527564sampleIcon5.jpeg"},
+  { id: 1, userId: 1, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg" },
+  {id:1, userId: 2, name: "井上智裕", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556468017sampleIcon2.png"},
+  {id:1, userId: 3, name: "わたなべつよし", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556504706sampleIcon3.jpg"},
+  {id:1, userId: 4, name: "にしい", text: "こんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556513724sampleIcon4.jpg"},
+  {id:1, userId: 5, name: "たいら", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/1599556527564sampleIcon5.jpeg"},
+  {id:1, userId: 1, name: "ピコピコポン太郎", text: "こんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちはこんにちは", img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"},
 ]
 
 export const Default = Template.bind({})

@@ -16,13 +16,13 @@
         </v-list-item-content>
       </v-list-item>
       <v-card :color="$const.BASE_COLOR2" tile class="overflow-y-auto" height="800">
-          <v-timeline light dense align-top>
+          <v-timeline dense align-top>
                   <v-timeline-item
                     large
-                    fill-dot
-                    :color="$const.ACCENT_COLOR"
+                    :color="$const.BASE_COLOR2"
                     v-for="item in messages"
                     :key="item.id"
+                    fill-dot
                   >
                     <template v-slot:icon>
                       <v-tooltip bottom>
@@ -35,7 +35,7 @@
                         <span>{{item.name}}</span>
                       </v-tooltip>
                     </template>
-                    <v-card class="elevation-2 mr-5" :width="item.text.length < 20 ? item.text.length*21 : undefined" :color="item.userId == authUserId ? $const.ACCENT_COLOR : $const.BASE_COLOR2" :dark="item.userId == authUserId">
+                    <v-card class="elevation-2 mr-5" :width="item.text.length < 20 ? 36+item.text.length*14 : undefined" :color="item.userId == authUserId ? $const.ACCENT_COLOR : $const.BASE_COLOR2" :light="item.userId != authUserId">
                       <v-card-text>{{item.text}}</v-card-text>
                     </v-card>
                   </v-timeline-item>
