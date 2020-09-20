@@ -13,7 +13,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async fetchByCanmpusId({ state, commit }, { campusId }) {
+  async fetchByCampusId({ state, commit }, { campusId }) {
     if (state.buildings.length > 0) return
     const { data } = await this.$axios.get(`buildings/campusId/${campusId}`)
     commit('setAll', { buildings: data.buildings })
