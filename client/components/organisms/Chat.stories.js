@@ -41,3 +41,9 @@ Default.args = {
   drawer: true,
   messages: messages
 }
+
+export const NoMessage = Template.bind({})
+NoMessage.args = {
+  drawer: true,
+  messages: []
+}

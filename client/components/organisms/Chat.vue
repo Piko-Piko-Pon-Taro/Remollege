@@ -15,18 +15,14 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-card :color="$const.BASE_COLOR2" tile>
+      <v-card :color="$const.BASE_COLOR2" tile class="overflow-y-auto" height="800">
           <v-timeline light dense align-top>
-              <v-virtual-scroll
-                :items="messages"
-                :item-height="100"
-                height="800"
-              >
-                <template v-slot="{ item }">
                   <v-timeline-item
                     large
                     fill-dot
                     :color="$const.ACCENT_COLOR"
+                    v-for="item in messages"
+                    :key="item.id"
                   >
                     <template v-slot:icon>
                       <v-tooltip bottom>
@@ -43,8 +39,6 @@
                       <v-card-text>{{item.text}}</v-card-text>
                     </v-card>
                   </v-timeline-item>
-                </template>
-              </v-virtual-scroll>
             </v-timeline>
       </v-card>
       <MessageInput label="Chat" @send="sendMessage"/>
