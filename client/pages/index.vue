@@ -30,23 +30,21 @@ export default {
       process.client &&
       this.$auth.$storage.getUniversal('strategy') === 'waseda'
     ) {
-      setTimeout(() => {
-        this.$auth
-          .loginWith('local', {
-            headers: {
-              authorization: this.$auth.$storage.getUniversal('_token.waseda')
-            }
-          })
-          .then((result) => {
-            this.$toast.success('ログインしました')
-            this.$store.dispatch('buildings/fetchByCampusId', { campusId: 1 })
-            this.$auth.$storage.removeUniversal('waseda.state')
-            this.$auth.$storage.removeUniversal('_token.waseda')
-          })
-          .catch((e) => {
-            this.$toast.error('ログインできませんでした')
-          })
-      }, 1000)
+      this.$auth
+        .loginWith('local', {
+          headers: {
+            authorization: this.$auth.$storage.getUniversal('_token.waseda')
+          }
+        })
+        .then((result) => {
+          this.$toast.success('ログインしました')
+          this.$store.dispatch('buildings/fetchByCampusId', { campusId: 1 })
+          this.$auth.$storage.removeUniversal('waseda.state')
+          this.$auth.$storage.removeUniversal('_token.waseda')
+        })
+        .catch((e) => {
+          this.$toast.error('ログインできませんでした')
+        })
     }
   }
 }
