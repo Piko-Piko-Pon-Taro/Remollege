@@ -26,6 +26,7 @@
                   <v-timeline-item
                     large
                     fill-dot
+                    :color="$const.ACCENT_COLOR"
                   >
                     <template v-slot:icon>
                       <v-tooltip bottom>
@@ -38,7 +39,7 @@
                         <span>{{item.name}}</span>
                       </v-tooltip>
                     </template>
-                    <v-card class="elevation-2 mr-5" :width="item.text.length < 20 ? item.text.length*21 : undefined">
+                    <v-card class="elevation-2 mr-5" :width="item.text.length < 20 ? item.text.length*21 : undefined" :color="item.userId == authUserId ? $const.ACCENT_COLOR : $const.BASE_COLOR2" :dark="item.userId == authUserId">
                       <v-card-text>{{item.text}}</v-card-text>
                     </v-card>
                   </v-timeline-item>
@@ -86,6 +87,11 @@ export default {
     messages: {
       type: Array,
       default: false
+    }
+  },
+  data () {
+    return {
+      authUserId: 1 // テスト用に使用
     }
   }
 }
