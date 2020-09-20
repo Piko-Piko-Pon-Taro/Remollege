@@ -1,9 +1,9 @@
 <template>
   <v-card
     :color="$const.BASE_COLOR"
+    :max-width="videoWidth"
+    :max-height="videoHeight"
     class="mx-auto elevation-0"
-    max-width="300"
-    max-height="240"
     dark
   >
     <video
@@ -15,7 +15,6 @@
       :muted="muted"
       autoplay
     />
-    <!-- <v-card-title>{{ name }}</v-card-title> -->
   </v-card>
 </template>
 
@@ -23,7 +22,8 @@
 export default {
   props: {
     id: {
-      type: String
+      type: String,
+      default: null
     },
     videoWidth: {
       type: Number,

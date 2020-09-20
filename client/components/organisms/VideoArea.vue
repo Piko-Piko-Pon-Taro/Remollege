@@ -11,15 +11,15 @@
             :name="user.name"
             :stream="localStream"
             :muted="true"
-            class="pb-0 mb-3"
+            class="pb-0"
           />
           <!-- <UserBanner
             v-if="localStream"
             :img="user.img"
             :name="user.name"
             :width="videoWidth"
-            class="mx-2"
-          />-->
+            class="pb-0 mx-2 mb-3"
+          /> -->
         </v-col>
         <v-col
           v-for="peerStream in peerStreams"
@@ -32,7 +32,7 @@
             :height="videoHeight"
             :stream="peerStream"
             :muted="false"
-            class="pb-0 mb-3"
+            class="pb-0"
           />
           <!-- <UserBanner
             v-if="localStream"
@@ -41,7 +41,7 @@
             :width="videoWidth"
             class="mx-2"
             style="display: block;"
-          />-->
+          /> -->
         </v-col>
       </v-row>
     </div>
@@ -270,10 +270,15 @@ export default {
     // sets stream with default devices
     async setDefaultStream() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
+        const constraints = {
+          video: {
+            width: { exact: this.videoWidth },
+            height: { exact: this.videoHeight }
+          },
           audio: true
-        })
+        }
+        const stream = await navigator.mediaDevices.getUserMedia(constraints)
+
         this.localStream = stream
 
         // get current deviceId (used in settings)
