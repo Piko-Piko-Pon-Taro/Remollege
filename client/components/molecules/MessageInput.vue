@@ -16,7 +16,7 @@
         <v-btn
           :disabled="value ? false : true"
           icon
-          color="primary"
+          :color="$const.ACCENT_COLOR"
           @click.stop="send"
         >
           <v-icon>mdi-send</v-icon>
