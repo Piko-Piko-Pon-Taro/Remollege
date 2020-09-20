@@ -133,7 +133,8 @@ export default {
             // When "key" is received,
             // dispatch action "value"
             { someOneSitsDown: 'rooms/SOCKET_someOneSitsDown' },
-            { someOneStandsUp: 'rooms/SOCKET_someOneStandsUp' }
+            { someOneStandsUp: 'rooms/SOCKET_someOneStandsUp' },
+            { someOneSendChat: 'chats/SOCKET_someOneSendChat' }
           ]
         }
       }

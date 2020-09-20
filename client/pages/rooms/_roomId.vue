@@ -30,6 +30,22 @@
         </v-col>
       </v-row>
     </v-card>
+
+    <!-- TODO: UIてきとうです！ -->
+    <div>
+      <input
+        v-model="chat"
+        @keyup.enter="sendChat"
+        type="text"
+        placeholder="ほえ"
+      />
+      <button @click="sendChat">送信</button>
+      <div v-for="(c, index) in chats" :key="index">
+        <p>{{ c.user.img }} {{ c.user.name }}</p>
+        <p>{{ c.text }}</p>
+        <p>{{ c.time }}</p>
+      </div>
+    </div>
   </v-container>
 </template>
 
@@ -49,12 +65,16 @@ export default {
         img:
           'https://storage.googleapis.com/remollege-storage/1599556564604teacher.jpg'
       },
-      seatedTableId: null
+      seatedTableId: null,
+      chat: ''
     }
   },
   computed: {
     room() {
       return this.$store.getters['rooms/oneByRoomId'](this.$route.params.roomId)
+    },
+    chats() {
+      return this.$store.getters['chats/all']
     }
   },
   async asyncData({ store, route }) {
@@ -101,6 +121,34 @@ export default {
         userId: this.$auth.user.id
       })
     },
+    sendChat() {
+      // 空白のみの場合何もしない
+      if (!this.chat.trim()) return
+
+      // 時刻を作る
+      let now = new Date() // 現在時刻（世界標準時）を取得
+      now.setTime(now.getTime() + 1000 * 60 * 60 * 9) // 日本時間に変換
+      now = now
+        .toJSON()
+        .split('T')[1]
+        .slice(0, 5) // 時刻のみを取得
+
+      // メッセージオブジェクトを作る
+      const chat = {
+        user: {
+          name: this.$auth.user.name,
+          img: this.$auth.user.img
+        },
+        text: this.chat.trim(),
+        time: now
+      }
+
+      // サーバー側にメッセージを送信する
+      this.socket.emit('sendChat', { tableId: this.seatedTableId, chat })
+
+      // input要素を空にする
+      this.chat = ''
+    },
     leave() {
       this.$refs.videoArea.closeCall()
       this.socket.emit('standUp', {
@@ -109,6 +157,7 @@ export default {
         userId: this.$auth.user.id
       })
       this.seatedTableId = null
+      this.$store.dispatch('chats/reset')
     }
   }
 }
