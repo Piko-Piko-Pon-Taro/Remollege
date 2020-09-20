@@ -37,7 +37,8 @@
 export default {
   methods: {
     waseda() {
-      this.$auth.loginWith('waseda', { params: { hd: 'waseda.jp' } })
+      this.$auth.loginWith('waseda') // FIXME: 早稲田生のみにするときに下のに戻す
+      // this.$auth.loginWith('waseda', { params: { hd: 'waseda.jp' } })
     }
   }
 }
