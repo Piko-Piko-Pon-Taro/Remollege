@@ -118,8 +118,9 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-footer :fixed="fixed" dark app>
-      <span>&copy; 2020 PikoPikoPonTaro</span>
+    <v-footer :fixed="fixed" class="d-flex justify-center" dark app>
+      <span class="mx-3">&copy; 2020 PikoPikoPonTaro</span>
+      <span class="mx-3">ご連絡: remollege@gmail.com</span>
     </v-footer>
   </v-app>
 </template>
