@@ -15,6 +15,7 @@
       v-show="seatedTableId"
       :user="$auth.user"
       @leave="leave"
+      @chat="chatDrawer = !chatDrawer"
     />
 
     <v-card :color="$const.BASE_COLOR2">
@@ -32,7 +33,8 @@
     </v-card>
 
     <!-- TODO: UIてきとうです！ -->
-    <div>
+    <Chat :drawer="chatDrawer" :messages="chats" :authUserId="$auth.user.id" @send="sendChat"/>
+    <!-- <div>
       <input
         v-model="chat"
         @keyup.enter="sendChat"
@@ -45,7 +47,7 @@
         <p>{{ c.text }}</p>
         <p>{{ c.time }}</p>
       </div>
-    </div>
+    </div> -->
   </v-container>
 </template>
 
@@ -56,7 +58,8 @@ export default {
     TeacherCard: () => import('@/components/organisms/TeacherCard'),
     TeacherBanner: () => import('@/components/organisms/TeacherBanner'),
     TableCard: () => import('@/components/organisms/TableCard'),
-    VideoArea: () => import('@/components/organisms/VideoArea')
+    VideoArea: () => import('@/components/organisms/VideoArea'),
+    Chat: () => import('@/components/organisms/Chat')
   },
   data() {
     return {
@@ -66,7 +69,8 @@ export default {
           'https://storage.googleapis.com/remollege-storage/1599556564604teacher.jpg'
       },
       seatedTableId: null,
-      chat: ''
+      chatDrawer: false
+      // chat: ''
     }
   },
   computed: {
@@ -121,9 +125,9 @@ export default {
         userId: this.$auth.user.id
       })
     },
-    sendChat() {
+    sendChat(value) {
       // 空白のみの場合何もしない
-      if (!this.chat.trim()) return
+      if (!value.trim()) return
 
       // 時刻を作る
       let now = new Date() // 現在時刻（世界標準時）を取得
@@ -136,18 +140,16 @@ export default {
       // メッセージオブジェクトを作る
       const chat = {
         user: {
+          id: this.$auth.user.id,
           name: this.$auth.user.name,
           img: this.$auth.user.img
         },
-        text: this.chat.trim(),
+        text: value.trim(),
         time: now
       }
 
       // サーバー側にメッセージを送信する
       this.socket.emit('sendChat', { tableId: this.seatedTableId, chat })
-
-      // input要素を空にする
-      this.chat = ''
     },
     leave() {
       this.$refs.videoArea.closeCall()

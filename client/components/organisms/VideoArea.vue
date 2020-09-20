@@ -68,6 +68,11 @@
         <v-icon v-if="!isMicOn">mdi-microphone-off</v-icon>
       </v-btn>
 
+      <v-btn @click="$emit('chat')" value="chat">
+        <span>Chat</span>
+        <v-icon>mdi-chat</v-icon>
+      </v-btn>
+
       <!-- 相手の音ミュート用 -->
       <!-- <v-btn>
         <span value="speaker">Speaker</span>
@@ -140,7 +145,8 @@ if (process.client) {
 export default {
   components: {
     VideoCard: () => import('@/components/organisms/VideoCard'),
-    ActionButton: () => import('@/components/atoms/ActionButton')
+    ActionButton: () => import('@/components/atoms/ActionButton'),
+    
     // UserBanner: () => import('@/components/organisms/UserBanner')
   },
   props: {
