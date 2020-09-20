@@ -18,34 +18,33 @@
       <v-card :color="$const.BASE_COLOR2" tile>
           <v-timeline light dense>
               <v-virtual-scroll
-      :items="messages"
-      :item-height="100"
-      height="800"
-    >
-    <template v-slot="{ item }">
-    <v-timeline-item
-      large
-      fill-dot
-    >
-      <template v-slot:icon>
-          <v-tooltip bottom>
-      <template v-slot:activator="{ on, attrs }">
-        
-        <v-avatar v-bind="attrs"
-          v-on="on">
-          <img :src="item.img">
-        </v-avatar>
-      </template>
-      <span>{{item.name}}</span>
-    </v-tooltip>
-      </template>
-      <v-card class="elevation-2 mr-5">
-        <v-card-text>{{item.text}}</v-card-text>
-      </v-card>
-    </v-timeline-item>
-    </template>
-    </v-virtual-scroll>
-  </v-timeline>
+                :items="messages"
+                :item-height="100"
+                height="800"
+              >
+                <template v-slot="{ item }">
+                  <v-timeline-item
+                    large
+                    fill-dot
+                  >
+                    <template v-slot:icon>
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-avatar v-bind="attrs"
+                            v-on="on">
+                            <img :src="item.img">
+                          </v-avatar>
+                        </template>
+                        <span>{{item.name}}</span>
+                      </v-tooltip>
+                    </template>
+                    <v-card class="elevation-2 mr-5" :width="item.text.length < 20 ? item.text.length*21 : undefined">
+                      <v-card-text>{{item.text}}</v-card-text>
+                    </v-card>
+                  </v-timeline-item>
+                </template>
+              </v-virtual-scroll>
+            </v-timeline>
 <!-- <v-timeline dense>
       <v-timeline-item
         v-for="n in 2"
