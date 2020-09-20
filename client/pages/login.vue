@@ -3,7 +3,8 @@
     <v-card
       :dark="false"
       class="elevation-12"
-      width="60%"
+      width="45%"
+      min-width="400px"
       height="50%"
       style="margin: 10% auto;"
     >
@@ -21,12 +22,16 @@
         <v-btn
           @click.stop="waseda()"
           :color="$const.MAIN_COLOR"
-          width="70%"
-          style="margin: 10px 15%;"
+          width="80%"
+          style="margin: 10px 10%;"
           class="title py-5"
           dark
         >
-          WASEDAメールでサインイン
+          <!-- WASEDAメールでサインイン FIXME: 早稲田生のみにするときにコメントアウトはずす -->
+          <v-icon class="mr-3">
+            mdi-google
+          </v-icon>
+          Googleでサインイン
         </v-btn>
       </v-form>
     </v-card>
