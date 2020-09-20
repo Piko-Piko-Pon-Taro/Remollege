@@ -16,7 +16,7 @@
         </v-list-item-content>
       </v-list-item>
       <v-card :color="$const.BASE_COLOR2" tile>
-          <v-timeline light dense>
+          <v-timeline light dense align-top>
               <v-virtual-scroll
                 :items="messages"
                 :item-height="100"
