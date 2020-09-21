@@ -1,9 +1,16 @@
 <template>
   <v-container>
     <ExitButton :to="'/'" />
-    <v-row no-gutters>
-      <v-col v-for="room in rooms" :key="room.id" cols="3">
-        <RoomCard :room="room" class="my-3" />
+    <v-row>
+      <v-col
+        v-for="room in rooms"
+        :key="room.id"
+        lg="3"
+        md="4"
+        sm="6"
+        cols="12"
+      >
+        <RoomCard :room="room" />
       </v-col>
     </v-row>
   </v-container>
