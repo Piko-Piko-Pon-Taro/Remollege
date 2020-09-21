@@ -48,6 +48,7 @@ export default {
           this.$store.dispatch('buildings/fetchByCampusId', { campusId: 1 })
           this.$auth.$storage.removeUniversal('waseda.state')
           this.$auth.$storage.removeUniversal('_token.waseda')
+          this.$auth.$storage.removeUniversal('_refresh_token.waseda')
         })
         .catch((e) => {
           this.$toast.error('ログインできませんでした')
