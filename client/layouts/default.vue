@@ -105,12 +105,18 @@
         <v-toolbar-title v-text="title" />
       </nuxt-link>
       <!-- TODO: マウスホバーした時指マークにしたい -->
-      <v-card-actions v-if="$auth.loggedIn" @click="dialog = true">
-        <v-card-text class="white--text">
-          <UserIcon :src="$auth.user.img" class="mr-2" />
-          {{ $auth.user.name }}
-        </v-card-text>
+      <v-card-actions
+        v-if="$auth.loggedIn"
+        @click="dialog = true"
+        class="d-none d-sm-flex"
+      >
+        <UserIcon :src="$auth.user.img" class="mr-2" />
+        <p class="my-auto">{{ $auth.user.name }}</p>
       </v-card-actions>
+      <v-spacer></v-spacer>
+      <p v-if="hint" class="my-auto grey lighten-2 black--text pa-2 rounded">
+        {{ hint }}
+      </p>
     </v-app-bar>
     <!-- header -->
 
@@ -162,6 +168,25 @@ export default {
       rightDrawer: false,
       title: 'Remollege',
       dialog: false
+    }
+  },
+  computed: {
+    hint() {
+      let hint = ''
+      switch (this.$route.name) {
+        case 'index':
+          hint = '建物を選んでね 🙋‍♂️'
+          break
+        case 'buildings-buildingId':
+          hint = 'お部屋を選んでね 🙋‍♂️'
+          break
+        case 'rooms-roomId':
+          hint = 'レッツ通話 🙋‍♂️'
+          break
+        default:
+          break
+      }
+      return hint
     }
   },
   methods: {
