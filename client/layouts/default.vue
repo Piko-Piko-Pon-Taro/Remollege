@@ -12,7 +12,7 @@
         <nuxt-link
           v-show="$auth.loggedIn"
           :to="'/'"
-          style="text-decoration: none;color:white;"
+          style="text-decoration: none; color: white;"
         >
           <v-list-item link>
             <v-list-item-action>
@@ -52,7 +52,7 @@
         <nuxt-link
           v-show="!$auth.loggedIn"
           :to="'/login'"
-          style="text-decoration: none;color:white;"
+          style="text-decoration: none; color: white;"
         >
           <v-list-item link>
             <v-list-item-action>
@@ -70,7 +70,7 @@
           :to="'/login'"
           @click.native.stop="logout"
           v-show="$auth.loggedIn"
-          style="color:white;text-decoration: none;"
+          style="color: white; text-decoration: none;"
         >
           <v-list-item link>
             <v-list-item-action>
@@ -93,8 +93,15 @@
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="title" />
-      <v-card-actions v-if="$auth.loggedIn">
+      <nuxt-link
+        to="/"
+        style="color: white; text-decoration: none;"
+        class="ml-5"
+      >
+        <v-toolbar-title v-text="title" />
+      </nuxt-link>
+      <!-- TODO: マウスホバーした時指マークにしたい -->
+      <v-card-actions v-if="$auth.loggedIn" @click="dialog = true">
         <v-card-text class="white--text">
           <UserIcon :src="$auth.user.img" class="mr-2" />
           {{ $auth.user.name }}
