@@ -1,8 +1,15 @@
 <template>
   <v-container>
-    <v-row no-gutters>
-      <v-col v-for="building in buildings" :key="building.id" cols="3">
-        <BuildingCard :building="building" class="my-3" />
+    <v-row>
+      <v-col
+        v-for="building in buildings"
+        :key="building.id"
+        lg="3"
+        md="4"
+        sm="6"
+        cols="12"
+      >
+        <BuildingCard :building="building" />
       </v-col>
     </v-row>
   </v-container>
