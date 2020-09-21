@@ -4,7 +4,7 @@
     :xlarge="true"
     text="EXIT"
     icon="mdi-door"
-    class="ml-5"
+    class="ml-1"
   />
 </template>
 
