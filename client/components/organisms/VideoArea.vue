@@ -8,18 +8,12 @@
             :id="'self'"
             :videoWidth="videoWidth"
             :videoHeight="videoHeight"
-            :name="user.name"
+            :user="user"
             :stream="localStream"
+            :isMicOn="isMicOn"
             :muted="true"
             class="pb-0"
           />
-          <!-- <UserBanner
-            v-if="localStream"
-            :img="user.img"
-            :name="user.name"
-            :width="videoWidth"
-            class="pb-0 mx-2 mb-3"
-          /> -->
         </v-col>
         <v-col
           v-for="peerStream in peerStreams"
@@ -31,17 +25,12 @@
             :width="videoWidth"
             :height="videoHeight"
             :stream="peerStream"
+            :user="
+              peerUsers.find((user) => user.id.toString() === peerStream.peerId)
+            "
             :muted="false"
             class="pb-0"
           />
-          <!-- <UserBanner
-            v-if="localStream"
-            :img="user.img"
-            :name="user.name"
-            :width="videoWidth"
-            class="mx-2"
-            style="display: block;"
-          /> -->
         </v-col>
       </v-row>
     </div>
@@ -168,6 +157,14 @@ export default {
     user: {
       type: Object,
       default: null
+    },
+    tables: {
+      type: Array,
+      default: null
+    },
+    seatedTableId: {
+      type: Number,
+      default: null
     }
   },
   data() {
@@ -180,6 +177,7 @@ export default {
       videoWidth: 300,
       videoHeight: 240,
       peerStreams: [],
+      peerUsers: null, // for peer names and icons at VideoCard
       localStream: null,
       peerId: '',
       connectedRoomId: '',
@@ -380,6 +378,11 @@ export default {
       this.connectedRoomId = call.name
 
       call.on('stream', (stream) => {
+        const table = this.tables.filter(
+          (table) => table.id === this.seatedTableId
+        )[0]
+        this.peerUsers = table.users.filter((user) => user.id !== this.user.id)
+
         this.addVideo(stream)
       })
 

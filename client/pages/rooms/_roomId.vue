@@ -14,6 +14,8 @@
       ref="videoArea"
       v-show="seatedTableId"
       :user="$auth.user"
+      :tables="room.tables"
+      :seatedTableId="seatedTableId"
       @leave="leave"
     />
 

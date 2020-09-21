@@ -4,6 +4,7 @@
     :max-width="videoWidth"
     :max-height="videoHeight"
     class="mx-auto elevation-0"
+    style="position:relative"
     dark
   >
     <video
@@ -15,11 +16,31 @@
       :muted="muted"
       autoplay
     />
+    <v-card
+      class="rounded-0 elevation-0"
+      style="
+      display: inline-block;
+      background-color: rgba(20, 20, 20, 0.60);
+      position:absolute;
+      left:0;
+      bottom:0;
+      "
+    >
+      <div class="px-2 py-2 d-flex align-center" style="height:20px">
+        <v-icon v-if="!isMicOn" small style="color:red"
+          >mdi-microphone-off</v-icon
+        >
+        <div>{{ user.name }}</div>
+      </div>
+    </v-card>
   </v-card>
 </template>
 
 <script>
 export default {
+  components: {
+    // UserIcon: () => import('@/components/atoms/UserIcon')
+  },
   props: {
     id: {
       type: String,
@@ -33,13 +54,17 @@ export default {
       type: Number,
       default: 240
     },
-    name: {
-      type: String,
+    user: {
+      type: Object,
       default: null
     },
     stream: {
       type: MediaStream,
       default: null
+    },
+    isMicOn: {
+      type: Boolean,
+      default: false
     },
     muted: {
       type: Boolean,
