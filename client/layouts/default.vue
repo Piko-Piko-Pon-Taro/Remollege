@@ -114,7 +114,7 @@
         <p class="my-auto">{{ $auth.user.name }}</p>
       </v-card-actions>
       <v-spacer></v-spacer>
-      <p v-if="hint" class="my-auto grey lighten-2 black--text pa-2 rounded">
+      <p v-if="hint" class="my-auto white black--text pa-2 rounded">
         {{ hint }}
       </p>
     </v-app-bar>
