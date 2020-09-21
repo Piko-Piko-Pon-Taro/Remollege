@@ -18,14 +18,19 @@
     />
 
     <v-card :color="$const.BASE_COLOR2">
-      <v-row no-gutters>
-        <v-col v-for="table in room.tables" :key="table.id" cols="4">
+      <v-row class="mx-0">
+        <v-col
+          v-for="table in room.tables"
+          :key="table.id"
+          md="4"
+          sm="6"
+          cols="12"
+        >
           <TableCard
             :seatedTableId="seatedTableId"
             :table="table"
             @sitDown="sitDown"
             @leave="leave"
-            class="my-3 mx-3"
           />
         </v-col>
       </v-row>
