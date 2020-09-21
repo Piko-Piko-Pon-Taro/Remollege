@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <ExitButton :to="'/'" />
+    <v-row>
+      <ExitButton :to="'/'" />
+      <v-spacer></v-spacer>
+      <v-card outlined class="my-2 mx-3 pa-3">{{ building.name }}</v-card>
+    </v-row>
     <v-row>
       <v-col
         v-for="room in rooms"
@@ -23,6 +27,11 @@ export default {
     RoomCard: () => import('@/components/organisms/RoomCard')
   },
   computed: {
+    building() {
+      return this.$store.getters['buildings/oneByBuildingId'](
+        this.$route.params.buildingId
+      )
+    },
     rooms() {
       return this.$store.getters['rooms/allByBuildingId'](
         this.$route.params.buildingId
@@ -32,6 +41,9 @@ export default {
   async asyncData({ store, route }) {
     await Promise.all([
       // TODO: 最初にまとめて呼べるようにしたい
+      store.dispatch('buildings/fetchByBuildingId', {
+        buildingId: route.params.buildingId
+      }),
       store.dispatch('rooms/fetchByBuildingId', {
         buildingId: route.params.buildingId
       })

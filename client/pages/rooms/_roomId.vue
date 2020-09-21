@@ -7,6 +7,8 @@
         :img="teacher.img"
         :name="teacher.name"
       />
+      <v-spacer></v-spacer>
+      <v-card outlined class="my-2 mx-3 pa-3">{{ room.name }}</v-card>
     </v-row>
     <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="my-5" />
 

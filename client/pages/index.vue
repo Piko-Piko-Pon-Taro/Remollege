@@ -1,5 +1,9 @@
 <template>
   <v-container>
+    <v-row class="px-3">
+      <v-spacer></v-spacer>
+      <v-card outlined class="pa-3">早稲田大学 西早稲田キャンパス</v-card>
+    </v-row>
     <v-row>
       <v-col
         v-for="building in buildings"
