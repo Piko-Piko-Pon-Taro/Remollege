@@ -105,14 +105,21 @@
         <v-toolbar-title v-text="title" />
       </nuxt-link>
       <!-- TODO: マウスホバーした時指マークにしたい -->
-      <v-card-actions
-        v-if="$auth.loggedIn"
-        @click="dialog = true"
-        class="d-none d-sm-flex"
-      >
-        <UserIcon :src="$auth.user.img" class="mr-2" />
-        <p class="my-auto">{{ $auth.user.name }}</p>
-      </v-card-actions>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+        <v-card-actions
+          v-if="$auth.loggedIn"
+          @click="dialog = true"
+          class="d-none d-sm-flex"
+          style="cursor: pointer;"
+          v-on="on"
+        >
+          <UserIcon :src="$auth.user.img" class="mr-2" />
+          <p class="my-auto">{{ $auth.user.name }}</p>
+        </v-card-actions>
+        </template>
+        <span>プロフィールを表示</span>
+      </v-tooltip>
       <v-spacer></v-spacer>
       <p v-if="hint" class="my-auto white black--text pa-2 rounded">
         {{ hint }}
