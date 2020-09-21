@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="px-3">
       <v-spacer></v-spacer>
-      <v-card outlined class="pa-3">早稲田大学 西早稲田キャンパス</v-card>
+      <v-card outlined class="pa-3 my-2">早稲田大学 西早稲田キャンパス</v-card>
     </v-row>
     <v-row>
       <v-col
