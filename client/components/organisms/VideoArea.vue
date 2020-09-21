@@ -436,6 +436,8 @@ export default {
     closeCall() {
       if (this.existingCall) {
         this.existingCall.close()
+        this.localStream.getAudioTracks()[0].stop()
+        this.localStream.getVideoTracks()[0].stop()
         this.existingCall = null
       }
     }
