@@ -53,33 +53,41 @@
     >
       <v-btn @click="$emit('leave')" value="hangup">
         <span>Leave</span>
-        <v-icon>mdi-phone-hangup</v-icon>
+        <v-icon class="grey--text text--darken-1">mdi-phone-hangup</v-icon>
       </v-btn>
 
       <v-btn @click="toggleCamera" value="video">
         <span>Video</span>
-        <v-icon v-if="isCamOn">mdi-video</v-icon>
-        <v-icon v-if="!isCamOn">mdi-video-off</v-icon>
+        <v-icon v-if="isCamOn" class="grey--text text--darken-1"
+          >mdi-video</v-icon
+        >
+        <v-icon v-if="!isCamOn" class="grey--text text--darken-1"
+          >mdi-video-off</v-icon
+        >
       </v-btn>
 
       <v-btn @click="toggleMic" value="mic">
         <span>Mic</span>
-        <v-icon v-if="isMicOn">mdi-microphone</v-icon>
-        <v-icon v-if="!isMicOn">mdi-microphone-off</v-icon>
+        <v-icon v-if="isMicOn" class="grey--text text--darken-1"
+          >mdi-microphone</v-icon
+        >
+        <v-icon v-if="!isMicOn" class="grey--text text--darken-1"
+          >mdi-microphone-off</v-icon
+        >
       </v-btn>
 
       <!-- 相手の音ミュート用 -->
       <!-- <v-btn>
         <span value="speaker">Speaker</span>
-        <v-icon>mdi-volume-high</v-icon>
-        <v-icon>mdi-volume-off</v-icon>
+        <v-icon class="grey--text text--darken-1">mdi-volume-high</v-icon>
+        <v-icon class="grey--text text--darken-1">mdi-volume-off</v-icon>
       </v-btn>-->
 
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
           <v-btn v-bind="attrs" v-on="on" value="cog">
             <span>Settings</span>
-            <v-icon>mdi-cog</v-icon>
+            <v-icon class="grey--text text--darken-1">mdi-cog</v-icon>
           </v-btn>
         </template>
         <v-card>
