@@ -100,7 +100,7 @@
       <nuxt-link
         to="/"
         style="color: white; text-decoration: none;"
-        class="ml-5"
+        class="ml-sm-5"
       >
         <v-toolbar-title v-text="title" />
       </nuxt-link>
