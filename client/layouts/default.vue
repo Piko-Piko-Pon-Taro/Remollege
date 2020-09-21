@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <!-- sidebar -->
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -85,6 +86,9 @@
         </nuxt-link>
       </v-list>
     </v-navigation-drawer>
+    <!-- sidebar -->
+
+    <!-- header -->
     <v-app-bar
       :clipped-left="clipped"
       :color="$const.MAIN_COLOR"
@@ -108,11 +112,17 @@
         </v-card-text>
       </v-card-actions>
     </v-app-bar>
+    <!-- header -->
+
+    <!-- main -->
     <v-main :style="'background-color: ' + $const.BASE_COLOR + ';'">
       <v-container>
         <nuxt />
       </v-container>
     </v-main>
+    <!-- main -->
+
+    <!-- sidebar? FIXME: 適切なコメントアウトに修正 -->
     <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
       <v-list>
         <v-list-item @click.native="right = !right">
@@ -125,10 +135,14 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+    <!-- sidebar? -->
+
+    <!-- footer -->
     <v-footer :fixed="fixed" class="d-flex justify-center" dark app>
       <span class="mx-3">&copy; 2020 PikoPikoPonTaro</span>
       <span class="mx-3">ご連絡: remollege@gmail.com</span>
     </v-footer>
+    <!-- footer -->
   </v-app>
 </template>
 
