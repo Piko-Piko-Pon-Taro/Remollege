@@ -1,9 +1,8 @@
 <template>
   <v-container>
-    <v-row>
-      <ExitButton :to="'/'" />
-      <v-spacer></v-spacer>
-      <v-card outlined class="my-2 mx-3 pa-3">{{ building.name }}</v-card>
+    <v-row class="pl-1">
+      <ExitButton :to="'/'" class="mr-3" />
+      <HintText text="お部屋を選んでね 🙋‍♂️" class="my-2" />
     </v-row>
     <v-row>
       <v-col
@@ -24,6 +23,7 @@
 export default {
   components: {
     ExitButton: () => import('@/components/atoms/ExitButton'),
+    HintText: () => import('@/components/atoms/HintText'),
     RoomCard: () => import('@/components/organisms/RoomCard')
   },
   computed: {
@@ -41,9 +41,6 @@ export default {
   async asyncData({ store, route }) {
     await Promise.all([
       // TODO: 最初にまとめて呼べるようにしたい
-      store.dispatch('buildings/fetchByBuildingId', {
-        buildingId: route.params.buildingId
-      }),
       store.dispatch('rooms/fetchByBuildingId', {
         buildingId: route.params.buildingId
       })

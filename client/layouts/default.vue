@@ -10,11 +10,7 @@
       dark
     >
       <v-list dense>
-        <nuxt-link
-          v-show="$auth.loggedIn"
-          :to="'/'"
-          style="text-decoration: none; color: white;"
-        >
+        <nuxt-link v-show="$auth.loggedIn" :to="'/'">
           <v-list-item link>
             <v-list-item-action>
               <v-icon>mdi-school</v-icon>
@@ -50,11 +46,7 @@
           />
         </v-dialog>
 
-        <nuxt-link
-          v-show="!$auth.loggedIn"
-          :to="'/login'"
-          style="text-decoration: none; color: white;"
-        >
+        <nuxt-link v-show="!$auth.loggedIn" :to="'/login'">
           <v-list-item link>
             <v-list-item-action>
               <v-icon>mdi-login</v-icon>
@@ -71,7 +63,6 @@
           :to="'/login'"
           @click.native.stop="logout"
           v-show="$auth.loggedIn"
-          style="color: white; text-decoration: none;"
         >
           <v-list-item link>
             <v-list-item-action>
@@ -97,11 +88,7 @@
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <nuxt-link
-        to="/"
-        style="color: white; text-decoration: none;"
-        class="ml-sm-5"
-      >
+      <nuxt-link to="/" class="ml-sm-5">
         <v-toolbar-title v-text="title" />
       </nuxt-link>
       <v-tooltip bottom>
@@ -120,13 +107,7 @@
         <span>プロフィールを表示</span>
       </v-tooltip>
       <v-spacer></v-spacer>
-      <p
-        v-if="hint"
-        :style="`background-color: ${$const.BASE_COLOR2};`"
-        class="my-auto black--text pa-2 rounded"
-      >
-        {{ hint }}
-      </p>
+      <Breadcrumb :items="breadcrumbs" />
     </v-app-bar>
     <!-- header -->
 
@@ -151,7 +132,8 @@
 export default {
   components: {
     UserIcon: () => import('@/components/atoms/UserIcon'),
-    ProfileCard: () => import('@/components/organisms/ProfileCard')
+    ProfileCard: () => import('@/components/organisms/ProfileCard'),
+    Breadcrumb: () => import('@/components/organisms/Breadcrumb')
   },
   data() {
     return {
@@ -166,22 +148,11 @@ export default {
     }
   },
   computed: {
-    hint() {
-      let hint = ''
-      switch (this.$route.name) {
-        case 'index':
-          hint = '建物を選んでね 🙋‍♂️'
-          break
-        case 'buildings-buildingId':
-          hint = 'お部屋を選んでね 🙋‍♂️'
-          break
-        case 'rooms-roomId':
-          hint = 'レッツ通話 🙋‍♂️'
-          break
-        default:
-          break
-      }
-      return hint
+    breadcrumbs() {
+      return this.$store.getters.breadcrumds({
+        routeName: this.$route.name,
+        routeParams: this.$route.params
+      })
     }
   },
   methods: {
@@ -194,3 +165,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.v-application a {
+  text-decoration: none;
+  color: #fff;
+}
+</style>

@@ -1,8 +1,7 @@
 <template>
   <v-container>
-    <v-row class="px-3">
-      <v-spacer></v-spacer>
-      <v-card outlined class="pa-3 my-2">早稲田大学 西早稲田キャンパス</v-card>
+    <v-row class="pl-3">
+      <HintText text="建物を選んでね 🙋‍♂️" class="my-2" />
     </v-row>
     <v-row>
       <v-col
@@ -22,6 +21,7 @@
 <script>
 export default {
   components: {
+    HintText: () => import('@/components/atoms/HintText'),
     BuildingCard: () => import('@/components/organisms/BuildingCard')
   },
   computed: {

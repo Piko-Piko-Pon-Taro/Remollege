@@ -1,16 +1,15 @@
 <template>
   <v-container>
-    <v-row>
-      <ExitButton :to="`/buildings/${room.buildingId}`" />
+    <v-row class="pl-1">
+      <ExitButton :to="`/buildings/${room.buildingId}`" class="mr-3" />
+      <HintText text="レッツ通話 🙋‍♂️" class="my-2" />
       <TeacherBanner
         v-if="seatedTableId"
         :img="teacher.img"
         :name="teacher.name"
       />
-      <v-spacer></v-spacer>
-      <v-card outlined class="my-2 mx-3 pa-3">{{ room.name }}</v-card>
     </v-row>
-    <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="my-5" />
+    <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="mt-3 mb-5" />
 
     <VideoArea
       ref="videoArea"
@@ -60,6 +59,7 @@
 export default {
   components: {
     ExitButton: () => import('@/components/atoms/ExitButton'),
+    HintText: () => import('@/components/atoms/HintText'),
     TeacherCard: () => import('@/components/organisms/TeacherCard'),
     TeacherBanner: () => import('@/components/organisms/TeacherBanner'),
     TableCard: () => import('@/components/organisms/TableCard'),
