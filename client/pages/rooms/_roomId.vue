@@ -16,6 +16,8 @@
       :user="$auth.user"
       @leave="leave"
       @chat="chatDrawer = !chatDrawer"
+      :naviValue="naviValue"
+      @navi="(value) => {naviValue = value}"
     />
 
     <v-card :color="$const.BASE_COLOR2">
@@ -33,7 +35,7 @@
     </v-card>
 
     <!-- TODO: UIてきとうです！ -->
-    <Chat :drawer="chatDrawer" :messages="chats" :authUserId="$auth.user.id" @send="sendChat"/>
+    <Chat :value="chatDrawer" @input="toggleChat" :messages="chats" :authUserId="$auth.user.id" @send="sendChat"/>
     <!-- <div>
       <input
         v-model="chat"
@@ -69,7 +71,8 @@ export default {
           'https://storage.googleapis.com/remollege-storage/1599556564604teacher.jpg'
       },
       seatedTableId: null,
-      chatDrawer: false
+      chatDrawer: false,
+      naviValue: undefined
       // chat: ''
     }
   },
@@ -160,6 +163,12 @@ export default {
       })
       this.seatedTableId = null
       this.$store.dispatch('chats/reset')
+    },
+    toggleChat(value) {
+      this.chatDrawer = value
+      if (value == false) {
+        this.naviValue = null
+      }
     }
   }
 }

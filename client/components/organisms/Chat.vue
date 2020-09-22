@@ -1,6 +1,7 @@
 <template>
 <v-navigation-drawer
-      :value="drawer"
+      :value="value"
+      @input="syncDrawer"
       clipped
       fixed
       dark
@@ -52,7 +53,7 @@ export default {
     MessageInput: () => import('@/components/molecules/MessageInput')
   },
   props: {
-    drawer: {
+    value: {
       type: Boolean,
       default: false
     },
@@ -70,6 +71,9 @@ export default {
       // this.messages.push({id:1, userId: 1, name: "ピコピコポン太郎", text: value, img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"})
       this.$emit('send', value)
     },
+    syncDrawer(value) {
+      this.$emit('input', value)
+    }
   }
 }
 </script>

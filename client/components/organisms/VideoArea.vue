@@ -50,25 +50,26 @@
       :color="$const.MAIN_COLOR"
       :background-color="$const.BASE_COLOR2"
       horizontal
+      :value="naviValue"
     >
-      <v-btn @click="$emit('leave')" value="hangup">
+      <v-btn @click="$emit('leave'); $emit('navi', 'hangup');" value="hangup">
         <span>Leave</span>
         <v-icon>mdi-phone-hangup</v-icon>
       </v-btn>
 
-      <v-btn @click="toggleCamera" value="video">
+      <v-btn @click="toggleCamera;  $emit('navi', 'video');" value="video">
         <span>Video</span>
         <v-icon v-if="isCamOn">mdi-video</v-icon>
         <v-icon v-if="!isCamOn">mdi-video-off</v-icon>
       </v-btn>
 
-      <v-btn @click="toggleMic" value="mic">
+      <v-btn @click="toggleMic;  $emit('navi', 'mic');" value="mic">
         <span>Mic</span>
         <v-icon v-if="isMicOn">mdi-microphone</v-icon>
         <v-icon v-if="!isMicOn">mdi-microphone-off</v-icon>
       </v-btn>
 
-      <v-btn @click="$emit('chat')" value="chat">
+      <v-btn @click="$emit('chat');  $emit('navi', 'chat');" value="chat">
         <span>Chat</span>
         <v-icon>mdi-chat</v-icon>
       </v-btn>
@@ -82,7 +83,7 @@
 
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" value="cog">
+          <v-btn v-bind="attrs" v-on="on" @click="$emit('navi', 'cog')" value="cog">
             <span>Settings</span>
             <v-icon>mdi-cog</v-icon>
           </v-btn>
@@ -152,6 +153,10 @@ export default {
   props: {
     user: {
       type: Object,
+      default: null
+    },
+    naviValue: {
+      type: String,
       default: null
     }
   },
