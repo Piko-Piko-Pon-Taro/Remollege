@@ -57,13 +57,13 @@
         <v-icon>mdi-phone-hangup</v-icon>
       </v-btn>
 
-      <v-btn @click="toggleCamera;  $emit('navi', 'video');" value="video">
+      <v-btn @click="toggleCamera" value="video">
         <span>Video</span>
         <v-icon v-if="isCamOn">mdi-video</v-icon>
         <v-icon v-if="!isCamOn">mdi-video-off</v-icon>
       </v-btn>
 
-      <v-btn @click="toggleMic;  $emit('navi', 'mic');" value="mic">
+      <v-btn @click="toggleMic" value="mic">
         <span>Mic</span>
         <v-icon v-if="isMicOn">mdi-microphone</v-icon>
         <v-icon v-if="!isMicOn">mdi-microphone-off</v-icon>
@@ -401,6 +401,7 @@ export default {
     },
 
     toggleMic() {
+      this.$emit('navi', 'mic')
       if (this.localStream) {
         const audioTrack = this.localStream.getAudioTracks()[0]
         audioTrack.enabled = !audioTrack.enabled
@@ -408,6 +409,7 @@ export default {
       }
     },
     toggleCamera() {
+      this.$emit('navi', 'video');
       if (this.localStream) {
         const videoTrack = this.localStream.getVideoTracks()[0]
         videoTrack.enabled = !videoTrack.enabled
