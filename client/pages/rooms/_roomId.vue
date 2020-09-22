@@ -34,22 +34,8 @@
       </v-row>
     </v-card>
 
-    <!-- TODO: UIてきとうです！ -->
     <Chat :value="chatDrawer" @input="toggleChat" :messages="chats" :authUserId="$auth.user.id" @send="sendChat"/>
-    <!-- <div>
-      <input
-        v-model="chat"
-        @keyup.enter="sendChat"
-        type="text"
-        placeholder="ほえ"
-      />
-      <button @click="sendChat">送信</button>
-      <div v-for="(c, index) in chats" :key="index">
-        <p>{{ c.user.img }} {{ c.user.name }}</p>
-        <p>{{ c.text }}</p>
-        <p>{{ c.time }}</p>
-      </div>
-    </div> -->
+
   </v-container>
 </template>
 
