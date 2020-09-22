@@ -1,28 +1,32 @@
 <template>
-  <v-card :color="$const.MAIN_COLOR" dark>
-    <v-card-title class="headline pt-3 pb-0">Table{{ table.id }}</v-card-title>
+  <v-card :color="$const.MAIN_COLOR" dark height="100%">
+    <v-card-title class="headline pb-0">Table{{ table.id }}</v-card-title>
     <v-card-actions>
-      <ActionButton
-        v-if="seatedTableId === null"
-        @click="sitDown"
-        text="Take a seat"
-        class="mr-10"
-      />
-      <ActionButton
-        v-else-if="seatedTableId === table.id"
-        @click="leave"
-        text="Leave"
-        class="mr-10"
-      />
-      <div style="margin: 0 0 0 auto">
-        <UserIcon
-          v-for="i in 6"
-          :key="i"
-          :src="table.users[i - 1] ? table.users[i - 1].img : undefined"
-          :icon="table.users[i - 1] ? undefined : 'mdi-selection-ellipse'"
-          class="mx-1 px-0"
-        />
-      </div>
+      <v-row align="center">
+        <v-col>
+          <ActionButton
+            v-if="seatedTableId === null"
+            @click="sitDown"
+            text="Take a seat"
+          />
+          <ActionButton
+            v-else-if="seatedTableId === table.id"
+            @click="leave"
+            text="Leave"
+          />
+        </v-col>
+        <v-col>
+          <div>
+            <UserIcon
+              v-for="i in 6"
+              :key="i"
+              :src="table.users[i - 1] ? table.users[i - 1].img : undefined"
+              :icon="table.users[i - 1] ? undefined : 'mdi-selection-ellipse'"
+              class="mx-1"
+            />
+          </div>
+        </v-col>
+      </v-row>
     </v-card-actions>
   </v-card>
 </template>

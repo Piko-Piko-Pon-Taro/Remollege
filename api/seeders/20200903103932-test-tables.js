@@ -11,7 +11,11 @@ module.exports = {
       { id:6, roomId:3, createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'},
       { id:7, roomId:3, createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'},
       { id:8, roomId:3, createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'},
-      { id:9, roomId:2, createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'}
+      { id:9, roomId:2, createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'},
+      { id:10, roomId:1, createdAt:'2020-08-14 00:00:00', updatedAt:'2020-08-14 00:00:00'},
+      { id:11, roomId:1, createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'},
+      { id:12, roomId:1, createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'},
+      { id:13, roomId:1, createdAt:'2020-08-15 00:00:00', updatedAt:'2020-08-15 00:00:00'}
     ], {});
   },
 
