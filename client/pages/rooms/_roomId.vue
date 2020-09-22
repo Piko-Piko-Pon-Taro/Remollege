@@ -2,11 +2,12 @@
   <v-container>
     <v-row class="pl-1">
       <ExitButton :to="`/buildings/${room.buildingId}`" class="mr-3" />
-      <HintText text="レッツ通話 🙋‍♂️" class="my-2" />
+      <HintText text="レッツ通話 🙋‍♂️" class="my-2 mr-3" />
       <TeacherBanner
         v-if="seatedTableId"
         :img="teacher.img"
         :name="teacher.name"
+        class="ml-2"
       />
     </v-row>
     <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="mt-3 mb-5" />
