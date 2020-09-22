@@ -50,8 +50,9 @@
       :color="$const.MAIN_COLOR"
       :background-color="$const.BASE_COLOR2"
       horizontal
+      :value="naviValue"
     >
-      <v-btn @click="$emit('leave')" value="hangup">
+      <v-btn @click="$emit('leave'); $emit('navi', 'hangup');" value="hangup">
         <span>Leave</span>
         <v-icon>mdi-phone-hangup</v-icon>
       </v-btn>
@@ -68,6 +69,11 @@
         <v-icon v-if="!isMicOn">mdi-microphone-off</v-icon>
       </v-btn>
 
+      <v-btn @click="$emit('chat');  $emit('navi', 'chat');" value="chat">
+        <span>Chat</span>
+        <v-icon>mdi-chat</v-icon>
+      </v-btn>
+
       <!-- 相手の音ミュート用 -->
       <!-- <v-btn>
         <span value="speaker">Speaker</span>
@@ -77,7 +83,7 @@
 
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" value="cog">
+          <v-btn v-bind="attrs" v-on="on" @click="$emit('navi', 'cog')" value="cog">
             <span>Settings</span>
             <v-icon>mdi-cog</v-icon>
           </v-btn>
@@ -140,12 +146,17 @@ if (process.client) {
 export default {
   components: {
     VideoCard: () => import('@/components/organisms/VideoCard'),
-    ActionButton: () => import('@/components/atoms/ActionButton')
+    ActionButton: () => import('@/components/atoms/ActionButton'),
+    
     // UserBanner: () => import('@/components/organisms/UserBanner')
   },
   props: {
     user: {
       type: Object,
+      default: null
+    },
+    naviValue: {
+      type: String,
       default: null
     }
   },
@@ -390,6 +401,7 @@ export default {
     },
 
     toggleMic() {
+      this.$emit('navi', 'mic')
       if (this.localStream) {
         const audioTrack = this.localStream.getAudioTracks()[0]
         audioTrack.enabled = !audioTrack.enabled
@@ -397,6 +409,7 @@ export default {
       }
     },
     toggleCamera() {
+      this.$emit('navi', 'video');
       if (this.localStream) {
         const videoTrack = this.localStream.getVideoTracks()[0]
         videoTrack.enabled = !videoTrack.enabled
