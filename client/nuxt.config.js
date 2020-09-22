@@ -32,8 +32,12 @@ export default {
    ** Headers of the page
    */
   head: {
-    titleTemplate: '%s - ' + process.env.npm_package_name,
-    title: process.env.npm_package_name || '',
+    htmlAttrs: {
+      lang: 'ja',
+      prefix: 'og: http://ogp.me/ns#'
+    },
+    titleTemplate: '%s - 大学専用オンライン通話サービス',
+    title: 'Remollege',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -41,7 +45,32 @@ export default {
         hid: 'description',
         name: 'description',
         content: process.env.npm_package_description || ''
-      }
+      },
+      { hid: 'og:site_name', property: 'og:site_name', content: 'Remollege' },
+      { hid: 'og:type', property: 'og:type', content: 'website' },
+      {
+        hid: 'og:url',
+        property: 'og:url',
+        content: 'https://pikopikopon1.uc.r.appspot.com'
+      },
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: 'Remollege | 大学専用オンライン通話サービス'
+      },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content:
+          '現在は早稲田大学生のみ使用可能ですが、随時対応していく予定です🙇‍♂️'
+      },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content:
+          'https://storage.googleapis.com/remollege-storage/static/main_visual.png'
+      },
+      { name: 'twitter:card', content: 'summary' }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
@@ -133,7 +162,8 @@ export default {
             // When "key" is received,
             // dispatch action "value"
             { someOneSitsDown: 'rooms/SOCKET_someOneSitsDown' },
-            { someOneStandsUp: 'rooms/SOCKET_someOneStandsUp' }
+            { someOneStandsUp: 'rooms/SOCKET_someOneStandsUp' },
+            { someOneSendChat: 'chats/SOCKET_someOneSendChat' }
           ]
         }
       }
