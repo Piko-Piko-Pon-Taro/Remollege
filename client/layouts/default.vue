@@ -91,6 +91,7 @@
       <nuxt-link to="/" class="ml-sm-5">
         <v-toolbar-title v-text="title" />
       </nuxt-link>
+      <v-divider class="ml-5 d-none d-sm-flex" inset vertical></v-divider>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-card-actions
@@ -106,7 +107,8 @@
         </template>
         <span>プロフィールを表示</span>
       </v-tooltip>
-      <v-spacer></v-spacer>
+      <v-divider class="ml-4 d-none d-sm-flex" inset vertical></v-divider>
+      <v-spacer class="d-flex d-sm-none"></v-spacer>
       <Breadcrumb :items="breadcrumbs" />
     </v-app-bar>
     <!-- header -->
