@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <!-- sidebar -->
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -9,11 +10,7 @@
       dark
     >
       <v-list dense>
-        <nuxt-link
-          v-show="$auth.loggedIn"
-          :to="'/'"
-          style="text-decoration: none;color:white;"
-        >
+        <nuxt-link v-show="$auth.loggedIn" :to="'/'">
           <v-list-item link>
             <v-list-item-action>
               <v-icon>mdi-school</v-icon>
@@ -49,11 +46,7 @@
           />
         </v-dialog>
 
-        <nuxt-link
-          v-show="!$auth.loggedIn"
-          :to="'/login'"
-          style="text-decoration: none;color:white;"
-        >
+        <nuxt-link v-show="!$auth.loggedIn" :to="'/login'">
           <v-list-item link>
             <v-list-item-action>
               <v-icon>mdi-login</v-icon>
@@ -70,7 +63,6 @@
           :to="'/login'"
           @click.native.stop="logout"
           v-show="$auth.loggedIn"
-          style="color:white;text-decoration: none;"
         >
           <v-list-item link>
             <v-list-item-action>
@@ -85,6 +77,9 @@
         </nuxt-link>
       </v-list>
     </v-navigation-drawer>
+    <!-- sidebar -->
+
+    <!-- header -->
     <v-app-bar
       :clipped-left="clipped"
       :color="$const.MAIN_COLOR"
@@ -93,35 +88,45 @@
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="title" />
-      <v-card-actions v-if="$auth.loggedIn">
-        <v-card-text class="white--text">
-          <UserIcon :src="$auth.user.img" class="mr-2" />
-          {{ $auth.user.name }}
-        </v-card-text>
-      </v-card-actions>
+      <nuxt-link to="/" class="ml-sm-5">
+        <v-toolbar-title v-text="title" />
+      </nuxt-link>
+      <v-divider class="ml-5 d-none d-sm-flex" inset vertical></v-divider>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-card-actions
+            v-if="$auth.loggedIn"
+            @click="dialog = true"
+            v-on="on"
+            class="d-none d-sm-flex"
+            style="cursor: pointer;"
+          >
+            <UserIcon :src="$auth.user.img" class="mr-2" />
+            <p class="my-auto">{{ $auth.user.name }}</p>
+          </v-card-actions>
+        </template>
+        <span>プロフィールを表示</span>
+      </v-tooltip>
+      <v-divider class="ml-4 d-none d-sm-flex" inset vertical></v-divider>
+      <v-spacer class="d-flex d-sm-none"></v-spacer>
+      <Breadcrumb :items="breadcrumbs" />
     </v-app-bar>
+    <!-- header -->
+
+    <!-- main -->
     <v-main :style="'background-color: ' + $const.BASE_COLOR + ';'">
       <v-container>
         <nuxt />
       </v-container>
     </v-main>
-    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    <!-- main -->
+
+    <!-- footer -->
     <v-footer :fixed="fixed" class="d-flex justify-center" dark app>
       <span class="mx-3">&copy; 2020 PikoPikoPonTaro</span>
       <span class="mx-3">ご連絡: remollege@gmail.com</span>
     </v-footer>
+    <!-- footer -->
   </v-app>
 </template>
 
@@ -129,7 +134,8 @@
 export default {
   components: {
     UserIcon: () => import('@/components/atoms/UserIcon'),
-    ProfileCard: () => import('@/components/organisms/ProfileCard')
+    ProfileCard: () => import('@/components/organisms/ProfileCard'),
+    Breadcrumb: () => import('@/components/organisms/Breadcrumb')
   },
   data() {
     return {
@@ -143,6 +149,14 @@ export default {
       dialog: false
     }
   },
+  computed: {
+    breadcrumbs() {
+      return this.$store.getters.breadcrumds({
+        routeName: this.$route.name,
+        routeParams: this.$route.params
+      })
+    }
+  },
   methods: {
     logout() {
       this.$auth.logout()
@@ -153,3 +167,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.v-application a {
+  text-decoration: none;
+  color: #fff;
+}
+</style>

@@ -1,15 +1,17 @@
 <template>
-  <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
-  </v-app>
+  <v-card outlined max-width="500" class="mx-auto mt-10 text-center">
+    <v-img
+      src="https://storage.googleapis.com/remollege-storage/static/waseda.jpg"
+    ></v-img>
+    <v-card-text class="text-center pa-10">
+      <h1 class="mb-5">
+        {{ error.statusCode === 404 ? pageNotFound : otherError }}
+      </h1>
+      <NuxtLink to="/">
+        トップページへ戻る
+      </NuxtLink>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
@@ -30,8 +32,8 @@ export default {
   },
   data() {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
+      pageNotFound: 'ごめんなさいページがありません🥺',
+      otherError: 'ごめんなさいエラーが起きてしまいました🥺'
     }
   }
 }
