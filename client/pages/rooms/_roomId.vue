@@ -67,7 +67,6 @@ export default {
       seatedTableId: null,
       chatDrawer: false,
       naviValue: undefined
-      // chat: ''
     }
   },
   computed: {

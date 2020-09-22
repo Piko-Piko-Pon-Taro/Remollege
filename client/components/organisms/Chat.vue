@@ -68,7 +68,6 @@ export default {
   },
   methods: {
     sendMessage(value) {
-      // this.messages.push({id:1, userId: 1, name: "ピコピコポン太郎", text: value, img: "https://storage.googleapis.com/remollege-storage/static/waseda.jpg"})
       this.$emit('send', value)
     },
     syncDrawer(value) {
