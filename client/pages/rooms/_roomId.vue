@@ -19,7 +19,11 @@
       @leave="leave"
       @chat="chatDrawer = !chatDrawer"
       :naviValue="naviValue"
-      @navi="(value) => {naviValue = value}"
+      @navi="
+        (value) => {
+          naviValue = value
+        }
+      "
     />
 
     <v-card :color="$const.BASE_COLOR2">
@@ -41,8 +45,13 @@
       </v-row>
     </v-card>
 
-    <Chat :value="chatDrawer" @input="toggleChat" :messages="chats" :authUserId="$auth.user.id" @send="sendChat"/>
-
+    <Chat
+      :value="chatDrawer"
+      @input="toggleChat"
+      :messages="chats"
+      :authUserId="$auth.user.id"
+      @send="sendChat"
+    />
   </v-container>
 </template>
 
@@ -78,12 +87,10 @@ export default {
     }
   },
   async asyncData({ store, route }) {
-    await Promise.all([
-      // TODO: 最初にまとめて呼べるようにしたい
-      store.dispatch('rooms/updateByRoomId', {
-        roomId: route.params.roomId
-      })
-    ])
+    await store.dispatch('fetchAllData')
+    await store.dispatch('rooms/updateByRoomId', {
+      roomId: route.params.roomId
+    })
   },
   mounted() {
     this.socket = this.$nuxtSocket({})
@@ -159,7 +166,7 @@ export default {
     },
     toggleChat(value) {
       this.chatDrawer = value
-      if (value == false) {
+      if (value === false) {
         this.naviValue = null
       }
     }

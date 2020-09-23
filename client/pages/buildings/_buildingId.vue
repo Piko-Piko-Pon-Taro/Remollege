@@ -38,13 +38,8 @@ export default {
       )
     }
   },
-  async asyncData({ store, route }) {
-    await Promise.all([
-      // TODO: 最初にまとめて呼べるようにしたい
-      store.dispatch('rooms/fetchByBuildingId', {
-        buildingId: route.params.buildingId
-      })
-    ])
+  async asyncData({ store }) {
+    await store.dispatch('fetchAllData')
   }
 }
 </script>

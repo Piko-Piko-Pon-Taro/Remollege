@@ -42,8 +42,8 @@ module.exports = (sequelize, DataTypes) => {
   );
   Table.associate = function (models) {
     Table.belongsTo(models.Room, {
-      sourceKey: "roomId",
-      foreignKey: "id",
+      foreignKey: "roomId",
+      targetKey: "id",
     });
     Table.hasMany(models.TableUser, {
       sourceKey: "id",
