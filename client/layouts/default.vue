@@ -161,6 +161,7 @@ export default {
   methods: {
     logout() {
       this.$auth.logout()
+      location.replace('/login')
     },
     updateProfile(value, file) {
       this.$store.dispatch('updateAuthUser', { user: value, file })

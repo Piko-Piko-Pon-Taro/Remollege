@@ -8,18 +8,12 @@
             :id="'self'"
             :videoWidth="videoWidth"
             :videoHeight="videoHeight"
-            :name="user.name"
+            :user="user"
             :stream="localStream"
+            :isMicOn="isMicOn"
             :muted="true"
-            class="pb-0 mb-3"
+            class="pb-0"
           />
-          <!-- <UserBanner
-            v-if="localStream"
-            :img="user.img"
-            :name="user.name"
-            :width="videoWidth"
-            class="mx-2"
-          />-->
         </v-col>
         <v-col
           v-for="peerStream in peerStreams"
@@ -31,17 +25,12 @@
             :width="videoWidth"
             :height="videoHeight"
             :stream="peerStream"
+            :user="
+              peerUsers.find((user) => user.id.toString() === peerStream.peerId)
+            "
             :muted="false"
-            class="pb-0 mb-3"
+            class="pb-0"
           />
-          <!-- <UserBanner
-            v-if="localStream"
-            :img="user.img"
-            :name="user.name"
-            :width="videoWidth"
-            class="mx-2"
-            style="display: block;"
-          />-->
         </v-col>
       </v-row>
     </div>
@@ -52,21 +41,34 @@
       horizontal
       :value="naviValue"
     >
-      <v-btn @click="$emit('leave'); $emit('navi', 'hangup');" value="hangup">
+
+      <v-btn @click="$emit('leave'); $emit('navi', 'hangup');" value="hangup" class="grey--text text--darken-1">
         <span>Leave</span>
-        <v-icon>mdi-phone-hangup</v-icon>
+        <v-icon class="grey--text text--darken-1">mdi-phone-hangup</v-icon>
       </v-btn>
 
-      <v-btn @click="toggleCamera" value="video">
+      <v-btn
+        @click="toggleCamera"
+        value="video"
+        class="grey--text text--darken-1"
+      >
         <span>Video</span>
-        <v-icon v-if="isCamOn">mdi-video</v-icon>
-        <v-icon v-if="!isCamOn">mdi-video-off</v-icon>
+        <v-icon v-if="isCamOn" class="grey--text text--darken-1"
+          >mdi-video</v-icon
+        >
+        <v-icon v-if="!isCamOn" class="grey--text text--darken-1"
+          >mdi-video-off</v-icon
+        >
       </v-btn>
 
-      <v-btn @click="toggleMic" value="mic">
+      <v-btn @click="toggleMic" value="mic" class="grey--text text--darken-1">
         <span>Mic</span>
-        <v-icon v-if="isMicOn">mdi-microphone</v-icon>
-        <v-icon v-if="!isMicOn">mdi-microphone-off</v-icon>
+        <v-icon v-if="isMicOn" class="grey--text text--darken-1"
+          >mdi-microphone</v-icon
+        >
+        <v-icon v-if="!isMicOn" class="grey--text text--darken-1"
+          >mdi-microphone-off</v-icon
+        >
       </v-btn>
 
       <v-btn @click="$emit('chat');  $emit('navi', 'chat');" value="chat">
@@ -75,17 +77,17 @@
       </v-btn>
 
       <!-- 相手の音ミュート用 -->
-      <!-- <v-btn>
+      <!-- <v-btn class="grey--text text--darken-1">
         <span value="speaker">Speaker</span>
-        <v-icon>mdi-volume-high</v-icon>
-        <v-icon>mdi-volume-off</v-icon>
+        <v-icon class="grey--text text--darken-1">mdi-volume-high</v-icon>
+        <v-icon class="grey--text text--darken-1">mdi-volume-off</v-icon>
       </v-btn>-->
 
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" @click="$emit('navi', 'cog')" value="cog">
+          <v-btn v-bind="attrs" v-on="on" @click="$emit('navi', 'cog')" value="cog" class="grey--text text--darken-1">
             <span>Settings</span>
-            <v-icon>mdi-cog</v-icon>
+            <v-icon class="grey--text text--darken-1">mdi-cog</v-icon>
           </v-btn>
         </template>
         <v-card>
@@ -155,6 +157,14 @@ export default {
       type: Object,
       default: null
     },
+    tables: {
+      type: Array,
+      default: null
+    },
+    seatedTableId: {
+      type: Number,
+      default: null
+    },
     naviValue: {
       type: String,
       default: null
@@ -170,6 +180,7 @@ export default {
       videoWidth: 300,
       videoHeight: 240,
       peerStreams: [],
+      peerUsers: null, // for peer names and icons at VideoCard
       localStream: null,
       peerId: '',
       connectedRoomId: '',
@@ -281,10 +292,15 @@ export default {
     // sets stream with default devices
     async setDefaultStream() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
+        const constraints = {
+          video: {
+            width: { exact: this.videoWidth },
+            height: { exact: this.videoHeight }
+          },
           audio: true
-        })
+        }
+        const stream = await navigator.mediaDevices.getUserMedia(constraints)
+
         this.localStream = stream
 
         // get current deviceId (used in settings)
@@ -365,6 +381,11 @@ export default {
       this.connectedRoomId = call.name
 
       call.on('stream', (stream) => {
+        const table = this.tables.filter(
+          (table) => table.id === this.seatedTableId
+        )[0]
+        this.peerUsers = table.users.filter((user) => user.id !== this.user.id)
+
         this.addVideo(stream)
       })
 
@@ -436,6 +457,8 @@ export default {
     closeCall() {
       if (this.existingCall) {
         this.existingCall.close()
+        this.localStream.getAudioTracks()[0].stop()
+        this.localStream.getVideoTracks()[0].stop()
         this.existingCall = null
       }
     }
