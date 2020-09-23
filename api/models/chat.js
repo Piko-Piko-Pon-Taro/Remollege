@@ -46,8 +46,8 @@ module.exports = (sequelize, DataTypes) => {
   );
   Chat.associate = function (models) {
     Chat.belongsTo(models.User, {
-      sourceKey: "userId",
-      foreignKey: "id",
+      foreignKey: "userId",
+      targetKey: "id",
     });
   };
   return Chat;

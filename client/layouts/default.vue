@@ -91,24 +91,25 @@
       <nuxt-link to="/" class="ml-sm-5">
         <v-toolbar-title v-text="title" />
       </nuxt-link>
-      <v-divider class="ml-5 d-none d-sm-flex" inset vertical></v-divider>
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on }">
-          <v-card-actions
-            v-if="$auth.loggedIn"
-            @click="dialog = true"
-            v-on="on"
-            class="d-none d-sm-flex"
-            style="cursor: pointer;"
-          >
-            <UserIcon :src="$auth.user.img" class="mr-2" />
-            <p class="my-auto">{{ $auth.user.name }}</p>
-          </v-card-actions>
-        </template>
-        <span>プロフィールを表示</span>
-      </v-tooltip>
-      <v-divider class="ml-4 d-none d-sm-flex" inset vertical></v-divider>
-      <v-spacer class="d-flex d-sm-none"></v-spacer>
+      <template v-if="$auth.loggedIn">
+        <v-divider class="ml-5 d-none d-sm-flex" inset vertical></v-divider>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-card-actions
+              @click="dialog = true"
+              v-on="on"
+              class="d-none d-sm-flex"
+              style="cursor: pointer;"
+            >
+              <UserIcon :src="$auth.user.img" class="mr-2" />
+              <p class="my-auto">{{ $auth.user.name }}</p>
+            </v-card-actions>
+          </template>
+          <span>プロフィールを表示</span>
+        </v-tooltip>
+        <v-divider class="ml-4 d-none d-sm-flex" inset vertical></v-divider>
+        <v-spacer class="d-flex d-sm-none"></v-spacer>
+      </template>
       <Breadcrumb :items="breadcrumbs" />
     </v-app-bar>
     <!-- header -->
@@ -160,6 +161,7 @@ export default {
   methods: {
     logout() {
       this.$auth.logout()
+      location.replace('/login')
     },
     updateProfile(value, file) {
       this.$store.dispatch('updateAuthUser', { user: value, file })

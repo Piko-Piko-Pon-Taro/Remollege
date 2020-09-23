@@ -30,10 +30,8 @@ export default {
     }
   },
   async asyncData({ store, $auth }) {
-    if ($auth.$storage.getUniversal('strategy') === 'local' && $auth.loggedIn) {
-      await Promise.all([
-        store.dispatch('buildings/fetchByCampusId', { campusId: 1 })
-      ])
+    if ($auth.loggedIn && $auth.$storage.getUniversal('strategy') === 'local') {
+      await store.dispatch('fetchAllData')
     }
   },
   beforeCreate() {
@@ -49,13 +47,17 @@ export default {
         })
         .then((result) => {
           this.$toast.success('ログインしました')
-          this.$store.dispatch('buildings/fetchByCampusId', { campusId: 1 })
-          this.$auth.$storage.removeUniversal('waseda.state')
-          this.$auth.$storage.removeUniversal('_token.waseda')
-          this.$auth.$storage.removeUniversal('_refresh_token.waseda')
+          this.$store.dispatch('fetchAllData')
         })
         .catch((e) => {
           this.$toast.error('ログインできませんでした')
+          this.$auth.$storage.removeUniversal('_token.local')
+          this.$auth.$storage.removeUniversal('_refresh_token.local')
+        })
+        .finally(() => {
+          this.$auth.$storage.removeUniversal('waseda.state')
+          this.$auth.$storage.removeUniversal('_token.waseda')
+          this.$auth.$storage.removeUniversal('_refresh_token.waseda')
         })
     }
   }
