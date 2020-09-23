@@ -1,14 +1,16 @@
 <template>
   <v-container>
-    <v-row>
-      <ExitButton :to="`/buildings/${room.buildingId}`" />
+    <v-row class="pl-1">
+      <ExitButton :to="`/buildings/${room.buildingId}`" class="mr-3" />
+      <HintText text="レッツ通話 🙋‍♂️" class="my-2 mr-3" />
       <TeacherBanner
         v-if="seatedTableId"
         :img="teacher.img"
         :name="teacher.name"
+        class="ml-2"
       />
     </v-row>
-    <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="my-5" />
+    <TeacherCard v-if="!seatedTableId" :teacher="teacher" class="mt-3 mb-5" />
 
     <VideoArea
       ref="videoArea"
@@ -17,37 +19,41 @@
       :tables="room.tables"
       :seatedTableId="seatedTableId"
       @leave="leave"
+      @chat="chatDrawer = !chatDrawer"
+      :naviValue="naviValue"
+      @navi="
+        (value) => {
+          naviValue = value
+        }
+      "
     />
 
     <v-card :color="$const.BASE_COLOR2">
-      <v-row no-gutters>
-        <v-col v-for="table in room.tables" :key="table.id" cols="4">
+      <v-row class="mx-0">
+        <v-col
+          v-for="table in room.tables"
+          :key="table.id"
+          md="4"
+          sm="6"
+          cols="12"
+        >
           <TableCard
             :seatedTableId="seatedTableId"
             :table="table"
             @sitDown="sitDown"
             @leave="leave"
-            class="my-3 mx-3"
           />
         </v-col>
       </v-row>
     </v-card>
 
-    <!-- TODO: UIてきとうです！ -->
-    <div>
-      <input
-        v-model="chat"
-        @keyup.enter="sendChat"
-        type="text"
-        placeholder="ほえ"
-      />
-      <button @click="sendChat">送信</button>
-      <div v-for="(c, index) in chats" :key="index">
-        <p>{{ c.user.img }} {{ c.user.name }}</p>
-        <p>{{ c.text }}</p>
-        <p>{{ c.time }}</p>
-      </div>
-    </div>
+    <Chat
+      :value="chatDrawer"
+      @input="toggleChat"
+      :messages="chats"
+      :authUserId="$auth.user.id"
+      @send="sendChat"
+    />
   </v-container>
 </template>
 
@@ -55,10 +61,12 @@
 export default {
   components: {
     ExitButton: () => import('@/components/atoms/ExitButton'),
+    HintText: () => import('@/components/atoms/HintText'),
     TeacherCard: () => import('@/components/organisms/TeacherCard'),
     TeacherBanner: () => import('@/components/organisms/TeacherBanner'),
     TableCard: () => import('@/components/organisms/TableCard'),
-    VideoArea: () => import('@/components/organisms/VideoArea')
+    VideoArea: () => import('@/components/organisms/VideoArea'),
+    Chat: () => import('@/components/organisms/Chat')
   },
   data() {
     return {
@@ -68,7 +76,8 @@ export default {
           'https://storage.googleapis.com/remollege-storage/1599556564604teacher.jpg'
       },
       seatedTableId: null,
-      chat: ''
+      chatDrawer: false,
+      naviValue: undefined
     }
   },
   computed: {
@@ -80,12 +89,10 @@ export default {
     }
   },
   async asyncData({ store, route }) {
-    await Promise.all([
-      // TODO: 最初にまとめて呼べるようにしたい
-      store.dispatch('rooms/updateByRoomId', {
-        roomId: route.params.roomId
-      })
-    ])
+    await store.dispatch('fetchAllData')
+    await store.dispatch('rooms/updateByRoomId', {
+      roomId: route.params.roomId
+    })
   },
   mounted() {
     this.socket = this.$nuxtSocket({})
@@ -123,9 +130,9 @@ export default {
         userId: this.$auth.user.id
       })
     },
-    sendChat() {
+    sendChat(value) {
       // 空白のみの場合何もしない
-      if (!this.chat.trim()) return
+      if (!value.trim()) return
 
       // 時刻を作る
       let now = new Date() // 現在時刻（世界標準時）を取得
@@ -138,18 +145,16 @@ export default {
       // メッセージオブジェクトを作る
       const chat = {
         user: {
+          id: this.$auth.user.id,
           name: this.$auth.user.name,
           img: this.$auth.user.img
         },
-        text: this.chat.trim(),
+        text: value.trim(),
         time: now
       }
 
       // サーバー側にメッセージを送信する
       this.socket.emit('sendChat', { tableId: this.seatedTableId, chat })
-
-      // input要素を空にする
-      this.chat = ''
     },
     leave() {
       this.$refs.videoArea.closeCall()
@@ -160,6 +165,12 @@ export default {
       })
       this.seatedTableId = null
       this.$store.dispatch('chats/reset')
+    },
+    toggleChat(value) {
+      this.chatDrawer = value
+      if (value === false) {
+        this.naviValue = null
+      }
     }
   }
 }

@@ -41,6 +41,16 @@ router.get("/buildingId/:buildingId", async (req, res, next) => {
   }
 })
 
+/* GetRoomsByCampusId */
+router.get("/campusId/:campusId", async (req, res, next) => {
+  try {
+    const rooms = await Room.scope({ method: ['inCampus', req.params.campusId] }).findAll();
+    res.json(addStatusOK({ rooms }));
+  } catch (e) {
+    next(e);
+  }
+})
+
 // /* GetRoomTables */
 // router.get("/:id/tables/", async (req, res, next) => {
 //   try {

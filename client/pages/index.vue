@@ -1,8 +1,18 @@
 <template>
   <v-container>
-    <v-row no-gutters>
-      <v-col v-for="building in buildings" :key="building.id" cols="3">
-        <BuildingCard :building="building" class="my-3" />
+    <v-row class="pl-3">
+      <HintText text="建物を選んでね 🙋‍♂️" class="my-2" />
+    </v-row>
+    <v-row>
+      <v-col
+        v-for="building in buildings"
+        :key="building.id"
+        lg="3"
+        md="4"
+        sm="6"
+        cols="12"
+      >
+        <BuildingCard :building="building" />
       </v-col>
     </v-row>
   </v-container>
@@ -11,6 +21,7 @@
 <script>
 export default {
   components: {
+    HintText: () => import('@/components/atoms/HintText'),
     BuildingCard: () => import('@/components/organisms/BuildingCard')
   },
   computed: {
@@ -19,10 +30,8 @@ export default {
     }
   },
   async asyncData({ store, $auth }) {
-    if ($auth.$storage.getUniversal('strategy') === 'local' && $auth.loggedIn) {
-      await Promise.all([
-        store.dispatch('buildings/fetchByCampusId', { campusId: 1 })
-      ])
+    if ($auth.loggedIn && $auth.$storage.getUniversal('strategy') === 'local') {
+      await store.dispatch('fetchAllData')
     }
   },
   beforeCreate() {
@@ -38,12 +47,17 @@ export default {
         })
         .then((result) => {
           this.$toast.success('ログインしました')
-          this.$store.dispatch('buildings/fetchByCampusId', { campusId: 1 })
-          this.$auth.$storage.removeUniversal('waseda.state')
-          this.$auth.$storage.removeUniversal('_token.waseda')
+          this.$store.dispatch('fetchAllData')
         })
         .catch((e) => {
           this.$toast.error('ログインできませんでした')
+          this.$auth.$storage.removeUniversal('_token.local')
+          this.$auth.$storage.removeUniversal('_refresh_token.local')
+        })
+        .finally(() => {
+          this.$auth.$storage.removeUniversal('waseda.state')
+          this.$auth.$storage.removeUniversal('_token.waseda')
+          this.$auth.$storage.removeUniversal('_refresh_token.waseda')
         })
     }
   }

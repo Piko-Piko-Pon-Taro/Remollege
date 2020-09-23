@@ -10,6 +10,9 @@ export const getters = {
 }
 
 export const mutations = {
+  setAll(state, { rooms }) {
+    state.rooms = rooms
+  },
   addMany(state, { rooms }) {
     rooms.forEach((room) => {
       if (state.rooms.find((stateRoom) => stateRoom.id === room.id)) return
@@ -63,6 +66,10 @@ export const mutations = {
 }
 
 export const actions = {
+  async fetchByCampusId({ commit }, { campusId }) {
+    const { data } = await this.$axios.get(`rooms/campusId/${campusId}`)
+    commit('setAll', { rooms: data.rooms })
+  },
   async fetchByBuildingId({ commit }, { buildingId }) {
     const { data } = await this.$axios.get(`rooms/buildingId/${buildingId}`)
     commit('addMany', { rooms: data.rooms })

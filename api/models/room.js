@@ -32,6 +32,19 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true,
       defaultScope: {},
       scopes: {
+        inCampus(campusId) {
+          return {
+            include: [
+              {
+                model: sequelize.models.Building,
+                where: {
+                  campusId
+                },
+                attributes: [],
+              }
+            ]
+          }
+        },
         withUsers() {
           return {
             include: [
@@ -55,8 +68,8 @@ module.exports = (sequelize, DataTypes) => {
   );
   Room.associate = function (models) {
     Room.belongsTo(models.Building, {
-      sourceKey: "buildingId",
-      foreignKey: "id",
+      foreignKey: "buildingId",
+      targetKey: "id",
     });
     Room.hasMany(models.Table, {
       sourceKey: "id",
