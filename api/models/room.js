@@ -32,6 +32,19 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true,
       defaultScope: {},
       scopes: {
+        inCampus(campusId) {
+          return {
+            include: [
+              {
+                model: sequelize.models.Building,
+                where: {
+                  campusId
+                },
+                attributes: [],
+              }
+            ]
+          }
+        },
         withUsers() {
           return {
             include: [

@@ -78,6 +78,9 @@ GET {{baseUrl}}/rooms/1
 # @name GetRoomsByBuildingId
 GET {{baseUrl}}/rooms/buildingId/1
 ###
+# @name GetRoomsByCampusId
+GET {{baseUrl}}/rooms/CampusId/1
+###
 # # @name GetRoomTables
 # GET {{baseUrl}}/rooms/1/tables/
 ###
