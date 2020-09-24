@@ -89,7 +89,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxtjs/vuetify'],
+  buildModules: ['@nuxtjs/vuetify', '@nuxtjs/google-analytics'],
   /*
    ** Nuxt.js modules
    */
@@ -197,6 +197,17 @@ export default {
         }
       }
     }
+  },
+  /*
+   * Google Analytics configuration
+   */
+  googleAnalytics: {
+    id: 'GA_TRACKING_ID'
+    // if you debug GA in dev mode, uncomment out next 4 lines.
+    // debug: {
+    //  enabled: true,
+    //  sendHitTask: true
+    // }
   },
   /*
    ** Build configuration

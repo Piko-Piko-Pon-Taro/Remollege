@@ -18,6 +18,7 @@ jobs:
           cd client
           echo '${{ secrets.SKYWAY_API_KEY }}' >> .env
           echo '${{ secrets.GOOGLE_CLIENT_ID }}' >> .env
+          sed -i 's|GA_TRACKING_ID|${{ secrets.GA_TRACKING_ID }}|g' nuxt.config.js
           cd ../api
           echo '${{ secrets.GCS_KEY_JSON }}' >> ${{ secrets.GCS_KEY_FILENAME }}
           echo '${{ secrets.SKYWAY_SECRET_KEY }}' >> .env
