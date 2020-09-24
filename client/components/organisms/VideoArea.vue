@@ -6,6 +6,7 @@
       :max-width="
         peerStreams.length === 1 ? videoWidth * 2 + videoWidth / 2 : '100%'
       "
+      :min-width="viewVideoWidth"
       class="mx-auto elevation-0"
     >
       <v-row no-gutters>
@@ -13,8 +14,8 @@
           <VideoCard
             v-if="localStream"
             :id="'self'"
-            :videoWidth="videoWidth"
-            :videoHeight="videoHeight"
+            :videoWidth="viewVideoWidth"
+            :videoHeight="viewVideoHeight"
             :user="user"
             :stream="localStream"
             :isMicOn="isMicOn"
@@ -25,12 +26,12 @@
         <v-col
           v-for="peerStream in peerStreams"
           :key="peerStream.peerId"
-          :width="videoWidth"
+          :width="viewVideoWidth"
         >
           <VideoCard
             :id="peerStream.peerId"
-            :width="videoWidth"
-            :height="videoHeight"
+            :videoWidth="viewVideoWidth"
+            :videoHeight="viewVideoHeight"
             :stream="peerStream"
             :user="
               peerUsers.find((user) => user.id.toString() === peerStream.peerId)
@@ -45,6 +46,7 @@
     <v-bottom-navigation
       :background-color="$const.BASE_COLOR2"
       :value="naviValue"
+      :min-width="viewVideoWidth"
       style="color:rgba(0, 0, 0, 0.6)"
       horizontal
     >
@@ -53,22 +55,23 @@
           $emit('leave')
           $emit('navi', 'hangup')
         "
+        :min-width="'24px'"
         value="hangup"
       >
-        <span>Leave</span>
-        <v-icon>mdi-phone-hangup</v-icon>
+        <span class="d-none d-sm-block ml-2">Leave</span>
+        <v-icon class="mr-0">mdi-phone-hangup</v-icon>
       </v-btn>
 
-      <v-btn @click="toggleCamera" value="video">
-        <span>Video</span>
-        <v-icon v-if="isCamOn">mdi-video</v-icon>
-        <v-icon v-if="!isCamOn">mdi-video-off</v-icon>
+      <v-btn @click="toggleCamera" :min-width="'24px'" value="video">
+        <span class="d-none d-sm-block ml-2">Video</span>
+        <v-icon v-if="isCamOn" class="mr-0">mdi-video</v-icon>
+        <v-icon v-if="!isCamOn" class="mr-0">mdi-video-off</v-icon>
       </v-btn>
 
-      <v-btn @click="toggleMic" value="mic">
-        <span>Mic</span>
-        <v-icon v-if="isMicOn">mdi-microphone</v-icon>
-        <v-icon v-if="!isMicOn">mdi-microphone-off</v-icon>
+      <v-btn @click="toggleMic" :min-width="'24px'" value="mic">
+        <span class="d-none d-sm-block ml-2">Mic</span>
+        <v-icon v-if="isMicOn" class="mr-0">mdi-microphone</v-icon>
+        <v-icon v-if="!isMicOn" class="mr-0">mdi-microphone-off</v-icon>
       </v-btn>
 
       <v-btn
@@ -76,17 +79,18 @@
           $emit('chat')
           $emit('navi', 'chat')
         "
+        :min-width="'24px'"
         value="chat"
       >
-        <span>Chat</span>
-        <v-icon>mdi-chat</v-icon>
+        <span class="d-none d-sm-block ml-2">Chat</span>
+        <v-icon class="mr-0">mdi-chat</v-icon>
       </v-btn>
 
       <!-- 相手の音ミュート用 -->
       <!-- <v-btn>
         <span value="speaker">Speaker</span>
-        <v-icon>mdi-volume-high</v-icon>
-        <v-icon>mdi-volume-off</v-icon>
+        <v-icon class="mr-0">mdi-volume-high</v-icon>
+        <v-icon class="mr-0">mdi-volume-off</v-icon>
       </v-btn>-->
 
       <v-dialog v-model="dialog" persistent max-width="600px">
@@ -95,10 +99,11 @@
             v-bind="attrs"
             v-on="on"
             @click="$emit('navi', 'cog')"
+            :min-width="'24px'"
             value="cog"
           >
-            <span>Settings</span>
-            <v-icon>mdi-cog</v-icon>
+            <span class="d-none d-sm-block ml-2">Settings</span>
+            <v-icon class="mr-0">mdi-cog</v-icon>
           </v-btn>
         </template>
         <v-card>
@@ -186,8 +191,10 @@ export default {
       selectedVideo: null, // deviceId
       audioDevices: [],
       videoDevices: [],
-      videoWidth: 300,
+      videoWidth: 300, // size of actual video
       videoHeight: 240,
+      viewVideoWidth: null, // size of video on display
+      viewVideoHeight: null,
       peerStreams: [],
       peerUsers: null, // for peer names and icons at VideoCard
       localStream: null,
@@ -204,9 +211,19 @@ export default {
   created() {
     if (process.client) {
       this.initPeer()
+      // calculate video size
+      const w = window.parent.screen.width // eslint-disable-line
+      if (w * 0.7 < this.videoWidth) {
+        // change video size if viewport is too small
+        this.viewVideoWidth = w * 0.7
+      } else {
+        // default viewport
+        this.viewVideoWidth = this.videoWidth
+      }
+      // set video-height based on video-width
+      this.viewVideoHeight = this.viewVideoWidth * 0.8
     }
   },
-
   methods: {
     async initPeer() {
       const credential = await this.getCredential()
