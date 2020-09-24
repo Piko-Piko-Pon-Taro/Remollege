@@ -1,8 +1,15 @@
 <template>
   <v-card :color="$const.BASE_COLOR" class="mx-auto pa-5 elevation-0">
-    <div id="videos-container">
+    <v-card
+      id="videos-container"
+      :color="$const.BASE_COLOR"
+      :max-width="
+        peerStreams.length === 1 ? videoWidth * 2 + videoWidth / 2 : '100%'
+      "
+      class="mx-auto elevation-0"
+    >
       <v-row no-gutters>
-        <v-col :width="videoWidth">
+        <v-col>
           <VideoCard
             v-if="localStream"
             :id="'self'"
@@ -12,7 +19,7 @@
             :stream="localStream"
             :isMicOn="isMicOn"
             :muted="true"
-            class="pb-0"
+            class="pb-0 mb-5"
           />
         </v-col>
         <v-col
@@ -29,11 +36,11 @@
               peerUsers.find((user) => user.id.toString() === peerStream.peerId)
             "
             :muted="false"
-            class="pb-0"
+            class="pb-0 mb-5"
           />
         </v-col>
       </v-row>
-    </div>
+    </v-card>
 
     <v-bottom-navigation
       :background-color="$const.BASE_COLOR2"
