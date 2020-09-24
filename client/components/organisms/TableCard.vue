@@ -23,6 +23,7 @@
               :src="table.users[i - 1] ? table.users[i - 1].img : undefined"
               :icon="table.users[i - 1] ? undefined : 'mdi-selection-ellipse'"
               class="mx-1"
+              :name="table.users[i - 1] ? table.users[i - 1].name : null"
             />
           </div>
         </v-col>
