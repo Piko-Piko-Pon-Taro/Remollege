@@ -40,6 +40,9 @@
 
 <script>
 export default {
+  mounted() {
+    this.$auth.$storage.removeUniversal('redirect')
+  },
   methods: {
     waseda() {
       this.$auth.loginWith('waseda') // FIXME: 早稲田生のみにするときに下のに戻す

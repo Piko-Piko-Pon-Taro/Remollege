@@ -2,22 +2,23 @@
   <div>
     <v-textarea
       v-model="value"
+      :label="label"
+      @click:clear="clear"
+      @keydown.cmdOrCtrl.enter="send"
       filled
       row="1"
       row-height="5"
       clear-icon="mdi-close-circle"
       clearable
-      :label="label"
       type="text"
       auto-grow
-      @click:clear="clear"
     >
       <template v-slot:append>
         <v-btn
           :disabled="value ? false : true"
-          icon
           :color="$const.ACCENT_COLOR"
           @click.stop="send"
+          icon
         >
           <v-icon>mdi-send</v-icon>
         </v-btn>
