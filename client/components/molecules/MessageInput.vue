@@ -4,7 +4,8 @@
       v-model="value"
       :label="label"
       @click:clear="clear"
-      @keydown.cmdOrCtrl.enter="send"
+      @keydown.meta.enter="send"
+      @keydown.ctrl.enter="send"
       filled
       row="1"
       row-height="5"
