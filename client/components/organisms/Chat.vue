@@ -36,7 +36,7 @@
                         <span>{{item.user.name}}</span>
                       </v-tooltip>
                     </template>
-                    <v-card class="elevation-2 mr-5" :width="item.text.length < 20 ? 36+item.text.length*14 : undefined" :color="item.user.id == authUserId ? $const.ACCENT_COLOR : $const.BASE_COLOR2" :light="item.user.id != authUserId">
+                    <v-card class="elevation-2 mr-5" style="display: inline-block;" :color="item.user.id == authUserId ? $const.ACCENT_COLOR : $const.BASE_COLOR2" :light="item.user.id != authUserId">
                       <v-card-text>{{item.text}}</v-card-text>
                     </v-card>
                   </v-timeline-item>
