@@ -16,7 +16,7 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-card :color="$const.BASE_COLOR2" tile class="overflow-y-auto" height="800">
+      <v-card :color="$const.BASE_COLOR2" tile class="overflow-y-auto" height="60%" style="resize: vertical;">
           <v-timeline dense align-top>
                   <v-timeline-item
                     large
