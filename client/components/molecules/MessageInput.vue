@@ -11,6 +11,7 @@
       type="text"
       auto-grow
       @click:clear="clear"
+      @keydown.ctrl.enter="send"
     >
       <template v-slot:append>
         <v-btn
