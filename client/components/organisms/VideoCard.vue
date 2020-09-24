@@ -30,7 +30,7 @@
         <v-icon v-if="!isMicOn" small style="color:red"
           >mdi-microphone-off</v-icon
         >
-        <div>{{ user.name }}</div>
+        <div>{{ user ? user.name : '' }}</div>
       </div>
     </v-card>
   </v-card>
