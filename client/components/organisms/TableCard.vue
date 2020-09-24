@@ -1,6 +1,6 @@
 <template>
   <v-card :color="$const.MAIN_COLOR" dark height="100%">
-    <v-card-title class="headline pb-0">Table{{ table.id }}</v-card-title>
+    <v-card-title class="headline pb-0">{{ name }}</v-card-title>
     <v-card-actions>
       <v-row align="center">
         <v-col>
@@ -38,6 +38,10 @@ export default {
     UserIcon: () => import('@/components/atoms/UserIcon')
   },
   props: {
+    name: {
+      type: String,
+      default: null
+    },
     table: {
       type: Object,
       default: null

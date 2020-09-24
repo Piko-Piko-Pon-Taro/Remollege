@@ -31,8 +31,8 @@
     <v-card :color="$const.BASE_COLOR2">
       <v-row class="mx-0">
         <v-col
-          v-for="table in room.tables"
-          :key="table.id"
+          v-for="(table, i) in room.tables"
+          :key="i"
           md="4"
           sm="6"
           cols="12"
@@ -40,6 +40,7 @@
           <TableCard
             :seatedTableId="seatedTableId"
             :table="table"
+            :name="`Table${i + 1}`"
             @sitDown="sitDown"
             @leave="leave"
           />

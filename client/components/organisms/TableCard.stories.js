@@ -64,6 +64,7 @@ const otherUsers = [
 
 export const NotSeated = Template.bind({})
 NotSeated.args = {
+  name: 'Table1',
   table: {
     id: 1,
     users: [...otherUsers]
@@ -73,6 +74,7 @@ NotSeated.args = {
 
 export const Seated = Template.bind({})
 Seated.args = {
+  name: 'Table2',
   table: {
     id: 1,
     users: [...otherUsers, user]
@@ -82,6 +84,7 @@ Seated.args = {
 
 export const SeatedOtherTable = Template.bind({})
 SeatedOtherTable.args = {
+  name: 'Table3',
   table: {
     id: 1,
     users: [...otherUsers]
