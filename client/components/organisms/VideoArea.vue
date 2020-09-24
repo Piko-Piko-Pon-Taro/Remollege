@@ -242,12 +242,6 @@ export default {
           this.peer.updateCredential(credential)
         })
       })
-
-      this.peer.on('call', (call) => {
-        call.answer(this.localStream)
-        this.setupCallEventHandlers(call)
-      })
-
       this.peer.on('error', (err) => {
         switch (err.type) {
           case 'invalid-key':
@@ -399,6 +393,10 @@ export default {
         mode: 'sfu',
         stream: this.localStream
       })
+      if (!call) {
+        // ネットワークエラーの時用
+        return
+      }
       this.setupCallEventHandlers(call)
     },
 
