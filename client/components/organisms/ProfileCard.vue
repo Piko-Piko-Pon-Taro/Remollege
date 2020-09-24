@@ -6,18 +6,16 @@
       "
       height="250px"
     >
-      <v-row class="fill-height">
+      <v-row class="fill-height" justify="center">
         <UserIcon
           v-if="!isBeingEdited"
           :src="image"
           size="200"
-          class="mx-auto"
         />
         <UserIcon
           v-if="isBeingEdited"
           :src="imageEdited"
           size="200"
-          class="mx-auto"
         >
           <v-row>
             <v-layout style="width: 100%; margin: auto;">
