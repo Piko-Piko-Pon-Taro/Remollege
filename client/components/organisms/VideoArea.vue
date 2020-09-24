@@ -38,11 +38,17 @@
     <v-bottom-navigation
       :color="$const.MAIN_COLOR"
       :background-color="$const.BASE_COLOR2"
-      horizontal
       :value="naviValue"
+      horizontal
     >
-
-      <v-btn @click="$emit('leave'); $emit('navi', 'hangup');" value="hangup" class="grey--text text--darken-1">
+      <v-btn
+        @click="
+          $emit('leave')
+          $emit('navi', 'hangup')
+        "
+        value="hangup"
+        class="grey--text text--darken-1"
+      >
         <span>Leave</span>
         <v-icon class="grey--text text--darken-1">mdi-phone-hangup</v-icon>
       </v-btn>
@@ -71,7 +77,14 @@
         >
       </v-btn>
 
-      <v-btn @click="$emit('chat');  $emit('navi', 'chat');" value="chat">
+      <v-btn
+        @click="
+          $emit('chat')
+          $emit('navi', 'chat')
+        "
+        value="chat"
+        class="grey--text text--darken-1"
+      >
         <span>Chat</span>
         <v-icon>mdi-chat</v-icon>
       </v-btn>
@@ -85,7 +98,13 @@
 
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" @click="$emit('navi', 'cog')" value="cog" class="grey--text text--darken-1">
+          <v-btn
+            v-bind="attrs"
+            v-on="on"
+            @click="$emit('navi', 'cog')"
+            value="cog"
+            class="grey--text text--darken-1"
+          >
             <span>Settings</span>
             <v-icon class="grey--text text--darken-1">mdi-cog</v-icon>
           </v-btn>
@@ -148,8 +167,8 @@ if (process.client) {
 export default {
   components: {
     VideoCard: () => import('@/components/organisms/VideoCard'),
-    ActionButton: () => import('@/components/atoms/ActionButton'),
-    
+    ActionButton: () => import('@/components/atoms/ActionButton')
+
     // UserBanner: () => import('@/components/organisms/UserBanner')
   },
   props: {
@@ -430,7 +449,7 @@ export default {
       }
     },
     toggleCamera() {
-      this.$emit('navi', 'video');
+      this.$emit('navi', 'video')
       if (this.localStream) {
         const videoTrack = this.localStream.getVideoTracks()[0]
         videoTrack.enabled = !videoTrack.enabled

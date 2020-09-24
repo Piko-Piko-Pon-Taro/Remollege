@@ -33,7 +33,7 @@
         <v-col
           v-for="(table, i) in room.tables"
           :key="i"
-          md="4"
+          lg="4"
           sm="6"
           cols="12"
         >
