@@ -1,93 +1,109 @@
 <template>
   <v-card :color="$const.BASE_COLOR" class="mx-auto pa-5 elevation-0">
-    <div id="videos-container">
+    <v-card
+      id="videos-container"
+      :color="$const.BASE_COLOR"
+      :max-width="
+        peerStreams.length === 1 ? videoWidth * 2 + videoWidth / 2 : '100%'
+      "
+      :min-width="viewVideoWidth"
+      class="mx-auto elevation-0"
+    >
       <v-row no-gutters>
-        <v-col :width="videoWidth">
+        <v-col>
           <VideoCard
             v-if="localStream"
             :id="'self'"
-            :videoWidth="videoWidth"
-            :videoHeight="videoHeight"
+            :videoWidth="viewVideoWidth"
+            :videoHeight="viewVideoHeight"
             :user="user"
             :stream="localStream"
             :isMicOn="isMicOn"
             :muted="true"
-            class="pb-0"
+            class="pb-0 mb-5"
           />
         </v-col>
         <v-col
           v-for="peerStream in peerStreams"
           :key="peerStream.peerId"
-          :width="videoWidth"
+          :width="viewVideoWidth"
         >
           <VideoCard
             :id="peerStream.peerId"
-            :width="videoWidth"
-            :height="videoHeight"
+            :videoWidth="viewVideoWidth"
+            :videoHeight="viewVideoHeight"
             :stream="peerStream"
             :user="
               peerUsers.find((user) => user.id.toString() === peerStream.peerId)
             "
             :muted="false"
-            class="pb-0"
+            class="pb-0 mb-5"
           />
         </v-col>
       </v-row>
-    </div>
+    </v-card>
 
     <v-bottom-navigation
-      :color="$const.MAIN_COLOR"
       :background-color="$const.BASE_COLOR2"
-      horizontal
       :value="naviValue"
+      :min-width="viewVideoWidth"
+      style="color:rgba(0, 0, 0, 0.6)"
+      horizontal
     >
+      <v-btn
+        @click="
+          $emit('leave')
+          $emit('navi', 'hangup')
+        "
+        :min-width="'24px'"
+        value="hangup"
+      >
+        <span class="d-none d-sm-block ml-2">Leave</span>
+        <v-icon class="mr-0">mdi-phone-hangup</v-icon>
+      </v-btn>
 
-      <v-btn @click="$emit('leave'); $emit('navi', 'hangup');" value="hangup" class="grey--text text--darken-1">
-        <span>Leave</span>
-        <v-icon class="grey--text text--darken-1">mdi-phone-hangup</v-icon>
+      <v-btn @click="toggleCamera" :min-width="'24px'" value="video">
+        <span class="d-none d-sm-block ml-2">Video</span>
+        <v-icon v-if="isCamOn" class="mr-0">mdi-video</v-icon>
+        <v-icon v-if="!isCamOn" class="mr-0">mdi-video-off</v-icon>
+      </v-btn>
+
+      <v-btn @click="toggleMic" :min-width="'24px'" value="mic">
+        <span class="d-none d-sm-block ml-2">Mic</span>
+        <v-icon v-if="isMicOn" class="mr-0">mdi-microphone</v-icon>
+        <v-icon v-if="!isMicOn" class="mr-0">mdi-microphone-off</v-icon>
       </v-btn>
 
       <v-btn
-        @click="toggleCamera"
-        value="video"
-        class="grey--text text--darken-1"
+        @click="
+          $emit('chat')
+          $emit('navi', 'chat')
+        "
+        :min-width="'24px'"
+        value="chat"
       >
-        <span>Video</span>
-        <v-icon v-if="isCamOn" class="grey--text text--darken-1"
-          >mdi-video</v-icon
-        >
-        <v-icon v-if="!isCamOn" class="grey--text text--darken-1"
-          >mdi-video-off</v-icon
-        >
-      </v-btn>
-
-      <v-btn @click="toggleMic" value="mic" class="grey--text text--darken-1">
-        <span>Mic</span>
-        <v-icon v-if="isMicOn" class="grey--text text--darken-1"
-          >mdi-microphone</v-icon
-        >
-        <v-icon v-if="!isMicOn" class="grey--text text--darken-1"
-          >mdi-microphone-off</v-icon
-        >
-      </v-btn>
-
-      <v-btn @click="$emit('chat');  $emit('navi', 'chat');" value="chat" class="grey--text text--darken-1">
-        <span>Chat</span>
-        <v-icon>mdi-chat</v-icon>
+        <span class="d-none d-sm-block ml-2">Chat</span>
+        <v-icon class="mr-0">mdi-chat</v-icon>
       </v-btn>
 
       <!-- 相手の音ミュート用 -->
-      <!-- <v-btn class="grey--text text--darken-1">
+      <!-- <v-btn>
         <span value="speaker">Speaker</span>
-        <v-icon class="grey--text text--darken-1">mdi-volume-high</v-icon>
-        <v-icon class="grey--text text--darken-1">mdi-volume-off</v-icon>
+        <v-icon class="mr-0">mdi-volume-high</v-icon>
+        <v-icon class="mr-0">mdi-volume-off</v-icon>
       </v-btn>-->
 
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" @click="$emit('navi', 'cog')" value="cog" class="grey--text text--darken-1">
-            <span>Settings</span>
-            <v-icon class="grey--text text--darken-1">mdi-cog</v-icon>
+          <v-btn
+            v-bind="attrs"
+            v-on="on"
+            @click="$emit('navi', 'cog')"
+            :min-width="'24px'"
+            value="cog"
+          >
+            <span class="d-none d-sm-block ml-2">Settings</span>
+            <v-icon class="mr-0">mdi-cog</v-icon>
           </v-btn>
         </template>
         <v-card>
@@ -148,9 +164,7 @@ if (process.client) {
 export default {
   components: {
     VideoCard: () => import('@/components/organisms/VideoCard'),
-    ActionButton: () => import('@/components/atoms/ActionButton'),
-    
-    // UserBanner: () => import('@/components/organisms/UserBanner')
+    ActionButton: () => import('@/components/atoms/ActionButton')
   },
   props: {
     user: {
@@ -177,8 +191,10 @@ export default {
       selectedVideo: null, // deviceId
       audioDevices: [],
       videoDevices: [],
-      videoWidth: 300,
+      videoWidth: 300, // size of actual video
       videoHeight: 240,
+      viewVideoWidth: null, // size of video on display
+      viewVideoHeight: null,
       peerStreams: [],
       peerUsers: null, // for peer names and icons at VideoCard
       localStream: null,
@@ -193,9 +209,21 @@ export default {
     }
   },
   created() {
-    this.initPeer()
+    if (process.client) {
+      this.initPeer()
+      // calculate video size
+      const w = window.parent.screen.width // eslint-disable-line
+      if (w * 0.7 < this.videoWidth) {
+        // change video size if viewport is too small
+        this.viewVideoWidth = w * 0.7
+      } else {
+        // default viewport
+        this.viewVideoWidth = this.videoWidth
+      }
+      // set video-height based on video-width
+      this.viewVideoHeight = this.viewVideoWidth * 0.8
+    }
   },
-
   methods: {
     async initPeer() {
       const credential = await this.getCredential()
@@ -430,7 +458,7 @@ export default {
       }
     },
     toggleCamera() {
-      this.$emit('navi', 'video');
+      this.$emit('navi', 'video')
       if (this.localStream) {
         const videoTrack = this.localStream.getVideoTracks()[0]
         videoTrack.enabled = !videoTrack.enabled
