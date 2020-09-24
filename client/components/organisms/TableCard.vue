@@ -3,7 +3,7 @@
     <v-card-title class="headline pb-0">Table{{ table.id }}</v-card-title>
     <v-card-actions>
       <v-row align="center">
-        <v-col>
+        <v-col lg="4" md="4" sm="5">
           <ActionButton
             v-if="seatedTableId === null"
             @click="sitDown"
@@ -15,18 +15,19 @@
             text="Leave"
           />
         </v-col>
-        <v-col>
-          <div>
+        <v-spacer />
+        <v-col lg="6" md="6" sm="5">
+          <v-row no-gutters>
+            <v-col v-for="i in 6" :key="i" xl="2" lg="4" md="4" sm="6">
             <UserIcon
-              v-for="i in 6"
-              :key="i"
               :src="table.users[i - 1] ? table.users[i - 1].img : undefined"
               :icon="table.users[i - 1] ? undefined : 'mdi-selection-ellipse'"
-              class="mx-1"
               :name="table.users[i - 1] ? table.users[i - 1].name : null"
             />
-          </div>
+            </v-col>
+          </v-row>
         </v-col>
+        <v-spacer />
       </v-row>
     </v-card-actions>
   </v-card>
