@@ -37,10 +37,14 @@ export const mutations = {
   },
   seatAtTable(state, { roomId, tableId, user }) {
     state.rooms = state.rooms.map((stateRoom) => {
-      if (stateRoom.id === roomId) {
+      if (Number(stateRoom.id) === Number(roomId)) {
         stateRoom.tables = stateRoom.tables.map((stateTable) => {
-          if (stateTable.id === tableId) {
-            stateTable.users.push(user)
+          if (Number(stateTable.id) === Number(tableId)) {
+            if (
+              !stateTable.users.find((u) => Number(u.id) === Number(user.id))
+            ) {
+              stateTable.users.push(user)
+            }
           }
           return stateTable
         })
@@ -50,11 +54,11 @@ export const mutations = {
   },
   leaveFromTable(state, { roomId, tableId, userId }) {
     state.rooms = state.rooms.map((stateRoom) => {
-      if (stateRoom.id === roomId) {
+      if (Number(stateRoom.id) === Number(roomId)) {
         stateRoom.tables = stateRoom.tables.map((stateTable) => {
-          if (stateTable.id === tableId) {
+          if (Number(stateTable.id) === Number(tableId)) {
             stateTable.users = stateTable.users.filter(
-              (stateUser) => stateUser.id !== userId
+              (stateUser) => Number(stateUser.id) !== Number(userId)
             )
           }
           return stateTable
