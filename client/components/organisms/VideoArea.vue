@@ -71,7 +71,7 @@
         >
       </v-btn>
 
-      <v-btn @click="$emit('chat');  $emit('navi', 'chat');" value="chat">
+      <v-btn @click="$emit('chat');  $emit('navi', 'chat');" value="chat" class="grey--text text--darken-1">
         <span>Chat</span>
         <v-icon>mdi-chat</v-icon>
       </v-btn>
