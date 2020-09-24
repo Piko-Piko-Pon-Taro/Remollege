@@ -26,8 +26,8 @@
       <v-timeline dense align-top>
         <v-timeline-item
           :color="$const.BASE_COLOR2"
-          v-for="item in messages"
-          :key="item"
+          v-for="(item, i) in messages"
+          :key="i"
           large
           fill-dot
         >
