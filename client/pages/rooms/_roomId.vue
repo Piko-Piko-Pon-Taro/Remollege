@@ -38,6 +38,8 @@
           cols="12"
         >
           <TableCard
+            :processing="processing"
+            :maxPeople="6"
             :seatedTableId="seatedTableId"
             :table="table"
             :name="`Table${i + 1}`"
@@ -78,7 +80,8 @@ export default {
       },
       seatedTableId: null,
       chatDrawer: false,
-      naviValue: undefined
+      naviValue: undefined,
+      processing: false
     }
   },
   computed: {
@@ -120,16 +123,30 @@ export default {
     next()
   },
   methods: {
-    sitDown(value) {
+    async sitDown(value) {
+      this.processing = true
       this.seatedTableId = value
-      this.$refs.videoArea.initChat(
+      await this.$refs.videoArea.initChat(
         this.$route.params.roomId + '-' + this.seatedTableId
       )
-      this.socket.emit('sitDown', {
+      await this.socket.emit('sitDown', {
         roomId: this.room.id,
         tableId: this.seatedTableId,
         userId: this.$auth.user.id
       })
+      this.processing = false
+    },
+    async leave() {
+      this.processing = true
+      await this.$refs.videoArea.closeCall()
+      await this.socket.emit('standUp', {
+        roomId: this.room.id,
+        tableId: this.seatedTableId,
+        userId: this.$auth.user.id
+      })
+      await this.$store.dispatch('chats/reset')
+      this.seatedTableId = null
+      this.processing = false
     },
     sendChat(value) {
       // 空白のみの場合何もしない
@@ -156,16 +173,6 @@ export default {
 
       // サーバー側にメッセージを送信する
       this.socket.emit('sendChat', { tableId: this.seatedTableId, chat })
-    },
-    leave() {
-      this.$refs.videoArea.closeCall()
-      this.socket.emit('standUp', {
-        roomId: this.room.id,
-        tableId: this.seatedTableId,
-        userId: this.$auth.user.id
-      })
-      this.seatedTableId = null
-      this.$store.dispatch('chats/reset')
     },
     toggleChat(value) {
       this.chatDrawer = value

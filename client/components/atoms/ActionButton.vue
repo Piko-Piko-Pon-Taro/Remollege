@@ -3,6 +3,7 @@
     <v-btn
       v-if="to"
       :to="to"
+      :disabled="disabled"
       :color="$const.ACCENT_COLOR"
       @click.stop="click"
       :x-large="xlarge"
@@ -16,6 +17,7 @@
     </v-btn>
     <v-btn
       v-else
+      :disabled="disabled"
       :color="$const.ACCENT_COLOR"
       @click.stop="click"
       :x-large="xlarge"
@@ -32,6 +34,10 @@
 <script>
 export default {
   props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     icon: {
       type: String,
       default: null

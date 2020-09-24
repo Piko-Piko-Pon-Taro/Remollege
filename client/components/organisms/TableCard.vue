@@ -7,21 +7,23 @@
           <ActionButton
             v-if="seatedTableId === null"
             @click="sitDown"
+            :disabled="sitBtnDisabled"
             text="Take a seat"
           />
           <ActionButton
             v-else-if="seatedTableId === table.id"
             @click="leave"
+            :disabled="leaveBtnDisabled"
             text="Leave"
           />
         </v-col>
         <v-col>
           <div>
             <UserIcon
-              v-for="i in 6"
+              v-for="(num, i) in maxPeople"
               :key="i"
-              :src="table.users[i - 1] ? table.users[i - 1].img : undefined"
-              :icon="table.users[i - 1] ? undefined : 'mdi-selection-ellipse'"
+              :src="table.users[i] ? table.users[i].img : undefined"
+              :icon="table.users[i] ? undefined : 'mdi-selection-ellipse'"
               class="mx-1"
             />
           </div>
@@ -49,6 +51,22 @@ export default {
     seatedTableId: {
       type: Number,
       default: null
+    },
+    maxPeople: {
+      type: Number,
+      required: true
+    },
+    processing: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    sitBtnDisabled() {
+      return this.table.users.length === this.maxPeople || this.processing
+    },
+    leaveBtnDisabled() {
+      return this.processing
     }
   },
   methods: {
