@@ -34,7 +34,6 @@
           v-for="table in room.tables"
           :key="table.id"
           lg="4"
-          md="6"
           sm="6"
           cols="12"
         >
