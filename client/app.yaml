@@ -1,4 +1,4 @@
-runtime: nodejs12
+runtime: nodejs
 network:
   session_affinity: true
 env: flex
