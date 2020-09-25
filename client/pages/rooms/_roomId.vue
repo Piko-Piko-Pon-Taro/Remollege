@@ -101,7 +101,8 @@ export default {
   mounted() {
     this.socket = this.$nuxtSocket({})
     this.socket.emit('enter', {
-      roomId: this.room.id
+      roomId: this.room.id,
+      userId: this.$auth.user.id
     })
   },
   created() {
