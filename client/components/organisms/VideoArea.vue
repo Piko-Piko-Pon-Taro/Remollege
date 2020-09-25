@@ -19,6 +19,7 @@
             :user="user"
             :stream="localStream"
             :isMicOn="isMicOn"
+            :isCamOn="isCamOn"
             :muted="true"
             class="pb-0 mb-5"
           />
@@ -32,9 +33,19 @@
             :id="peerStream.peerId"
             :videoWidth="viewVideoWidth"
             :videoHeight="viewVideoHeight"
-            :stream="peerStream"
             :user="
               peerUsers.find((user) => user.id.toString() === peerStream.peerId)
+            "
+            :stream="peerStream"
+            :isMicOn="
+              peerDeviceStatus[peerStream.peerId.toString()]
+                ? peerDeviceStatus[peerStream.peerId.toString()].mic
+                : true
+            "
+            :isCamOn="
+              peerDeviceStatus[peerStream.peerId.toString()]
+                ? peerDeviceStatus[peerStream.peerId.toString()].video
+                : true
             "
             :muted="false"
             class="pb-0 mb-5"
@@ -148,7 +159,7 @@
               @click="onApplyChanges"
               text="Apply"
               class="mx-auto my-0 py-0"
-            /> -->
+            />-->
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -197,6 +208,7 @@ export default {
       viewVideoHeight: null,
       peerStreams: [],
       peerUsers: null, // for peer names and icons at VideoCard
+      peerDeviceStatus: {},
       localStream: null,
       peerId: '',
       connectedRoomId: '',
@@ -420,6 +432,14 @@ export default {
         )[0]
         this.peerUsers = table.users.filter((user) => user.id !== this.user.id)
 
+        this.existingCall.send({
+          toId: stream.peerId,
+          type: 'device-status',
+          context: {
+            mic: this.isMicOn,
+            video: this.isCamOn
+          }
+        })
         this.addVideo(stream)
       })
 
@@ -430,6 +450,18 @@ export default {
       call.on('close', () => {
         this.removeAllVideos()
         this.setupMakeCallUI()
+      })
+      call.on('data', ({ src, data }) => {
+        if (data) {
+          if (data.toId === this.user.id.toString() || data.toId === 'all') {
+            if (data.type === 'device-status') {
+              this.$set(this.peerDeviceStatus, src, {
+                mic: data.context.mic,
+                video: data.context.video
+              })
+            }
+          }
+        }
       })
     },
 
@@ -461,6 +493,14 @@ export default {
         const audioTrack = this.localStream.getAudioTracks()[0]
         audioTrack.enabled = !audioTrack.enabled
         this.isMicOn = !this.isMicOn
+        this.existingCall.send({
+          toId: 'all',
+          type: 'device-status',
+          context: {
+            mic: this.isMicOn,
+            video: this.isCamOn
+          }
+        })
       }
     },
     toggleCamera() {
@@ -469,6 +509,14 @@ export default {
         const videoTrack = this.localStream.getVideoTracks()[0]
         videoTrack.enabled = !videoTrack.enabled
         this.isCamOn = !this.isCamOn
+        this.existingCall.send({
+          toId: 'all',
+          type: 'device-status',
+          context: {
+            mic: this.isMicOn,
+            video: this.isCamOn
+          }
+        })
       }
     },
     onDeviceChange() {

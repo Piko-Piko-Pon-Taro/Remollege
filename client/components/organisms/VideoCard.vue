@@ -38,9 +38,6 @@
 
 <script>
 export default {
-  components: {
-    // UserIcon: () => import('@/components/atoms/UserIcon')
-  },
   props: {
     id: {
       type: String,
@@ -63,6 +60,10 @@ export default {
       default: null
     },
     isMicOn: {
+      type: Boolean,
+      default: true
+    },
+    isCamOn: {
       type: Boolean,
       default: true
     },
