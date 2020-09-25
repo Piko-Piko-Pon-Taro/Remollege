@@ -6,7 +6,11 @@
 
 var app = require('../app');
 var debug = require('debug')('api:server');
-var http = require('http');
+if (process.env.NODE_ENV === "production") {
+  var http = require('https');
+} else {
+  var http = require('http');
+}
 
 /**
  * Get port from environment and store in Express.
