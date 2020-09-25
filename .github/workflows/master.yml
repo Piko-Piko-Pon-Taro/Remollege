@@ -23,7 +23,6 @@ jobs:
           echo '${{ secrets.GCS_KEY_JSON }}' >> ${{ secrets.GCS_KEY_FILENAME }}
           echo '${{ secrets.SKYWAY_SECRET_KEY }}' >> .env
           echo '${{ secrets.JWT_SECRET }}' >> .env
-          echo 'NODE_ENV=production' >> .env
           cd config
           sed -i 's|MYSQL_USER|${{ secrets.MYSQL_USER }}|g' config.json
           sed -i 's|MYSQL_PASSWORD|${{ secrets.MYSQL_PASSWORD }}|g' config.json

@@ -1,7 +1,2 @@
 service: api
-runtime: nodejs
-network:
-  session_affinity: true
-env: flex
-manual_scaling:
-  instances: 1
+runtime: nodejs12
