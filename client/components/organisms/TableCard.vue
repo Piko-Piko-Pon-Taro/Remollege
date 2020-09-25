@@ -28,11 +28,7 @@
               sm="6"
               cols="2"
             >
-              <UserIcon
-                :src="table.users[i] ? table.users[i].img : undefined"
-                :icon="table.users[i] ? undefined : 'mdi-selection-ellipse'"
-                :name="table.users[i] ? table.users[i].name : null"
-              />
+              <UserInformationIcon :user="table.users[i]"/>
             </v-col>
           </v-row>
         </v-col>
@@ -46,7 +42,7 @@
 export default {
   components: {
     ActionButton: () => import('@/components/atoms/ActionButton'),
-    UserIcon: () => import('@/components/atoms/UserIcon')
+    UserInformationIcon: () => import('@/components/molecules/UserInformationIcon')
   },
   props: {
     name: {
@@ -84,6 +80,9 @@ export default {
     },
     leave() {
       this.$emit('leave')
+    },
+    updateProfile(value, file) {
+      this.$store.dispatch('updateAuthUser', { user: value, file })
     }
   }
 }
