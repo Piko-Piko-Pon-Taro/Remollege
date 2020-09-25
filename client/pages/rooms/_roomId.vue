@@ -94,15 +94,21 @@ export default {
   },
   async asyncData({ store, route }) {
     await store.dispatch('fetchAllData')
-    await store.dispatch('rooms/updateByRoomId', {
-      roomId: route.params.roomId
-    })
   },
   mounted() {
     this.socket = this.$nuxtSocket({})
-    this.socket.emit('enter', {
-      roomId: this.room.id
-    })
+    this.socket.emit(
+      'enter',
+      {
+        roomId: this.room.id,
+        userId: this.$auth.user.id
+      },
+      (res) => {
+        this.$store.dispatch('rooms/updateByRoomId', {
+          roomId: this.$route.params.roomId
+        })
+      }
+    )
   },
   created() {
     if (process.client) {
