@@ -4,7 +4,7 @@
       id="videos-container"
       :color="$const.BASE_COLOR"
       :max-width="
-        peerStreams.length === 1 ? videoWidth * 2 + videoWidth / 2 : '100%'
+        peerStreams.length === 3 ? videoWidth * 2 + videoWidth / 2 : '100%'
       "
       :min-width="viewVideoWidth"
       class="mx-auto elevation-0"
