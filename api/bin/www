@@ -30,9 +30,10 @@ const TableUser = models.TableUser;
 const io = require('socket.io')(server);
 io.on('connection', socket => {
 
-  socket.on('enter', ({ roomId, userId }) => {
-    socket.join(`room-${roomId}`);
-    TableUser.destroy({ where: { userId }, force: true });
+  socket.on('enter', async ({ roomId, userId }, cb) => {
+    await socket.join(`room-${roomId}`);
+    await TableUser.destroy({ where: { userId }, force: true });
+    cb();
   });
 
   socket.on('sitDown', async ({ roomId, tableId, userId }) => {

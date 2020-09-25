@@ -23,7 +23,7 @@ export const mutations = {
     let isUpdated = false
     // あれば更新する
     state.rooms = state.rooms.map((stateRoom) => {
-      if (stateRoom.id === room.id) {
+      if (Number(stateRoom.id) === Number(room.id)) {
         isUpdated = true
         return room
       } else {
