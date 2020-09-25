@@ -6,7 +6,11 @@
 
 var app = require('../app');
 var debug = require('debug')('api:server');
-var http = require('http');
+if (process.env.NODE_ENV === "production") {
+  var http = require('https');
+} else {
+  var http = require('http');
+}
 
 /**
  * Get port from environment and store in Express.
@@ -24,20 +28,10 @@ var server = http.createServer(app);
 /**
  * WebSocket
  */
-// FIXME: すまん荒技。app.jsにも同様の記述あるのでまとめてくれ…
-if (process.env.NODE_ENV === "production") {
-  client_url = "https://pikopikopon1.uc.r.appspot.com";
-} else if (process.env.NODE_ENV === "development_in_docker") {
-  client_url = "http://client:3001";
-} else {
-  client_url = "http://localhost:3001";
-}
 const models = require(global.models);
 const User = models.User;
 const TableUser = models.TableUser;
-const io = require('socket.io')(server, {
-  origins: [client_url]
-});
+const io = require('socket.io')(server);
 io.on('connection', socket => {
 
   socket.on('enter', async ({ roomId, userId }, cb) => {
