@@ -21,7 +21,7 @@ const passport = require("./passport");
 const cors = require("cors");
 
 if (process.env.NODE_ENV === "production") {
-  client_url = "http://pikopikopon1.uc.r.appspot.com";
+  client_url = "https://pikopikopon1.uc.r.appspot.com";
 } else if (process.env.NODE_ENV === "development_in_docker") {
   client_url = "http://client:3001";
 } else {
