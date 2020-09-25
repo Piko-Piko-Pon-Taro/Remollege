@@ -30,8 +30,10 @@ const TableUser = models.TableUser;
 const io = require('socket.io')(server);
 io.on('connection', socket => {
 
-  socket.on('enter', ({ roomId }) => {
-    socket.join(`room-${roomId}`);
+  socket.on('enter', async ({ roomId, userId }, cb) => {
+    await socket.join(`room-${roomId}`);
+    await TableUser.destroy({ where: { userId }, force: true });
+    cb();
   });
 
   socket.on('sitDown', async ({ roomId, tableId, userId }) => {
@@ -53,7 +55,12 @@ io.on('connection', socket => {
 
   socket.on('disconnecting', () => {});
 
-  socket.on('disconnect', () => {});
+  socket.on('disconnect', (reason) => {
+    if (reason === 'io server disconnect') {
+      // ここだけ手動でreconnectしないといけないらしいので対応
+      socket.connect();
+    }
+  });
 });
 
 /**

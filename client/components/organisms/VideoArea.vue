@@ -4,7 +4,7 @@
       id="videos-container"
       :color="$const.BASE_COLOR"
       :max-width="
-        peerStreams.length === 1 ? videoWidth * 2 + videoWidth / 2 : '100%'
+        peerStreams.length === 3 ? videoWidth * 2 + videoWidth / 2 : '100%'
       "
       :min-width="viewVideoWidth"
       class="mx-auto elevation-0"
@@ -272,6 +272,9 @@ export default {
             break
           default:
             alert('接続エラー')
+            // デバイスのストップ
+            this.localStream.getAudioTracks()[0].stop()
+            this.localStream.getVideoTracks()[0].stop()
         }
         this.$emit('leave')
       })
@@ -373,6 +376,11 @@ export default {
     },
 
     async initChat(chatId) {
+      // skywayとの疎通が取れる前の動作防止
+      if (!this.peer) {
+        return
+      }
+
       // wifi切れた時用
       if (!this.peer.open) {
         await this.initPeer()

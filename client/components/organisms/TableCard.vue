@@ -28,21 +28,7 @@
               sm="6"
               cols="2"
             >
-              <span @click.stop="table.users[i] && (dialog = true)">
-                  <UserIcon
-                    :src="table.users[i] ? table.users[i].img : undefined"
-                    :icon="table.users[i] ? undefined : 'mdi-selection-ellipse'"
-                    :name="table.users[i] ? table.users[i].name : null"
-                  />
-              </span>
-              <v-dialog v-if="table.users[i]" v-model="dialog" width="600">
-                <ProfileCard
-                  :name="table.users[i].name"
-                  :image="table.users[i].img"
-                  :profile="table.users[i].profile"
-                  @save="updateProfile"
-                />
-              </v-dialog>
+              <UserInformationIcon :user="table.users[i]"/>
             </v-col>
           </v-row>
         </v-col>
@@ -56,8 +42,7 @@
 export default {
   components: {
     ActionButton: () => import('@/components/atoms/ActionButton'),
-    UserIcon: () => import('@/components/atoms/UserIcon'),
-    ProfileCard: () => import('@/components/organisms/ProfileCard')
+    UserInformationIcon: () => import('@/components/molecules/UserInformationIcon')
   },
   props: {
     name: {
@@ -79,11 +64,6 @@ export default {
     processing: {
       type: Boolean,
       default: false
-    }
-  },
-  data() {
-    return {
-      dialog: false
     }
   },
   computed: {
