@@ -96,7 +96,7 @@ export default {
     await store.dispatch('fetchAllData')
   },
   mounted() {
-    this.socket = this.$nuxtSocket({ transports: ['polling'] })
+    this.socket = this.$nuxtSocket({})
     this.socket.emit(
       'enter',
       {
