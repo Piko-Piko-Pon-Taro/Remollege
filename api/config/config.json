@@ -24,11 +24,8 @@
     "username": "MYSQL_USER",
     "password": "MYSQL_PASSWORD",
     "database": "remollege",
-    "dialect": "mysql",
-    "dialectOptions": {
-      "socketPath": "MYSQL_SOCKET_PATH",
-      "supportBigNumbers": false,
-      "bigNumberStrings": false
-    }
+    "host": "172.17.0.1",
+    "port": "3306",
+    "dialect": "mysql"
   }
 }
