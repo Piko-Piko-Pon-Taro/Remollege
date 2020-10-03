@@ -1,2 +1,9 @@
 service: api
-runtime: nodejs12
+runtime: nodejs
+env: flex
+manual_scaling:
+  instances: 1
+network:
+  session_affinity: true
+beta_settings:
+  cloud_sql_instances: pikopikopon1:us-central1:remollege-database
