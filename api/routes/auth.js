@@ -11,7 +11,7 @@ const passport = require("passport");
 const bcrypt = require("bcrypt");
 
 // const expiresIn = 1800; // 30分
-const expiresIn = 7 * 24 * 3600; // 1週間 FIXME: 30分に戻す
+const expiresIn = 6 * 3600; // 6時間 // FIXME: 30分に戻す
 const refreshExpiresIn = 7 * 24 * 3600; // 1週間
 
 const axios = require('axios');
@@ -51,7 +51,7 @@ router.post("/waseda/", async (req, res, next) => {
 
     // token作成
     const accessToken = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn });
-    const refreshToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: refreshExpiresIn });
+    const refreshToken = jwt.sign({ user: { id: user.id } }, process.env.JWT_SECRET, { expiresIn: refreshExpiresIn });
     res.json(addStatusOK({ accessToken, refreshToken }));
   } catch (e) {
     next(e);
@@ -182,32 +182,13 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
-      const user = await User.scope("auth").findByPk(req.user.id);
+      const user = await User.scope("jwt").findByPk(req.user.id);
+      if (!user) throw boom.badImplementation();
 
-      req.login(user, { session: false }, (err) => {
-        if (err) {
-          throw boom.notImplemented('Login failed', err)
-        }
-        // JWTトークン作成
-        const token = jwt.sign(
-          {
-            id: user.id,
-            name: user.name,
-          },
-          process.env.JWT_SECRET,
-          { expiresIn }
-        );
-        const refreshToken = jwt.sign(
-          {
-            id: user.id,
-            name: user.name,
-          },
-          process.env.JWT_SECRET,
-          { expiresIn: refreshExpiresIn }
-        );
-        // レスポンス
-        res.json(addStatusOK({ token, refreshToken, expiresInSec: expiresIn, refreshExpiresInSec: refreshExpiresIn }));
-      });
+      // token作成
+      const accessToken = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn });
+      const refreshToken = jwt.sign({ user: { id: user.id } }, process.env.JWT_SECRET, { expiresIn: refreshExpiresIn });
+      res.json(addStatusOK({ accessToken, refreshToken, expiresIn }));
     } catch (e) {
       next(e);
     }
