@@ -48,10 +48,6 @@ export default {
         .then((result) => {
           this.$toast.success('ログインしました')
           this.$store.dispatch('fetchAllData')
-          this.$auth.setRefreshToken(
-            'local',
-            `bearer ${result.data.refreshToken}`
-          )
         })
         .catch((e) => {
           this.$toast.error('ログインできませんでした')
